@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -11,98 +11,77 @@ import { Badge } from "@/components/ui/badge"
 import { Plus, Search, MoreVertical, Edit, Trash, Eye, CheckCircle, XCircle } from "lucide-react"
 import { AdminHeader } from "@/components/admin-header"
 import { AdminSidebar } from "@/components/admin-sidebar"
+import api from "@/lib/axios"
+import { Court, CourtApi } from "@/lib/types"
 
-// Dados simulados de quadras
-const quadrasMock = [
-  {
-    id: "1",
-    nome: "Quadra de Futsal Coberta",
-    tipo: "Futsal",
-    precoHora: 80,
-    status: "ativa",
-    reservasHoje: 3,
-  },
-  {
-    id: "2",
-    nome: "Quadra de Vôlei",
-    tipo: "Vôlei",
-    precoHora: 60,
-    status: "ativa",
-    reservasHoje: 2,
-  },
-  {
-    id: "3",
-    nome: "Quadra de Beach Tennis",
-    tipo: "Beach Tennis",
-    precoHora: 100,
-    status: "ativa",
-    reservasHoje: 5,
-  },
-  {
-    id: "4",
-    nome: "Quadra de Tênis",
-    tipo: "Tênis",
-    precoHora: 90,
-    status: "inativa",
-    reservasHoje: 0,
-  },
-  {
-    id: "5",
-    nome: "Quadra de Society",
-    tipo: "Society",
-    precoHora: 120,
-    status: "ativa",
-    reservasHoje: 4,
-  },
-]
-
-export default function QuadrasPage() {
-  const [quadras, setQuadras] = useState(quadrasMock)
+export default function courtsPage() {
+  const [courts, setCourts] = useState<Court[]>([])
   const [searchTerm, setSearchTerm] = useState("")
 
-  const filteredQuadras = quadras.filter(
-    (quadra) =>
-      quadra.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      quadra.tipo.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
-
   const handleDelete = (id: string) => {
-    if (confirm("Tem certeza que deseja excluir esta quadra?")) {
-      setQuadras(quadras.filter((quadra) => quadra.id !== id))
+    if (confirm("Tem certeza que deseja excluir esta court?")) {
+      setCourts(courts.filter((court) => court.id !== id))
+
+      api.delete(`/courts/${id}`).then((response) => {
+        if (response.status === 200) {
+          alert("Quadra excluída com sucesso!")
+        } else {
+          alert("Erro ao excluir a quadra.")
+        }
+      })
     }
   }
 
   const toggleStatus = (id: string) => {
-    setQuadras(
-      quadras.map((quadra) =>
-        quadra.id === id
-          ? {
-              ...quadra,
-              status: quadra.status === "ativa" ? "inativa" : "ativa",
-            }
-          : quadra,
+    setCourts(
+      courts.map((court) =>
+        court.id === id
+          ? { ...court, isActive: !court.isActive }
+          : court,
       ),
     )
   }
 
+  useEffect(() => {
+    api.get("/companies/11111111-1111-1111-1111-111111111111/courts").then((response) => {
+      const courtsData = response.data.map((court: CourtApi) => ({
+        id: court.id,
+        name: court.name,
+        sportType: court.sport_type,
+        hourlyPrice: court.hourly_price,
+        isActive: court.is_active,
+        reservationToday: 0
+      }));
+
+      console.log(courtsData);
+      setCourts(courtsData);
+    })
+  }, [])
+
+  const filteredcourts = courts.filter(
+    (court) =>
+      court.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      court.sportType.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
+
   return (
     <div className="flex min-h-screen bg-green-50">
-      <AdminSidebar activePage="quadras" />
+      <AdminSidebar activePage="courts" />
       <div className="flex-1">
-        <AdminHeader title="Gerenciar Quadras" />
+        <AdminHeader title="Gerenciar courts" />
         <main className="p-6">
           <div className="mb-6 flex flex-col sm:flex-row justify-between gap-4">
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar quadras..."
+                placeholder="Buscar courts..."
                 className="pl-8"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <Button asChild className="bg-green-600 hover:bg-green-700">
-              <Link href="/admin/quadras/nova">
+              <Link href="/admin/courts/nova">
                 <Plus className="mr-2 h-4 w-4" />
                 Nova Quadra
               </Link>
@@ -123,31 +102,31 @@ export default function QuadrasPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredQuadras.length === 0 ? (
+                  {filteredcourts.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-6">
                         Nenhuma quadra encontrada
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredQuadras.map((quadra) => (
-                      <TableRow key={quadra.id}>
-                        <TableCell className="font-medium">{quadra.nome}</TableCell>
-                        <TableCell>{quadra.tipo}</TableCell>
-                        <TableCell className="text-right">R$ {quadra.precoHora.toFixed(2)}</TableCell>
+                    filteredcourts.map((court) => (
+                      <TableRow key={court.id}>
+                        <TableCell className="font-medium">{court.name}</TableCell>
+                        <TableCell>{court.sportType[0].toUpperCase() + court.sportType.slice(1)}</TableCell>
+                        <TableCell className="text-right">R$ {court.hourlyPrice.toFixed(2)}</TableCell>
                         <TableCell>
                           <Badge
-                            variant={quadra.status === "ativa" ? "default" : "secondary"}
+                            variant={court.isActive ? "default" : "secondary"}
                             className={
-                              quadra.status === "ativa"
+                              `${court.isActive
                                 ? "bg-green-500 hover:bg-green-600"
-                                : "bg-gray-500 hover:bg-gray-600"
+                                : "bg-red-500 hover:bg-red-600"} text-white`
                             }
                           >
-                            {quadra.status === "ativa" ? "Ativa" : "Inativa"}
+                            {court.isActive ? "Ativa" : "Inativa"}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-center">{quadra.reservasHoje}</TableCell>
+                        <TableCell className="text-center">{1}</TableCell>
                         <TableCell className="text-right">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -158,19 +137,19 @@ export default function QuadrasPage() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem asChild>
-                                <Link href={`/admin/quadras/${quadra.id}`}>
+                                <Link href={`/admin/courts/${court.id}`}>
                                   <Eye className="mr-2 h-4 w-4" />
                                   Ver detalhes
                                 </Link>
                               </DropdownMenuItem>
                               <DropdownMenuItem asChild>
-                                <Link href={`/admin/quadras/${quadra.id}/editar`}>
+                                <Link href={`/admin/courts/${court.id}/editar`}>
                                   <Edit className="mr-2 h-4 w-4" />
                                   Editar
                                 </Link>
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => toggleStatus(quadra.id)}>
-                                {quadra.status === "ativa" ? (
+                              <DropdownMenuItem onClick={() => toggleStatus(court.id)}>
+                                {court.isActive ? (
                                   <>
                                     <XCircle className="mr-2 h-4 w-4" />
                                     Desativar
@@ -183,7 +162,7 @@ export default function QuadrasPage() {
                                 )}
                               </DropdownMenuItem>
                               <DropdownMenuItem
-                                onClick={() => handleDelete(quadra.id)}
+                                onClick={() => handleDelete(court.id)}
                                 className="text-red-600 focus:text-red-600"
                               >
                                 <Trash className="mr-2 h-4 w-4" />
