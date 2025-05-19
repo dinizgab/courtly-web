@@ -14,7 +14,7 @@ import { Switch } from "@/components/ui/switch"
 import { AdminHeader } from "@/components/admin-header"
 import { AdminSidebar } from "@/components/admin-sidebar"
 
-export default function NovaQuadraPage() {
+export default function NewCourtPage() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
