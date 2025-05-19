@@ -19,7 +19,7 @@ export default function courtsPage() {
   const [searchTerm, setSearchTerm] = useState("")
 
   const handleDelete = (id: string) => {
-    if (confirm("Tem certeza que deseja excluir esta court?")) {
+    if (confirm("Tem certeza que deseja excluir esta quadra?")) {
       setCourts(courts.filter((court) => court.id !== id))
 
       api.delete(`/courts/${id}`).then((response) => {
@@ -74,7 +74,7 @@ export default function courtsPage() {
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar courts..."
+                placeholder="Buscar quadras..."
                 className="pl-8"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}

@@ -22,10 +22,9 @@ export default function NovaQuadraPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulação de envio para API
     setTimeout(() => {
       setIsSubmitting(false)
-      router.push("/admin/quadras")
+      router.push("/admin/courts")
     }, 1000)
   }
 
