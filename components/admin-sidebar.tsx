@@ -18,7 +18,7 @@ export function AdminSidebar({ activePage }: AdminSidebarProps) {
     },
     {
       name: "Quadras",
-      href: "/admin/quadras",
+      href: "/admin/courts",
       icon: LayoutGrid,
       id: "quadras",
     },
