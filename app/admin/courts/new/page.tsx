@@ -4,6 +4,9 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -13,19 +16,101 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch"
 import { AdminHeader } from "@/components/admin-header"
 import { AdminSidebar } from "@/components/admin-sidebar"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { useToast } from "@/components/ui/use-toast"
+import { Loader2 } from "lucide-react"
 
-export default function NewCourtPage() {
+const courtFormSchema = z.object({
+  nome: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),
+  tipo: z.string({ required_error: "Selecione o tipo de quadra" }),
+  preco: z.coerce.number().positive({ message: "Preço deve ser maior que zero" }),
+  capacidade: z.coerce.number().int().positive().optional(),
+  descricao: z.string().optional(),
+  horaInicio: z.string({ required_error: "Horário de abertura é obrigatório" }),
+  horaFim: z.string({ required_error: "Horário de fechamento é obrigatório" }),
+  ativa: z.boolean().default(true),
+})
+
+type CourtFormValues = z.infer<typeof courtFormSchema>
+
+export default function NovaQuadraPage() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [fotos, setFotos] = useState<FileList | null>(null)
+  const { toast } = useToast()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+  const form = useForm<CourtFormValues>({
+    resolver: zodResolver(courtFormSchema),
+    defaultValues: {
+      nome: "",
+      tipo: "",
+      preco: 0,
+      capacidade: undefined,
+      descricao: "",
+      horaInicio: "08:00",
+      horaFim: "22:00",
+      ativa: true,
+    },
+  })
 
-    setTimeout(() => {
-      setIsSubmitting(false)
+  const onSubmit = async (data: CourtFormValues) => {
+    try {
+      setIsSubmitting(true)
+
+      const formData = new FormData()
+
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value.toString())
+      })
+
+      if (fotos) {
+        Array.from(fotos).forEach((file, index) => {
+          formData.append(`foto_${index}`, file)
+        })
+      }
+
+      console.log("Form data to be sent:", {
+        ...data,
+        fotos: fotos ? Array.from(fotos).map((f) => f.name) : [],
+      })
+
+      // Here's how you would send the data to an API
+      // const response = await fetch('/api/quadras', {
+      //   method: 'POST',
+      //   body: formData,
+      // })
+
+      // if (!response.ok) {
+      //   throw new Error('Falha ao cadastrar quadra')
+      // }
+
+      // const result = await response.json()
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      toast({
+        title: "Quadra cadastrada com sucesso!",
+        description: `A quadra ${data.nome} foi cadastrada com sucesso.`,
+      })
+
       router.push("/admin/courts")
-    }, 1000)
+    } catch (error) {
+      console.error("Erro ao cadastrar quadra:", error)
+      toast({
+        title: "Erro ao cadastrar quadra",
+        description: error instanceof Error ? error.message : "Ocorreu um erro ao cadastrar a quadra",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFotos(e.target.files)
+    }
   }
 
   return (
@@ -35,94 +120,193 @@ export default function NewCourtPage() {
         <AdminHeader title="Nova Quadra" />
         <main className="p-6">
           <Card>
-            <form onSubmit={handleSubmit}>
-              <CardHeader>
-                <CardTitle>Cadastrar Nova Quadra</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="nome">Nome da Quadra</Label>
-                    <Input id="nome" placeholder="Ex: Quadra de Futsal Coberta" required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="tipo">Tipo de Quadra</Label>
-                    <Select required>
-                      <SelectTrigger id="tipo">
-                        <SelectValue placeholder="Selecione o tipo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="futsal">Futsal</SelectItem>
-                        <SelectItem value="society">Society</SelectItem>
-                        <SelectItem value="volei">Vôlei</SelectItem>
-                        <SelectItem value="beach-tennis">Beach Tennis</SelectItem>
-                        <SelectItem value="tenis">Tênis</SelectItem>
-                        <SelectItem value="basquete">Basquete</SelectItem>
-                        <SelectItem value="outro">Outro</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <CardHeader>
+                  <CardTitle>Cadastrar Nova Quadra</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="nome"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nome da Quadra</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Ex: Quadra de Futsal Coberta" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="preco">Preço por Hora (R$)</Label>
-                    <Input id="preco" type="number" min="0" step="0.01" placeholder="0.00" required />
+                    <FormField
+                      control={form.control}
+                      name="tipo"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Tipo de Quadra</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione o tipo" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="futsal">Futsal</SelectItem>
+                              <SelectItem value="society">Society</SelectItem>
+                              <SelectItem value="volei">Vôlei</SelectItem>
+                              <SelectItem value="beach-tennis">Beach Tennis</SelectItem>
+                              <SelectItem value="tenis">Tênis</SelectItem>
+                              <SelectItem value="basquete">Basquete</SelectItem>
+                              <SelectItem value="outro">Outro</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="capacidade">Capacidade (pessoas)</Label>
-                    <Input id="capacidade" type="number" min="1" placeholder="10" />
-                  </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="descricao">Descrição</Label>
-                  <Textarea
-                    id="descricao"
-                    placeholder="Descreva detalhes sobre a quadra, como dimensões, tipo de piso, etc."
-                    className="min-h-[100px]"
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="preco"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Preço por Hora (R$)</FormLabel>
+                          <FormControl>
+                            <Input type="number" min="0" step="0.01" placeholder="0.00" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="capacidade"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Capacidade (pessoas)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="1"
+                              placeholder="10"
+                              {...field}
+                              value={field.value || ""}
+                              onChange={(e) => {
+                                const value = e.target.value === "" ? undefined : Number.parseInt(e.target.value)
+                                field.onChange(value)
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="descricao"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Descrição</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Descreva detalhes sobre a quadra, como dimensões, tipo de piso, etc."
+                            className="min-h-[100px]"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="fotos">Fotos da Quadra</Label>
-                  <Input id="fotos" type="file" multiple accept="image/*" />
-                  <p className="text-sm text-muted-foreground">
-                    Você pode selecionar múltiplas fotos. Formatos aceitos: JPG, PNG.
-                  </p>
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="fotos">Fotos da Quadra</Label>
+                    <Input id="fotos" type="file" multiple accept="image/*" onChange={handleFileChange} />
+                    <p className="text-sm text-muted-foreground">
+                      Você pode selecionar múltiplas fotos. Formatos aceitos: JPG, PNG.
+                    </p>
+                  </div>
 
-                <div className="space-y-4">
-                  <Label>Horários Disponíveis</Label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="hora-inicio">Horário de Abertura</Label>
-                      <Input id="hora-inicio" type="time" defaultValue="08:00" required />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="hora-fim">Horário de Fechamento</Label>
-                      <Input id="hora-fim" type="time" defaultValue="22:00" required />
+                  <div className="space-y-4">
+                    <Label>Horários Disponíveis</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="horaInicio"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Horário de Abertura</FormLabel>
+                            <FormControl>
+                              <Input type="time" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="horaFim"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Horário de Fechamento</FormLabel>
+                            <FormControl>
+                              <Input type="time" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center space-x-2">
-                  <Switch id="ativa" defaultChecked />
-                  <Label htmlFor="ativa">Quadra ativa e disponível para reservas</Label>
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <Button type="button" variant="outline" onClick={() => router.push("/admin/quadras")}>
-                  Cancelar
-                </Button>
-                <Button type="submit" className="bg-green-600 hover:bg-green-700" disabled={isSubmitting}>
-                  {isSubmitting ? "Salvando..." : "Salvar Quadra"}
-                </Button>
-              </CardFooter>
-            </form>
+                  <FormField
+                    control={form.control}
+                    name="ativa"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <Switch checked={field.value} onCheckedChange={field.onChange} />
+                        </FormControl>
+                        <FormLabel>Quadra ativa e disponível para reservas</FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.push("/admin/quadras")}
+                    disabled={isSubmitting}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button type="submit" className="bg-green-600 hover:bg-green-700" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Salvando...
+                      </>
+                    ) : (
+                      "Salvar Quadra"
+                    )}
+                  </Button>
+                </CardFooter>
+              </form>
+            </Form>
           </Card>
         </main>
       </div>
     </div>
   )
 }
+
