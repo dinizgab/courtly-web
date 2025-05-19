@@ -13,10 +13,12 @@ import { AdminHeader } from "@/components/admin-header"
 import { AdminSidebar } from "@/components/admin-sidebar"
 import api from "@/lib/axios"
 import { Court, CourtApi } from "@/lib/types"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function courtsPage() {
   const [courts, setCourts] = useState<Court[]>([])
   const [searchTerm, setSearchTerm] = useState("")
+  const { toast } = useToast()
 
   const handleDelete = (id: string) => {
     if (confirm("Tem certeza que deseja excluir esta quadra?")) {
@@ -24,9 +26,17 @@ export default function courtsPage() {
 
       api.delete(`/courts/${id}`).then((response) => {
         if (response.status === 200) {
-          alert("Quadra excluída com sucesso!")
+          toast({
+            title: "Quadra excluída",
+            description: "Quadra excluída com sucesso!",
+            variant: "default",
+          })
         } else {
-          alert("Erro ao excluir a quadra.")
+          toast({
+            title: "Erro ao excluir quadra",
+            description: "Não foi possível excluir a quadra.",
+            variant: "destructive",
+          })
         }
       })
     }
@@ -43,6 +53,7 @@ export default function courtsPage() {
   }
 
   useEffect(() => {
+    // TODO - Fix response type here
     api.get("/companies/11111111-1111-1111-1111-111111111111/courts").then((response) => {
       const courtsData = response.data.map((court: CourtApi) => ({
         id: court.id,
@@ -81,7 +92,7 @@ export default function courtsPage() {
               />
             </div>
             <Button asChild className="bg-green-600 hover:bg-green-700">
-              <Link href="/admin/courts/nova">
+              <Link href="/admin/courts/new">
                 <Plus className="mr-2 h-4 w-4" />
                 Nova Quadra
               </Link>
