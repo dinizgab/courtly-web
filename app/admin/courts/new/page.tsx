@@ -19,16 +19,17 @@ import { AdminSidebar } from "@/components/admin-sidebar"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useToast } from "@/components/ui/use-toast"
 import { Loader2 } from "lucide-react"
+import { api } from "@/lib/axios"
 
 const courtFormSchema = z.object({
-  nome: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),
-  tipo: z.string({ required_error: "Selecione o tipo de quadra" }),
-  preco: z.coerce.number().positive({ message: "Preço deve ser maior que zero" }),
-  capacidade: z.coerce.number().int().positive().optional(),
-  descricao: z.string().optional(),
-  horaInicio: z.string({ required_error: "Horário de abertura é obrigatório" }),
-  horaFim: z.string({ required_error: "Horário de fechamento é obrigatório" }),
-  ativa: z.boolean().default(true),
+  name: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),
+  sportType: z.string({ required_error: "Selecione o tipo de quadra" }),
+  hourlyPrice: z.coerce.number().positive({ message: "Preço deve ser maior que zero" }),
+  capacity: z.coerce.number().int().positive().optional(),
+  description: z.string().optional(),
+  openingTime: z.string({ required_error: "Horário de abertura é obrigatório" }),
+  closingTime: z.string({ required_error: "Horário de fechamento é obrigatório" }),
+  isActive: z.boolean().default(true),
 })
 
 type CourtFormValues = z.infer<typeof courtFormSchema>
@@ -42,14 +43,14 @@ export default function NovaQuadraPage() {
   const form = useForm<CourtFormValues>({
     resolver: zodResolver(courtFormSchema),
     defaultValues: {
-      nome: "",
-      tipo: "",
-      preco: 0,
-      capacidade: undefined,
-      descricao: "",
-      horaInicio: "08:00",
-      horaFim: "22:00",
-      ativa: true,
+      name: "",
+      sportType: "",
+      hourlyPrice: 0,
+      capacity: undefined,
+      description: "",
+      openingTime: "08:00",
+      closingTime: "22:00",
+      isActive: true,
     },
   })
 
@@ -65,7 +66,7 @@ export default function NovaQuadraPage() {
 
       if (fotos) {
         Array.from(fotos).forEach((file, index) => {
-          formData.append(`foto_${index}`, file)
+          formData.append(`photo_${index}`, file)
         })
       }
 
@@ -74,27 +75,28 @@ export default function NovaQuadraPage() {
         fotos: fotos ? Array.from(fotos).map((f) => f.name) : [],
       })
 
-      // Here's how you would send the data to an API
-      // const response = await fetch('/api/quadras', {
-      //   method: 'POST',
-      //   body: formData,
-      // })
+      console.log(formData)
 
-      // if (!response.ok) {
-      //   throw new Error('Falha ao cadastrar quadra')
-      // }
-
-      // const result = await response.json()
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      toast({
-        title: "Quadra cadastrada com sucesso!",
-        description: `A quadra ${data.nome} foi cadastrada com sucesso.`,
+      api.post("/courts", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       })
-
-      router.push("/admin/courts")
+        .then((response) => {
+          if (response.status === 201) {
+            toast({
+              title: "Quadra cadastrada com sucesso!",
+              description: `A quadra ${data.name} foi cadastrada com sucesso.`,
+            })
+            router.push("/admin/courts")
+          } else {
+            toast({
+              title: "Erro ao cadastrar quadra",
+              description: "Não foi possível cadastrar a quadra.",
+              variant: "destructive",
+            })
+          }
+        })
     } catch (error) {
       console.error("Erro ao cadastrar quadra:", error)
       toast({
@@ -129,7 +131,7 @@ export default function NovaQuadraPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
-                      name="nome"
+                      name="name"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Nome da Quadra</FormLabel>
@@ -143,7 +145,7 @@ export default function NovaQuadraPage() {
 
                     <FormField
                       control={form.control}
-                      name="tipo"
+                      name="sportType"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Tipo de Quadra</FormLabel>
@@ -172,7 +174,7 @@ export default function NovaQuadraPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
-                      name="preco"
+                      name="hourlyPrice"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Preço por Hora (R$)</FormLabel>
@@ -186,7 +188,7 @@ export default function NovaQuadraPage() {
 
                     <FormField
                       control={form.control}
-                      name="capacidade"
+                      name="capacity"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Capacidade (pessoas)</FormLabel>
@@ -211,7 +213,7 @@ export default function NovaQuadraPage() {
 
                   <FormField
                     control={form.control}
-                    name="descricao"
+                    name="description"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Descrição</FormLabel>
@@ -240,7 +242,7 @@ export default function NovaQuadraPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
-                        name="horaInicio"
+                        name="openingTime"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Horário de Abertura</FormLabel>
@@ -254,7 +256,7 @@ export default function NovaQuadraPage() {
 
                       <FormField
                         control={form.control}
-                        name="horaFim"
+                        name="closingTime"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Horário de Fechamento</FormLabel>
@@ -270,7 +272,7 @@ export default function NovaQuadraPage() {
 
                   <FormField
                     control={form.control}
-                    name="ativa"
+                    name="isActive"
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center space-x-2 space-y-0">
                         <FormControl>
