@@ -142,7 +142,7 @@ export default function courtsPage() {
                                                         {court.isActive ? "Ativa" : "Inativa"}
                                                     </Badge>
                                                 </TableCell>
-                                                <TableCell className="text-center">{1}</TableCell>
+                                                <TableCell className="text-center">{court.bookingsToday}</TableCell>
                                                 <TableCell className="text-right">
                                                     <DropdownMenu>
                                                         <DropdownMenuTrigger asChild>
