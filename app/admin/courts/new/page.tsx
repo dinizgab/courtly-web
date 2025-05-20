@@ -35,7 +35,7 @@ const courtFormSchema = z.object({
 
 type CourtFormValues = z.infer<typeof courtFormSchema>
 
-export default function NovaQuadraPage() {
+export default function NewCourtPage() {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [fotos, setFotos] = useState<FileList | null>(null)
