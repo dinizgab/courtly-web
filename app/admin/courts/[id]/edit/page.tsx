@@ -63,7 +63,7 @@ export default function EditCourtPage() {
 
     // Fetch court data
     useEffect(() => {
-        const fetchQuadra = async () => {
+        const fetchCourt = async () => {
             setIsLoading(true)
             try {
                 await api.get(`/courts/${id}`).then((response: AxiosResponse<CourtApi>) => {
@@ -109,7 +109,7 @@ export default function EditCourtPage() {
             }
         }
 
-        fetchQuadra()
+        fetchCourt()
     }, [id, form, toast, router])
 
     const onSubmit = async (data: CourtFormValues) => {
@@ -149,8 +149,6 @@ export default function EditCourtPage() {
                     "Content-Type": "multipart/form-data",
                 },
             }).then((response: AxiosResponse<CourtApi>) => {
-                const updatedCourt: CourtApi = response.data
-
                 if (response.status === 200) {
                     toast({
                         title: "Quadra atualizada com sucesso!",
