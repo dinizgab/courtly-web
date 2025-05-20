@@ -453,7 +453,7 @@ export default function CourtDetailsPage() {
                                 <CardContent className="space-y-4">
                                     <Button
                                         className="w-full bg-green-600 hover:bg-green-700"
-                                        onClick={() => router.push("/admin/reservas/nova?quadra=" + court.id)}
+                                        onClick={() => router.push("/admin/bookings/new?quadra=" + court.id)}
                                     >
                                         <Calendar className="mr-2 h-4 w-4" />
                                         Nova Reserva

@@ -103,7 +103,7 @@ export default function DashboardPage() {
                             </p>
                             <p className="text-sm">Cliente: João Silva</p>
                           </div>
-                          <Link href={`/admin/reservas/${i}`} className="text-sm text-green-600 hover:underline">
+                          <Link href={`/admin/bookings/${i}`} className="text-sm text-green-600 hover:underline">
                             Ver detalhes
                           </Link>
                         </div>

@@ -38,6 +38,7 @@ export type Booking = {
     guestEmail: string
     guestPhone: string
     verificationCode: string
+    court?: Court
 }
 
 export type BookingApi = {
@@ -50,5 +51,6 @@ export type BookingApi = {
     guest_email: string
     guest_phone: string
     verification_code: string
+    court?: CourtApi
 }
 
