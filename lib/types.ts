@@ -6,7 +6,7 @@ export type Court = {
     isActive: boolean
     sportType: string
     hourlyPrice: number
-    reservationsToday: number
+    bookingsToday: number
     openingTime: string
     closingTime: string
     capacity: number
@@ -21,7 +21,7 @@ export type CourtApi = {
     is_active: boolean
     sport_type: string
     hourly_price: number
-    reservations_today: number
+    bookings_today: number
     opening_time: string
     closing_time: string
     capacity: number

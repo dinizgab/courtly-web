@@ -67,7 +67,7 @@ export default function courtsPage() {
                 openingTime: court.opening_time,
                 closingTime: court.closing_time,
                 capacity: court.capacity,
-                reservationsToday: 0
+                bookingsToday: court.bookings_today,
             } as Court));
 
             setCourts(courtsData);

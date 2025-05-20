@@ -62,7 +62,7 @@ export default function QuadraDetalhesPage() {
                         openingTime: court.opening_time,
                         closingTime: court.closing_time,
                         capacity: court.capacity,
-                        reservationsToday: 0,
+                        bookingsToday: 0,
                         photos: court.photos || [],
                     }
 
@@ -332,7 +332,7 @@ export default function QuadraDetalhesPage() {
                                                     <Calendar className="h-5 w-5 text-green-600 mr-2 mt-0.5" />
                                                     <div>
                                                         <h4 className="font-medium">Reservas Hoje</h4>
-                                                        <p className="text-gray-600">{court.reservationsToday} reservas</p>
+                                                        <p className="text-gray-600">{court.bookingsToday} reservas</p>
                                                     </div>
                                                 </div>
 
