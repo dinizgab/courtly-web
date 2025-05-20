@@ -83,12 +83,7 @@ export default function NovaQuadraPage() {
             //  })
             //}
 
-            console.log("Form data to be sent:", {
-                ...data,
-                fotos: fotos ? Array.from(fotos).map((f) => f.name) : [],
-            })
-
-            api.post("/courts", formData, {
+            await api.post("/courts", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
