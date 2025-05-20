@@ -104,7 +104,7 @@ export default function EditCourtPage() {
                     description: "Não foi possível carregar os detalhes da quadra para edição.",
                     variant: "destructive",
                 })
-                router.push("/admin/quadras")
+                router.push("/admin/courts")
             } finally {
                 setIsLoading(false)
             }
