@@ -24,28 +24,28 @@ export function AdminSidebar({ activePage }: AdminSidebarProps) {
     },
     {
       name: "Reservas",
-      href: "/admin/reservas",
+      href: "/admin/bookings",
       icon: CalendarDays,
       id: "reservas",
     },
-    {
-      name: "Clientes",
-      href: "/admin/clientes",
-      icon: Users,
-      id: "clientes",
-    },
-    {
-      name: "Relatórios",
-      href: "/admin/relatorios",
-      icon: BarChart3,
-      id: "relatorios",
-    },
-    {
-      name: "Configurações",
-      href: "/admin/configuracoes",
-      icon: Settings,
-      id: "configuracoes",
-    },
+    //{
+    //  name: "Clientes",
+    //  href: "/admin/clientes",
+    //  icon: Users,
+    //  id: "clientes",
+    //},
+    //{
+    //  name: "Relatórios",
+    //  href: "/admin/relatorios",
+    //  icon: BarChart3,
+    //  id: "relatorios",
+    //},
+    //{
+    //  name: "Configurações",
+    //  href: "/admin/configuracoes",
+    //  icon: Settings,
+    //  id: "configuracoes",
+    //},
   ]
 
   return (
