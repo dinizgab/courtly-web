@@ -23,25 +23,15 @@ import {
 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import api from "@/lib/axios"
-import { Court, CourtApi } from "@/lib/types"
+import { Booking, BookingApi, Court, CourtApi } from "@/lib/types"
 import { getTimeFromDateString, strToTitle } from "@/lib/utils"
 import { AxiosResponse } from "axios"
-
-interface Reserva {
-    id: string
-    cliente: string
-    contato: string
-    data: string
-    horario: string
-    valor: number
-    status: "confirmada" | "pendente" | "cancelada"
-}
 
 export default function QuadraDetalhesPage() {
     const router = useRouter()
     const { toast } = useToast()
     const [court, setCourt] = useState<Court | null>(null)
-    const [reservas, setReservas] = useState<Reserva[]>([])
+    const [bookings, setBookings] = useState<Booking[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const { id } = useParams() as { id: string }
 
@@ -49,7 +39,7 @@ export default function QuadraDetalhesPage() {
         const fetchCourt = async () => {
             setIsLoading(true)
             try {
-                await api.get(`/courts/${id}`).then((response: AxiosResponse) => {
+                await api.get(`/courts/${id}`).then((response: AxiosResponse<CourtApi>) => {
                     const court: CourtApi = response.data
                     const parsedCourt: Court = {
                         id: court.id,
@@ -69,37 +59,24 @@ export default function QuadraDetalhesPage() {
                     setCourt(parsedCourt)
                 })
 
-                const reservasData: Reserva[] = [
-                    {
-                        id: "1",
-                        cliente: "João Silva",
-                        contato: "joao@email.com",
-                        data: "2025-05-19",
-                        horario: "14:00 - 15:00",
-                        valor: 80,
-                        status: "confirmada",
-                    },
-                    {
-                        id: "2",
-                        cliente: "Maria Oliveira",
-                        contato: "(11) 98765-4321",
-                        data: "2025-05-19",
-                        horario: "16:00 - 17:00",
-                        valor: 80,
-                        status: "pendente",
-                    },
-                    {
-                        id: "3",
-                        cliente: "Carlos Santos",
-                        contato: "carlos@email.com",
-                        data: "2025-05-20",
-                        horario: "10:00 - 11:00",
-                        valor: 80,
-                        status: "confirmada",
-                    },
-                ]
+                await api.get(`/courts/${id}/bookings`).then((response: AxiosResponse<BookingApi[]>) => {
+                    const availableStatuses: Record<string, string> = { "confirmed": "confirmada", "pending": "pendente", "canceled": "cancelada" }
 
-                setReservas(reservasData)
+                    const bookings = response.data.map((booking: BookingApi) => ({
+                        id: booking.id,
+                        courtId: booking.court_id,
+                        guestName: booking.guest_name,
+                        guestEmail: booking.guest_email,
+                        guestPhone: booking.guest_phone,
+                        data: getTimeFromDateString(booking.start_time),
+                        startTime: booking.start_time,
+                        endTime: booking.end_time,
+                        verificationCode: booking.verification_code,
+                        status: availableStatuses[booking.status]
+                    }))
+
+                    setBookings(bookings)
+                })
             } catch (error) {
                 console.error("Erro ao buscar dados da quadra:", error)
                 toast({
@@ -173,22 +150,35 @@ export default function QuadraDetalhesPage() {
         const [horaInicio] = court.openingTime.split(":")
         const [horaFim] = court.closingTime.split(":")
 
-        for (let hora = Number.parseInt(horaInicio); hora < Number.parseInt(horaFim); hora++) {
-            const horaFormatada = hora.toString().padStart(2, "0")
-            const disponivel = !reservas.some((r) => {
-                const [inicio] = r.horario.split(" - ")[0].split(":")
-                return Number.parseInt(inicio) === hora && new Date(r.data).toDateString() === new Date().toDateString()
-            })
+        //    for (let hora = Number.parseInt(horaInicio); hora < Number.parseInt(horaFim); hora++) {
+        //        const horaFormatada = hora.toString().padStart(2, "0")
+        //        const disponivel = !bookings.some((r) => {
+        //            const [inicio] = r.horario.split(" - ")[0].split(":")
+        //            return Number.parseInt(inicio) === hora && new Date(r.data).toDateString() === new Date().toDateString()
+        //        })
 
-            horarios.push({
-                horario: `${horaFormatada}:00 - ${(hora + 1).toString().padStart(2, "0")}:00`,
-                disponivel,
-            })
-        }
+        //        horarios.push({
+        //            horario: `${horaFormatada}:00 - ${(hora + 1).toString().padStart(2, "0")}:00`,
+        //            disponivel,
+        //        })
+        //    }
 
         return horarios
     }
 
+    const getFormattedBookingText = (booking: Booking) => {
+        return `${new Date(booking.startTime).toLocaleDateString("pt-BR")} • ${getTimeFromDateString(booking.startTime)} - ${getTimeFromDateString(booking.endTime)}`
+    }
+
+    const getTotalPrice = (booking: Booking) => {
+        const startTime = new Date(booking.startTime)
+        const endTime = new Date(booking.endTime)
+        const durationInHours = (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60)
+        return (court?.hourlyPrice || 0) * durationInHours
+    }
+
+    // TODO - Componentize this page
+    // TODO - Check if its better to use loading component instead of creating a component here
     if (isLoading) {
         return (
             <div className="flex min-h-screen bg-green-50">
@@ -373,46 +363,51 @@ export default function QuadraDetalhesPage() {
                                         <TabsContent value="horarios">
                                             <div className="space-y-4">
                                                 <h3 className="font-semibold">Disponibilidade para Hoje</h3>
-                                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                                    {gerarHorarios().map((slot, index) => (
-                                                        <div
-                                                            key={index}
-                                                            className={`p-3 rounded-md border text-center ${slot.disponivel
-                                                                ? "border-green-200 bg-green-50 text-green-700"
-                                                                : "border-gray-200 bg-gray-100 text-gray-500"
-                                                                }`}
-                                                        >
-                                                            <div className="font-medium">{slot.horario}</div>
-                                                            <div className="text-xs mt-1">{slot.disponivel ? "Disponível" : "Reservado"}</div>
-                                                        </div>
-                                                    ))}
-                                                </div>
+                                                {
+                                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                                        {gerarHorarios().map((slot, index) => (
+                                                            <div
+                                                                key={index}
+                                                                className={`p-3 rounded-md border text-center ${slot.disponivel
+                                                                    ? "border-green-200 bg-green-50 text-green-700"
+                                                                    : "border-gray-200 bg-gray-100 text-gray-500"
+                                                                    }`}
+                                                            >
+                                                                <div className="font-medium">{slot.horario}</div>
+                                                                <div className="text-xs mt-1">{slot.disponivel ? "Disponível" : "Reservado"}</div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                }
                                             </div>
                                         </TabsContent>
 
                                         <TabsContent value="reservas">
-                                            {reservas.length > 0 ? (
+                                            {bookings.length > 0 ? (
                                                 <div className="space-y-4">
                                                     <h3 className="font-semibold">Próximas Reservas</h3>
                                                     <div className="space-y-3">
-                                                        {reservas.map((reserva) => (
+                                                        {bookings.map((booking) => (
                                                             <div
-                                                                key={reserva.id}
+                                                                key={booking.id}
                                                                 className="p-4 border rounded-md flex flex-col sm:flex-row justify-between"
                                                             >
                                                                 <div>
-                                                                    <div className="font-medium">{reserva.cliente}</div>
-                                                                    <div className="text-sm text-gray-500">{reserva.contato}</div>
+                                                                    <div className="font-medium">{booking.guestName}</div>
+                                                                    <div className="text-sm text-gray-500">{booking.guestEmail}</div>
+                                                                    <div className="text-sm text-gray-500">{booking.guestPhone}</div>
                                                                     <div className="text-sm mt-1">
-                                                                        {new Date(reserva.data).toLocaleDateString("pt-BR")} • {reserva.horario}
+                                                                        {getFormattedBookingText(booking)}
                                                                     </div>
                                                                 </div>
                                                                 <div className="mt-2 sm:mt-0 flex flex-col sm:items-end">
-                                                                    <div className="flex items-center">
-                                                                        <DollarSign className="h-4 w-4 text-green-600 mr-1" />
-                                                                        <span className="font-medium">R$ {reserva.valor.toFixed(2)}</span>
-                                                                    </div>
-                                                                    <div className="mt-1">{getStatusBadge(reserva.status)}</div>
+                                                                    {
+                                                                        <div className="flex items-center">
+                                                                            <DollarSign className="h-4 w-4 text-green-600 mr-1" />
+                                                                            <span className="font-medium">R$ {getTotalPrice(booking).toFixed(2)}</span>
+                                                                        </div>
+                                                                    }
+                                                                    <div className="mt-1">{getStatusBadge(booking.status)}</div>
                                                                 </div>
                                                             </div>
                                                         ))}
