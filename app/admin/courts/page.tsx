@@ -84,7 +84,7 @@ export default function courtsPage() {
         <div className="flex min-h-screen bg-green-50">
             <AdminSidebar activePage="courts" />
             <div className="flex-1">
-                <AdminHeader title="Gerenciar courts" />
+                <AdminHeader title="Gerenciar Quadras" />
                 <main className="p-6">
                     <div className="mb-6 flex flex-col sm:flex-row justify-between gap-4">
                         <div className="relative w-full sm:w-64">
