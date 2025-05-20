@@ -143,28 +143,28 @@ export default function CourtDetailsPage() {
         }
     }
 
-    const gerarHorarios = () => {
-        if (!court) return []
+    //const gerarHorarios = () => {
+    //    if (!court) return []
 
-        const horarios = []
-        const [horaInicio] = court.openingTime.split(":")
-        const [horaFim] = court.closingTime.split(":")
+    //    const horarios = []
+    //    const [horaInicio] = court.openingTime.split(":")
+    //    const [horaFim] = court.closingTime.split(":")
 
-        //    for (let hora = Number.parseInt(horaInicio); hora < Number.parseInt(horaFim); hora++) {
-        //        const horaFormatada = hora.toString().padStart(2, "0")
-        //        const disponivel = !bookings.some((r) => {
-        //            const [inicio] = r.horario.split(" - ")[0].split(":")
-        //            return Number.parseInt(inicio) === hora && new Date(r.data).toDateString() === new Date().toDateString()
-        //        })
+    //        for (let hora = Number.parseInt(horaInicio); hora < Number.parseInt(horaFim); hora++) {
+    //            const horaFormatada = hora.toString().padStart(2, "0")
+    //            const disponivel = !bookings.some((r) => {
+    //                const [inicio] = r.horario.split(" - ")[0].split(":")
+    //                return Number.parseInt(inicio) === hora && new Date(r.data).toDateString() === new Date().toDateString()
+    //            })
 
-        //        horarios.push({
-        //            horario: `${horaFormatada}:00 - ${(hora + 1).toString().padStart(2, "0")}:00`,
-        //            disponivel,
-        //        })
-        //    }
+    //            horarios.push({
+    //                horario: `${horaFormatada}:00 - ${(hora + 1).toString().padStart(2, "0")}:00`,
+    //                disponivel,
+    //            })
+    //        }
 
-        return horarios
-    }
+    //    return horarios
+    //}
 
     const getFormattedBookingText = (booking: Booking) => {
         return `${new Date(booking.startTime).toLocaleDateString("pt-BR")} • ${getTimeFromDateString(booking.startTime)} - ${getTimeFromDateString(booking.endTime)}`
@@ -288,8 +288,12 @@ export default function CourtDetailsPage() {
                                     <Tabs defaultValue="info" className="mt-4">
                                         <TabsList className="mb-4">
                                             <TabsTrigger value="info">Informações</TabsTrigger>
-                                            <TabsTrigger value="fotos">Fotos</TabsTrigger>
-                                            <TabsTrigger value="horarios">Horários</TabsTrigger>
+                                            {
+                                                //<TabsTrigger value="fotos">Fotos</TabsTrigger>
+                                            }
+                                            {
+                                                //<TabsTrigger value="horarios">Horários</TabsTrigger>
+                                            }
                                             <TabsTrigger value="reservas">Reservas</TabsTrigger>
                                         </TabsList>
 
@@ -360,27 +364,29 @@ export default function CourtDetailsPage() {
                                             )}
                                         </TabsContent>
 
-                                        <TabsContent value="horarios">
-                                            <div className="space-y-4">
-                                                <h3 className="font-semibold">Disponibilidade para Hoje</h3>
-                                                {
-                                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                                        {gerarHorarios().map((slot, index) => (
-                                                            <div
-                                                                key={index}
-                                                                className={`p-3 rounded-md border text-center ${slot.disponivel
-                                                                    ? "border-green-200 bg-green-50 text-green-700"
-                                                                    : "border-gray-200 bg-gray-100 text-gray-500"
-                                                                    }`}
-                                                            >
-                                                                <div className="font-medium">{slot.horario}</div>
-                                                                <div className="text-xs mt-1">{slot.disponivel ? "Disponível" : "Reservado"}</div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                }
-                                            </div>
-                                        </TabsContent>
+                                        {
+                                            //<TabsContent value="horarios">
+                                            //    <div className="space-y-4">
+                                            //        <h3 className="font-semibold">Disponibilidade para Hoje</h3>
+                                            //
+                                            //            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                            //                {gerarHorarios().map((slot, index) => (
+                                            //                    <div
+                                            //                        key={index}
+                                            //                        className={`p-3 rounded-md border text-center ${slot.disponivel
+                                            //                            ? "border-green-200 bg-green-50 text-green-700"
+                                            //                            : "border-gray-200 bg-gray-100 text-gray-500"
+                                            //                            }`}
+                                            //                    >
+                                            //                        <div className="font-medium">{slot.horario}</div>
+                                            //                        <div className="text-xs mt-1">{slot.disponivel ? "Disponível" : "Reservado"}</div>
+                                            //                    </div>
+                                            //                ))}
+                                            //            </div>
+                                            //        }
+                                            //    </div>
+                                            //</TabsContent>
+                                        }
 
                                         <TabsContent value="reservas">
                                             {bookings.length > 0 ? (
@@ -462,18 +468,18 @@ export default function CourtDetailsPage() {
                                         Editar Quadra
                                     </Button>
 
-                                    <Button
-                                        variant="outline"
-                                        className="w-full"
-                                        onClick={() => {
-                                            // Aqui você poderia abrir um modal para configurar horários específicos
-                                            alert("Funcionalidade de configuração de horários será implementada em breve.")
-                                        }}
-                                    >
-                                        <Clock className="mr-2 h-4 w-4" />
-                                        Configurar Horários
-                                    </Button>
                                     {
+                                        //<Button
+                                        //    variant="outline"
+                                        //    className="w-full"
+                                        //    onClick={() => {
+                                        //        // Aqui você poderia abrir um modal para configurar horários específicos
+                                        //        alert("Funcionalidade de configuração de horários será implementada em breve.")
+                                        //    }}
+                                        //>
+                                        //    <Clock className="mr-2 h-4 w-4" />
+                                        //    Configurar Horários
+                                        //</Button>
                                         // TODO - Adicionar funcionalidade de estatísticas
                                         //<div className="pt-4 border-t">
                                         //    <h3 className="font-medium mb-3">Estatísticas</h3>
