@@ -159,7 +159,7 @@ export default function courtsPage() {
                                                                 </Link>
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem asChild>
-                                                                <Link href={`/admin/courts/${court.id}/editar`}>
+                                                                <Link href={`/admin/courts/${court.id}/edit`}>
                                                                     <Edit className="mr-2 h-4 w-4" />
                                                                     Editar
                                                                 </Link>

@@ -27,7 +27,7 @@ import { Booking, BookingApi, Court, CourtApi } from "@/lib/types"
 import { getTimeFromDateString, strToTitle } from "@/lib/utils"
 import { AxiosResponse } from "axios"
 
-export default function QuadraDetalhesPage() {
+export default function CourtDetailsPage() {
     const router = useRouter()
     const { toast } = useToast()
     const [court, setCourt] = useState<Court | null>(null)
@@ -247,7 +247,7 @@ export default function QuadraDetalhesPage() {
                                     </>
                                 )}
                             </Button>
-                            <Button variant="outline" onClick={() => router.push(`/admin/courts/${id}/editar`)}>
+                            <Button variant="outline" onClick={() => router.push(`/admin/courts/${id}/edit`)}>
                                 <Edit className="mr-2 h-4 w-4" />
                                 Editar
                             </Button>
