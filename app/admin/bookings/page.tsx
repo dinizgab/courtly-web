@@ -18,7 +18,7 @@ import { Booking, BookingApi } from "@/lib/types"
 import { getTimeFromDateString } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
 
-export default function ReservasPage() {
+export default function BookingsPage() {
     const [bookings, setBookings] = useState<Booking[]>([])
     const [searchTerm, setSearchTerm] = useState("")
     const [statusFilter, setStatusFilter] = useState("todas")
@@ -37,12 +37,12 @@ export default function ReservasPage() {
 
     const handleCancelar = (id: string) => {
         if (confirm("Tem certeza que deseja cancelar esta reserva?")) {
-            setBookings(bookings.map((b) => (b.id === id ? { ...b, status: "cancelada" } : b)))
+            setBookings(bookings.map((b) => (b.id === id ? { ...b, status: "cancelled" } : b)))
         }
     }
 
     const handleConfirmar = (id: string) => {
-        setBookings(bookings.map((b) => (b.id === id ? { ...b, status: "confirmada" } : b)))
+        setBookings(bookings.map((b) => (b.id === id ? { ...b, status: "confirmed" } : b)))
     }
 
     useEffect(() => {
@@ -92,8 +92,6 @@ export default function ReservasPage() {
     }
 
     const getTotalPrice = (booking: Booking) => {
-        console.log(booking)
-
         const startTime = new Date(booking.startTime)
         const endTime = new Date(booking.endTime)
         const durationInHours = (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60)
@@ -184,13 +182,13 @@ export default function ReservasPage() {
                                                                     Ver detalhes
                                                                 </Link>
                                                             </DropdownMenuItem>
-                                                            {booking.status === "pendente" && (
+                                                            {booking.status === "pending" && (
                                                                 <DropdownMenuItem onClick={() => handleConfirmar(booking.id)}>
                                                                     <CheckCircle className="mr-2 h-4 w-4" />
                                                                     Confirmar
                                                                 </DropdownMenuItem>
                                                             )}
-                                                            {booking.status !== "cancelada" && (
+                                                            {booking.status !== "cancelled" && (
                                                                 <DropdownMenuItem
                                                                     onClick={() => handleCancelar(booking.id)}
                                                                     className="text-red-600 focus:text-red-600"
