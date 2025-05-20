@@ -11,7 +11,6 @@ import { AdminSidebar } from "@/components/admin-sidebar"
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("overview")
 
-  // Dados simulados para o dashboard
   const stats = [
     {
       title: "Reservas Hoje",
