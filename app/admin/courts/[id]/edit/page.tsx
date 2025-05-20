@@ -23,6 +23,7 @@ import Image from "next/image"
 import api from "@/lib/axios"
 import { Court, CourtApi } from "@/lib/types"
 import { AxiosResponse } from "axios"
+import { getTimeFromDateString } from "@/lib/utils"
 
 const courtFormSchema = z.object({
     name: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),
@@ -76,8 +77,8 @@ export default function EditCourtPage() {
                         hourlyPrice: court.hourly_price,
                         isActive: court.is_active,
                         description: court.description,
-                        openingTime: court.opening_time,
-                        closingTime: court.closing_time,
+                        openingTime: getTimeFromDateString(court.opening_time),
+                        closingTime: getTimeFromDateString(court.closing_time),
                         capacity: court.capacity,
                         bookingsToday: 0,
                         photos: court.photos || [],
@@ -155,7 +156,7 @@ export default function EditCourtPage() {
                         description: `A quadra ${data.name} foi atualizada com sucesso.`,
                     })
 
-                    router.push(`/admin/quadras/${id}`)
+                    router.push(`/admin/courts/${id}`)
                 } else {
                     toast({
                         title: "Erro ao atualizar quadra",
@@ -210,7 +211,7 @@ export default function EditCourtPage() {
                 <AdminHeader title="Editar Quadra" />
                 <main className="p-6">
                     <div className="mb-6">
-                        <Button variant="outline" onClick={() => router.push(`/admin/quadras/${id}`)}>
+                        <Button variant="outline" onClick={() => router.push(`/admin/courts/${id}`)}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Voltar para detalhes
                         </Button>
