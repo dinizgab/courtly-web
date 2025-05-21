@@ -60,8 +60,6 @@ export default function CourtDetailsPage() {
                 })
 
                 await api.get(`/courts/${id}/bookings`).then((response: AxiosResponse<BookingApi[]>) => {
-                    const availableStatuses: Record<string, string> = { "confirmed": "confirmada", "pending": "pendente", "canceled": "cancelada" }
-
                     const bookings = response.data.map((booking: BookingApi) => ({
                         id: booking.id,
                         courtId: booking.court_id,
@@ -72,7 +70,7 @@ export default function CourtDetailsPage() {
                         startTime: booking.start_time,
                         endTime: booking.end_time,
                         verificationCode: booking.verification_code,
-                        status: availableStatuses[booking.status]
+                        status: booking.status
                     }))
 
                     setBookings(bookings)
