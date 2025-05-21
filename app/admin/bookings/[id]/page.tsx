@@ -23,9 +23,10 @@ import {
     AlertTriangle,
     Copy,
 } from "lucide-react"
-import { Booking, BookingApi, Court } from "@/lib/types"
+import { Booking, BookingApi } from "@/lib/types"
 import { formatBookingTime, getBookingTotalPrice } from "@/lib/utils"
 import api from "@/lib/axios"
+import { useAuth } from "@/app/contexts/auth-context"
 
 export default function BookingDetailsPage() {
     const router = useRouter()
@@ -34,12 +35,21 @@ export default function BookingDetailsPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false)
     const { id } = useParams() as { id: string }
+    const { token } = useAuth()
 
     useEffect(() => {
         const fetchBooking = async () => {
             setIsLoading(true)
             try {
-                const response = await api.get(`/bookings/${id}`)
+                const response = await api.get(`/api/bookings/${id}`,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        }
+                    }
+
+                )
 
                 if (response.status === 200) {
                     const bookingData: BookingApi = response.data
@@ -82,7 +92,7 @@ export default function BookingDetailsPage() {
         }
 
         fetchBooking()
-    }, [id, toast])
+    }, [id, toast, token])
 
     const handleCancelar = () => {
         if (confirm("Tem certeza que deseja cancelar esta reserva?")) {

@@ -27,7 +27,7 @@ export default function BookingsPage() {
     const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false)
     const [selectedBooking, setSelectedReservation] = useState<string | null>(null)
     const { toast } = useToast()
-    const { companyId } = useAuth()
+    const { companyId, token } = useAuth()
 
     const filteredBookings = bookings.filter(
         (b) =>
@@ -51,8 +51,13 @@ export default function BookingsPage() {
     }
 
     const handleVerificationSubmit = async (code: string): Promise<boolean> => {
-        const response = await api.patch(`/companies/${companyId}/bookings/${selectedBooking}/confirm`, {
+        const response = await api.patch(`/api/companies/${companyId}/bookings/${selectedBooking}/confirm`, {
             verification_code: code,
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
         })
 
         if (response.status === 200) {
@@ -77,26 +82,32 @@ export default function BookingsPage() {
 
     useEffect(() => {
         const fetchBookings = async () => {
-            if (!companyId) return
+            if (!companyId || !token) return
 
             try {
-                await api.get(`/companies/${companyId}/bookings`)
-                    .then((res: AxiosResponse<BookingApi[]>) => {
-                        const parsedBookings = res.data.map((booking: BookingApi) => ({
-                            id: booking.id,
-                            courtId: booking.court_id,
-                            startTime: booking.start_time,
-                            endTime: booking.end_time,
-                            status: booking.status,
-                            guestName: booking.guest_name,
-                            guestEmail: booking.guest_email,
-                            guestPhone: booking.guest_phone,
-                            verificationCode: booking.verification_code,
-                            court: { name: booking.court?.name, hourlyPrice: booking.court?.hourly_price, }
-                        } as Booking))
+                const response = await api.get(`/api/companies/${companyId}/bookings`,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
+                        }
+                    }
+                )
 
-                        setBookings(parsedBookings)
-                    })
+                const parsedBookings = response.data.map((booking: BookingApi) => ({
+                    id: booking.id,
+                    courtId: booking.court_id,
+                    startTime: booking.start_time,
+                    endTime: booking.end_time,
+                    status: booking.status,
+                    guestName: booking.guest_name,
+                    guestEmail: booking.guest_email,
+                    guestPhone: booking.guest_phone,
+                    verificationCode: booking.verification_code,
+                    court: { name: booking.court?.name, hourlyPrice: booking.court?.hourly_price, }
+                } as Booking))
+
+                setBookings(parsedBookings)
             } catch (error) {
                 toast({
                     title: "Erro ao excluir quadra",
@@ -108,7 +119,7 @@ export default function BookingsPage() {
         }
 
         fetchBookings()
-    }, [companyId])
+    }, [companyId, token])
 
     const getStatusBadge = (status: string) => {
         switch (status) {
