@@ -24,7 +24,7 @@ import {
 import { useToast } from "@/components/ui/use-toast"
 import api from "@/lib/axios"
 import { Booking, BookingApi, Court, CourtApi } from "@/lib/types"
-import { getTimeFromDateString, strToTitle } from "@/lib/utils"
+import { getBookingTotalPrice, getTimeFromDateString, strToTitle } from "@/lib/utils"
 import { AxiosResponse } from "axios"
 
 export default function CourtDetailsPage() {
@@ -132,11 +132,11 @@ export default function CourtDetailsPage() {
 
     const getStatusBadge = (status: string) => {
         switch (status) {
-            case "confirmada":
+            case "confirmed":
                 return <Badge className="bg-green-500 hover:bg-green-600">Confirmada</Badge>
-            case "pendente":
+            case "pending":
                 return <Badge className="bg-yellow-500 hover:bg-yellow-600">Pendente</Badge>
-            case "cancelada":
+            case "cancelled":
                 return <Badge className="bg-red-500 hover:bg-red-600">Cancelada</Badge>
             default:
                 return <Badge>{status}</Badge>
@@ -168,13 +168,6 @@ export default function CourtDetailsPage() {
 
     const getFormattedBookingText = (booking: Booking) => {
         return `${new Date(booking.startTime).toLocaleDateString("pt-BR")} • ${getTimeFromDateString(booking.startTime)} - ${getTimeFromDateString(booking.endTime)}`
-    }
-
-    const getTotalPrice = (booking: Booking) => {
-        const startTime = new Date(booking.startTime)
-        const endTime = new Date(booking.endTime)
-        const durationInHours = (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60)
-        return (court?.hourlyPrice || 0) * durationInHours
     }
 
     // TODO - Componentize this page
@@ -410,7 +403,7 @@ export default function CourtDetailsPage() {
                                                                     {
                                                                         <div className="flex items-center">
                                                                             <DollarSign className="h-4 w-4 text-green-600 mr-1" />
-                                                                            <span className="font-medium">R$ {getTotalPrice(booking).toFixed(2)}</span>
+                                                                            <span className="font-medium">R$ {getBookingTotalPrice(booking).toFixed(2)}</span>
                                                                         </div>
                                                                     }
                                                                     <div className="mt-1">{getStatusBadge(booking.status)}</div>
@@ -421,7 +414,7 @@ export default function CourtDetailsPage() {
                                                     <Button
                                                         variant="outline"
                                                         className="w-full mt-4"
-                                                        onClick={() => router.push("/admin/reservas?court=" + court.id)}
+                                                        onClick={() => router.push("/admin/bookings?court=" + court.id)}
                                                     >
                                                         Ver todas as reservas
                                                     </Button>
@@ -433,7 +426,7 @@ export default function CourtDetailsPage() {
                                                     <Button
                                                         variant="outline"
                                                         className="mt-4"
-                                                        onClick={() => router.push("/admin/reservas/nova?quadra=" + court.id)}
+                                                        onClick={() => router.push("/admin/bookings/nova?court=" + court.id)}
                                                     >
                                                         Criar nova reserva
                                                     </Button>
