@@ -24,6 +24,7 @@ import api from "@/lib/axios"
 import { Court, CourtApi } from "@/lib/types"
 import { AxiosResponse } from "axios"
 import { getTimeFromDateString } from "@/lib/utils"
+import { useAuth } from "@/app/contexts/auth-context"
 
 const courtFormSchema = z.object({
     name: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),
@@ -47,6 +48,7 @@ export default function EditCourtPage() {
     const [fotosExistentes, setFotosExistentes] = useState<string[]>([])
     const [fotosParaRemover, setFotosParaRemover] = useState<string[]>([])
     const { id } = useParams() as { id: string }
+    const { token, companyId } = useAuth()
 
     const form = useForm<CourtFormValues>({
         resolver: zodResolver(courtFormSchema),
@@ -62,41 +64,47 @@ export default function EditCourtPage() {
         },
     })
 
-    // Fetch court data
     useEffect(() => {
         const fetchCourt = async () => {
             setIsLoading(true)
             try {
-                await api.get(`/courts/${id}`).then((response: AxiosResponse<CourtApi>) => {
-                    const court: CourtApi = response.data
-                    const parsedCourt: Court = {
-                        id: court.id,
-                        companyId: court.company_id,
-                        name: court.name,
-                        sportType: court.sport_type,
-                        hourlyPrice: court.hourly_price,
-                        isActive: court.is_active,
-                        description: court.description,
-                        openingTime: getTimeFromDateString(court.opening_time),
-                        closingTime: getTimeFromDateString(court.closing_time),
-                        capacity: court.capacity,
-                        bookingsToday: 0,
-                        photos: court.photos || [],
-                    }
-
-                    form.reset({
-                        name: parsedCourt.name,
-                        sportType: parsedCourt.sportType,
-                        hourlyPrice: parsedCourt.hourlyPrice,
-                        capacity: parsedCourt.capacity,
-                        description: parsedCourt.description || "",
-                        openingTime: parsedCourt.openingTime,
-                        closingTime: parsedCourt.closingTime,
-                        isActive: parsedCourt.isActive
+                if (!token) return
+                const response = await api.get(`/api/courts/${id}`,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        }
                     })
 
-                    setFotosExistentes(parsedCourt.photos)
+                const court: CourtApi = response.data
+                const parsedCourt: Court = {
+                    id: court.id,
+                    companyId: court.company_id,
+                    name: court.name,
+                    sportType: court.sport_type,
+                    hourlyPrice: court.hourly_price,
+                    isActive: court.is_active,
+                    description: court.description,
+                    openingTime: getTimeFromDateString(court.opening_time),
+                    closingTime: getTimeFromDateString(court.closing_time),
+                    capacity: court.capacity,
+                    bookingsToday: 0,
+                    photos: court.photos || [],
+                }
+
+                form.reset({
+                    name: parsedCourt.name,
+                    sportType: parsedCourt.sportType,
+                    hourlyPrice: parsedCourt.hourlyPrice,
+                    capacity: parsedCourt.capacity,
+                    description: parsedCourt.description || "",
+                    openingTime: parsedCourt.openingTime,
+                    closingTime: parsedCourt.closingTime,
+                    isActive: parsedCourt.isActive
                 })
+
+                setFotosExistentes(parsedCourt.photos)
             } catch (error) {
                 console.error("Erro ao buscar dados da quadra:", error)
                 toast({
@@ -111,19 +119,17 @@ export default function EditCourtPage() {
         }
 
         fetchCourt()
-    }, [id, form, toast, router])
+    }, [id, form, toast, router, token])
 
     const onSubmit = async (data: CourtFormValues) => {
         try {
             setIsSubmitting(true)
-
             const formData = new FormData()
 
             formData.append("court_info", JSON.stringify(
                 {
                     name: data.name,
-                    // TODO - Add dynamic company id
-                    company_id: "11111111-1111-1111-1111-111111111111",
+                    company_id: companyId,
                     sport_type: data.sportType,
                     hourly_price: data.hourlyPrice,
                     capacity: data.capacity,
@@ -145,26 +151,27 @@ export default function EditCourtPage() {
             //    })
             //}
 
-            await api.put(`/courts/${id}`, formData, {
+            const response = await api.put(`/api/courts/${id}`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
+                    "Authorization": `Bearer ${token}`,
                 },
-            }).then((response: AxiosResponse<CourtApi>) => {
-                if (response.status === 200) {
-                    toast({
-                        title: "Quadra atualizada com sucesso!",
-                        description: `A quadra ${data.name} foi atualizada com sucesso.`,
-                    })
-
-                    router.push(`/admin/courts/${id}`)
-                } else {
-                    toast({
-                        title: "Erro ao atualizar quadra",
-                        description: "Não foi possível atualizar a quadra. Tente novamente mais tarde.",
-                        variant: "destructive",
-                    })
-                }
             })
+
+            if (response.status === 200) {
+                toast({
+                    title: "Quadra atualizada com sucesso!",
+                    description: `A quadra ${data.name} foi atualizada com sucesso.`,
+                })
+
+                router.push(`/admin/courts/${id}`)
+            } else {
+                toast({
+                    title: "Erro ao atualizar quadra",
+                    description: "Não foi possível atualizar a quadra. Tente novamente mais tarde.",
+                    variant: "destructive",
+                })
+            }
         } catch (error) {
             console.error("Erro ao atualizar quadra:", error)
             toast({
