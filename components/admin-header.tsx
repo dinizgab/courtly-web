@@ -14,6 +14,7 @@ import {
 import { Bell, Calendar, LogOut, Menu, User } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { AdminSidebar } from "./admin-sidebar"
+import AuthService from "@/lib/auth-service"
 
 interface AdminHeaderProps {
   title: string
@@ -78,7 +79,7 @@ export function AdminHeader({ title }: AdminHeaderProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href="/" className="text-red-500">
-                <LogOut className="mr-2 h-4 w-4" />
+                <LogOut className="mr-2 h-4 w-4" onClick={() => AuthService.logout()}/>
                 Sair
               </Link>
             </DropdownMenuItem>
