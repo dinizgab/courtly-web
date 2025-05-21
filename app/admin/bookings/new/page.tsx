@@ -63,10 +63,9 @@ export default function NovaReservaPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulação de envio para API
     setTimeout(() => {
       setIsSubmitting(false)
-      router.push("/admin/reservas")
+      router.push("/admin/bookings")
     }, 1000)
   }
 
@@ -165,7 +164,7 @@ export default function NovaReservaPage() {
                 </div>
               </CardContent>
               <CardFooter className="flex justify-between">
-                <Button type="button" variant="outline" onClick={() => router.push("/admin/reservas")}>
+                <Button type="button" variant="outline" onClick={() => router.push("/admin/bookings")}>
                   Cancelar
                 </Button>
                 <Button

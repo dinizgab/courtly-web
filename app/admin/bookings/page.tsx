@@ -15,21 +15,23 @@ import { AdminSidebar } from "@/components/admin-sidebar"
 import api from "@/lib/axios"
 import { AxiosResponse } from "axios"
 import { Booking, BookingApi } from "@/lib/types"
-import { getTimeFromDateString } from "@/lib/utils"
+import { formatBookingTime } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
+import { VerificationCodeModal } from "@/components/verification-code-modal"
 
 export default function BookingsPage() {
     const [bookings, setBookings] = useState<Booking[]>([])
     const [searchTerm, setSearchTerm] = useState("")
     const [statusFilter, setStatusFilter] = useState("todas")
+    const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false)
+    const [selectedBooking, setSelectedReservation] = useState<string | null>(null)
     const { toast } = useToast()
 
     const filteredBookings = bookings.filter(
         (b) =>
             (statusFilter === "todas" || b.status === statusFilter) &&
             (b.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                // TODO - Change courtId to courtName
-                b.courtId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                b.court?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 b.guestEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 b.guestPhone.toLowerCase().includes(searchTerm.toLowerCase())
             ),
@@ -41,8 +43,34 @@ export default function BookingsPage() {
         }
     }
 
-    const handleConfirmar = (id: string) => {
-        setBookings(bookings.map((b) => (b.id === id ? { ...b, status: "confirmed" } : b)))
+    const handleConfirmClick = (id: string) => {
+        setSelectedReservation(id)
+        setIsVerificationModalOpen(true)
+    }
+
+    const handleVerificationSubmit = async (code: string): Promise<boolean> => {
+        const response = await api.patch(`/companies/${"11111111-1111-1111-1111-111111111111"}/bookings/${selectedBooking}/confirm`, {
+            verification_code: code,
+        })
+
+        if (response.status === 200) {
+            setBookings(bookings.map((r) => (r.id === selectedBooking ? { ...r, status: "confirmed" } : r)))
+
+            toast({
+                title: "Reserva confirmada",
+                description: "A reserva foi confirmada com sucesso.",
+            })
+
+            return true
+        } else {
+            toast({
+                title: "Código inválido",
+                description: "O código de verificação informado é inválido.",
+                variant: "destructive",
+            })
+
+            return false
+        }
     }
 
     useEffect(() => {
@@ -121,9 +149,9 @@ export default function BookingsPage() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="todas">Todas</SelectItem>
-                                    <SelectItem value="confirmada">Confirmadas</SelectItem>
-                                    <SelectItem value="pendente">Pendentes</SelectItem>
-                                    <SelectItem value="cancelada">Canceladas</SelectItem>
+                                    <SelectItem value="confirmed">Confirmadas</SelectItem>
+                                    <SelectItem value="pending">Pendentes</SelectItem>
+                                    <SelectItem value="cancelled">Canceladas</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -164,7 +192,7 @@ export default function BookingsPage() {
                                                 <TableCell>{booking.guestEmail}</TableCell>
                                                 <TableCell>{booking.court?.name}</TableCell>
                                                 <TableCell>{new Date(booking.startTime).toLocaleDateString("pt-BR")}</TableCell>
-                                                <TableCell>{`${getTimeFromDateString(booking.startTime)} - ${getTimeFromDateString(booking.endTime)}`}</TableCell>
+                                                <TableCell>{formatBookingTime(booking)}</TableCell>
                                                 <TableCell className="text-right">R$ {getTotalPrice(booking).toFixed(2)}</TableCell>
                                                 <TableCell>{getStatusBadge(booking.status)}</TableCell>
                                                 <TableCell className="text-right">
@@ -183,7 +211,7 @@ export default function BookingsPage() {
                                                                 </Link>
                                                             </DropdownMenuItem>
                                                             {booking.status === "pending" && (
-                                                                <DropdownMenuItem onClick={() => handleConfirmar(booking.id)}>
+                                                                <DropdownMenuItem onClick={() => handleConfirmClick(booking.id)}>
                                                                     <CheckCircle className="mr-2 h-4 w-4" />
                                                                     Confirmar
                                                                 </DropdownMenuItem>
@@ -209,6 +237,12 @@ export default function BookingsPage() {
                     </Card>
                 </main>
             </div>
+            <VerificationCodeModal
+                isOpen={isVerificationModalOpen}
+                onClose={() => setIsVerificationModalOpen(false)}
+                onConfirm={handleVerificationSubmit}
+                reservationId={selectedBooking || ""}
+            />
         </div>
     )
 }
