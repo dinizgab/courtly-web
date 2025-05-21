@@ -32,6 +32,9 @@ const signupFormSchema = z
       .regex(/[a-z]/, { message: "Senha deve conter pelo menos uma letra minúscula" })
       .regex(/[0-9]/, { message: "Senha deve conter pelo menos um número" }),
     confirmPassword: z.string(),
+    street: z.string().min(3, { message: "Rua é obrigatória" }),
+    number: z.string().min(1, { message: "Número é obrigatório" }),
+    neighborhood: z.string().min(3, { message: "Bairro é obrigatório" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "As senhas não coincidem",
@@ -55,6 +58,9 @@ export default function SignupPage() {
       cnpj: "",
       password: "",
       confirmPassword: "",
+      street: "",
+      number: "",
+      neighborhood: "",
     },
   })
 
@@ -68,6 +74,7 @@ export default function SignupPage() {
         companyName: data.companyName,
         cnpj: cleanedCNPJ,
         passworc: data.password,
+        address: `${data.street}, ${data.number} - ${data.neighborhood}`,
       }
 
       console.log("Dados do cadastro:", cadastroData)
@@ -170,6 +177,55 @@ export default function SignupPage() {
                       </FormItem>
                     )}
                   />
+
+                  <div className="space-y-4 mt-4">
+                    <h3 className="text-md font-medium">Endereço</h3>
+                    <div className="grid grid-cols-1 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="street"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Rua</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Nome da rua" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="number"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Número</FormLabel>
+                              <FormControl>
+                                <Input placeholder="123" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="neighborhood"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Bairro</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Nome do bairro" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+                  </div>
 
                   <FormField
                     control={form.control}
