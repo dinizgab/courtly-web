@@ -70,7 +70,7 @@ export function AdminHeader({ title }: AdminHeaderProps) {
             <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/admin/perfil">Perfil</Link>
+              <Link href="/admin/profile">Perfil</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/admin/configuracoes">Configurações</Link>
