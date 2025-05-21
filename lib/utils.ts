@@ -29,5 +29,5 @@ export function getBookingTotalPrice(booking: Booking) {
 }
 
 export function formatBookingTime(booking: Booking) {
-return `${getTimeFromDateString(booking.startTime)} - ${getTimeFromDateString(booking.endTime)}`;
+    return `${getTimeFromDateString(booking.startTime)} - ${getTimeFromDateString(booking.endTime)}`;
 }
