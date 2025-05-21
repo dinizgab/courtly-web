@@ -11,12 +11,13 @@ import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/components/ui/use-toast"
-import { Loader2, Eye, EyeOff, Save } from "lucide-react"
+import { Loader2, Save } from "lucide-react"
 import { AdminHeader } from "@/components/admin-header"
 import { AdminSidebar } from "@/components/admin-sidebar"
 import { validateCNPJ } from "@/lib/validator"
 import api from "@/lib/axios"
 import { useAuth } from "@/app/contexts/auth-context"
+import { Company } from "@/lib/types"
 
 const profileFormSchema = z.object({
     email: z.string().email({ message: "Email inválido" }),
@@ -83,6 +84,22 @@ export default function PerfilPage() {
     //    },
     //})
 
+    const formatPhone = (value: string) => {
+        const phoneNums = value.replace(/[^\d]/g, "")
+
+        if (phoneNums.length <= 10) {
+            return phoneNums
+                .replace(/^(\d{2})(\d)/, "($1) $2")
+                .replace(/(\d{4})(\d)/, "$1-$2")
+                .substring(0, 14)
+        } else {
+            return phoneNums
+                .replace(/^(\d{2})(\d)/, "($1) $2")
+                .replace(/(\d{5})(\d)/, "$1-$2")
+                .substring(0, 15)
+        }
+    }
+
     const onSubmitUpdates = async (data: ProfileFormValues) => {
         try {
             setIsSubmittingPerfil(true)
@@ -96,7 +113,7 @@ export default function PerfilPage() {
                 address: `${data.street}, ${data.number} - ${data.neighborhood}`
             }
 
-            const response = api.put("/api/companies/profile/update", profileData, {
+            const response = await api.put(`/api/companies/${companyId}`, profileData, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
@@ -173,15 +190,18 @@ export default function PerfilPage() {
                 })
 
                 if (response.status === 200) {
-                    const { email, name, cnpj, phone, address } = response.data
+                    const { name, cnpj, phone, address, email } = response.data as Company
+                    const [street, numberAndNeighborhood] = address.split(",").map((item) => item.trim())
+                    const [number, neighborhood] = numberAndNeighborhood.split("-").map((item) => item.trim())
+
                     profileForm.reset({
                         email,
                         name,
                         cnpj,
                         phone,
-                        street: address.split(",")[0],
-                        number: address.split(",")[1],
-                        neighborhood: address.split(",")[2],
+                        street,
+                        number,
+                        neighborhood,
                     })
                 }
             } catch (error) {
@@ -192,7 +212,7 @@ export default function PerfilPage() {
         fetchProfile()
     }, [token, companyId])
 
-    const formatarCNPJ = (value: string) => {
+    const formatCNPJ = (value: string) => {
         const cnpjNumerico = value.replace(/[^\d]/g, "")
 
         return cnpjNumerico
@@ -266,7 +286,7 @@ export default function PerfilPage() {
                                                         <FormItem>
                                                             <FormLabel>CNPJ</FormLabel>
                                                             <FormControl>
-                                                                <Input placeholder="XX.XXX.XXX/XXXX-XX" {...field} value={formatarCNPJ(field.value)} />
+                                                                <Input placeholder="XX.XXX.XXX/XXXX-XX" {...field} value={formatCNPJ(field.value)} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
@@ -287,22 +307,57 @@ export default function PerfilPage() {
                                                     )}
                                                 />
                                             </div>
-                                            {
-                                                // TODO - Add address fields
-                                            }
-                                            <FormField
-                                                control={profileForm.control}
-                                                name="street"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Endereço</FormLabel>
-                                                        <FormControl>
-                                                            <Input placeholder="Endereço completo" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
+
+                                            <div className="space-y-4 mt-4">
+                                                <h3 className="text-md font-medium">Endereço</h3>
+                                                <div className="grid grid-cols-1 gap-4">
+                                                    <FormField
+                                                        control={profileForm.control}
+                                                        name="street"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Rua</FormLabel>
+                                                                <FormControl>
+                                                                    <div className="flex">
+                                                                        <Input placeholder="Nome da rua" {...field} />
+                                                                    </div>
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <FormField
+                                                            control={profileForm.control}
+                                                            name="number"
+                                                            render={({ field }) => (
+                                                                <FormItem>
+                                                                    <FormLabel>Número</FormLabel>
+                                                                    <FormControl>
+                                                                        <Input placeholder="123" {...field} />
+                                                                    </FormControl>
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                            )}
+                                                        />
+
+                                                        <FormField
+                                                            control={profileForm.control}
+                                                            name="neighborhood"
+                                                            render={({ field }) => (
+                                                                <FormItem>
+                                                                    <FormLabel>Bairro</FormLabel>
+                                                                    <FormControl>
+                                                                        <Input placeholder="Nome do bairro" {...field} />
+                                                                    </FormControl>
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                            )}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </CardContent>
                                         <CardFooter>
                                             <Button type="submit" className="bg-green-600 hover:bg-green-700" disabled={isSubmittingPerfil}>

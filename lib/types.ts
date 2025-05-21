@@ -13,6 +13,15 @@ export type Court = {
     photos: string[]
 }
 
+export type Company = {
+    id: string
+    name: string
+    cnpj: string
+    address: string
+    phone: string
+    email: string
+}
+
 export type CourtApi = {
     id: string
     company_id: string
@@ -75,4 +84,3 @@ export interface AuthResponse {
     message: string
     token: string
 }
-
