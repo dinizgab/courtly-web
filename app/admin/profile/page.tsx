@@ -14,60 +14,8 @@ import { useToast } from "@/components/ui/use-toast"
 import { Loader2, Eye, EyeOff, Save } from "lucide-react"
 import { AdminHeader } from "@/components/admin-header"
 import { AdminSidebar } from "@/components/admin-sidebar"
+import { validateCNPJ } from "@/lib/validator"
 
-// Função para validar CNPJ
-function validarCNPJ(cnpj: string) {
-  cnpj = cnpj.replace(/[^\d]/g, "")
-
-  if (cnpj.length !== 14) return false
-
-  // Elimina CNPJs inválidos conhecidos
-  if (
-    cnpj === "00000000000000" ||
-    cnpj === "11111111111111" ||
-    cnpj === "22222222222222" ||
-    cnpj === "33333333333333" ||
-    cnpj === "44444444444444" ||
-    cnpj === "55555555555555" ||
-    cnpj === "66666666666666" ||
-    cnpj === "77777777777777" ||
-    cnpj === "88888888888888" ||
-    cnpj === "99999999999999"
-  )
-    return false
-
-  // Valida DVs
-  let tamanho = cnpj.length - 2
-  let numeros = cnpj.substring(0, tamanho)
-  const digitos = cnpj.substring(tamanho)
-  let soma = 0
-  let pos = tamanho - 7
-
-  for (let i = tamanho; i >= 1; i--) {
-    soma += Number(numeros.charAt(tamanho - i)) * pos--
-    if (pos < 2) pos = 9
-  }
-
-  let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11)
-  if (resultado !== Number(digitos.charAt(0))) return false
-
-  tamanho = tamanho + 1
-  numeros = cnpj.substring(0, tamanho)
-  soma = 0
-  pos = tamanho - 7
-
-  for (let i = tamanho; i >= 1; i--) {
-    soma += Number(numeros.charAt(tamanho - i)) * pos--
-    if (pos < 2) pos = 9
-  }
-
-  resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11)
-  if (resultado !== Number(digitos.charAt(1))) return false
-
-  return true
-}
-
-// Schema de validação do formulário de perfil
 const perfilFormSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
   nomeEmpresa: z.string().min(3, { message: "Nome da empresa deve ter pelo menos 3 caracteres" }),
@@ -75,7 +23,7 @@ const perfilFormSchema = z.object({
     .string()
     .min(14, { message: "CNPJ deve ter 14 dígitos" })
     .max(18, { message: "CNPJ deve ter 14 dígitos" })
-    .refine((cnpj) => validarCNPJ(cnpj), { message: "CNPJ inválido" }),
+    .refine((cnpj) => validateCNPJ(cnpj), { message: "CNPJ inválido" }),
   telefone: z.string().optional(),
   endereco: z.string().optional(),
 })

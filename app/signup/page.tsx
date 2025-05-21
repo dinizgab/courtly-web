@@ -14,116 +14,60 @@ import { useToast } from "@/components/ui/use-toast"
 import { Loader2, ArrowLeft, Eye, EyeOff } from "lucide-react"
 import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
+import { validateCNPJ } from "@/lib/validator"
 
-// Função para validar CNPJ
-function validarCNPJ(cnpj: string) {
-  cnpj = cnpj.replace(/[^\d]/g, "")
-
-  if (cnpj.length !== 14) return false
-
-  // Elimina CNPJs inválidos conhecidos
-  if (
-    cnpj === "00000000000000" ||
-    cnpj === "11111111111111" ||
-    cnpj === "22222222222222" ||
-    cnpj === "33333333333333" ||
-    cnpj === "44444444444444" ||
-    cnpj === "55555555555555" ||
-    cnpj === "66666666666666" ||
-    cnpj === "77777777777777" ||
-    cnpj === "88888888888888" ||
-    cnpj === "99999999999999"
-  )
-    return false
-
-  // Valida DVs
-  let tamanho = cnpj.length - 2
-  let numeros = cnpj.substring(0, tamanho)
-  const digitos = cnpj.substring(tamanho)
-  let soma = 0
-  let pos = tamanho - 7
-
-  for (let i = tamanho; i >= 1; i--) {
-    soma += Number(numeros.charAt(tamanho - i)) * pos--
-    if (pos < 2) pos = 9
-  }
-
-  let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11)
-  if (resultado !== Number(digitos.charAt(0))) return false
-
-  tamanho = tamanho + 1
-  numeros = cnpj.substring(0, tamanho)
-  soma = 0
-  pos = tamanho - 7
-
-  for (let i = tamanho; i >= 1; i--) {
-    soma += Number(numeros.charAt(tamanho - i)) * pos--
-    if (pos < 2) pos = 9
-  }
-
-  resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11)
-  if (resultado !== Number(digitos.charAt(1))) return false
-
-  return true
-}
-
-// Schema de validação do formulário
-const cadastroFormSchema = z
+const signupFormSchema = z
   .object({
     email: z.string().email({ message: "Email inválido" }),
-    nomeEmpresa: z.string().min(3, { message: "Nome da empresa deve ter pelo menos 3 caracteres" }),
+    companyName: z.string().min(3, { message: "Nome da empresa deve ter pelo menos 3 caracteres" }),
     cnpj: z
       .string()
       .min(14, { message: "CNPJ deve ter 14 dígitos" })
       .max(18, { message: "CNPJ deve ter 14 dígitos" })
-      .refine((cnpj) => validarCNPJ(cnpj), { message: "CNPJ inválido" }),
-    senha: z
+      .refine((cnpj) => validateCNPJ(cnpj), { message: "CNPJ inválido" }),
+    password: z
       .string()
       .min(8, { message: "Senha deve ter pelo menos 8 caracteres" })
       .regex(/[A-Z]/, { message: "Senha deve conter pelo menos uma letra maiúscula" })
       .regex(/[a-z]/, { message: "Senha deve conter pelo menos uma letra minúscula" })
       .regex(/[0-9]/, { message: "Senha deve conter pelo menos um número" }),
-    confirmarSenha: z.string(),
+    confirmPassword: z.string(),
   })
-  .refine((data) => data.senha === data.confirmarSenha, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "As senhas não coincidem",
     path: ["confirmarSenha"],
   })
 
-type CadastroFormValues = z.infer<typeof cadastroFormSchema>
+type SignupFormValues = z.infer<typeof signupFormSchema>
 
-export default function CadastroPage() {
+export default function SignupPage() {
   const router = useRouter()
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [mostrarSenha, setMostrarSenha] = useState(false)
-  const [mostrarConfirmacaoSenha, setMostrarConfirmacaoSenha] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-  // Inicializar o formulário
-  const form = useForm<CadastroFormValues>({
-    resolver: zodResolver(cadastroFormSchema),
+  const form = useForm<SignupFormValues>({
+    resolver: zodResolver(signupFormSchema),
     defaultValues: {
       email: "",
-      nomeEmpresa: "",
+      companyName: "",
       cnpj: "",
-      senha: "",
-      confirmarSenha: "",
+      password: "",
+      confirmPassword: "",
     },
   })
 
-  const onSubmit = async (data: CadastroFormValues) => {
+  const onSubmit = async (data: SignupFormValues) => {
     try {
       setIsSubmitting(true)
+      const cleanedCNPJ = data.cnpj.replace(/[^\d]/g, "")
 
-      // Formatar CNPJ para armazenamento (remover caracteres não numéricos)
-      const cnpjFormatado = data.cnpj.replace(/[^\d]/g, "")
-
-      // Dados do cadastro
       const cadastroData = {
         email: data.email,
-        nomeEmpresa: data.nomeEmpresa,
-        cnpj: cnpjFormatado,
-        senha: data.senha, // Em produção, isso seria hasheado no backend
+        companyName: data.companyName,
+        cnpj: cleanedCNPJ,
+        passworc: data.password,
       }
 
       console.log("Dados do cadastro:", cadastroData)
@@ -151,18 +95,15 @@ export default function CadastroPage() {
     }
   }
 
-  // Função para formatar CNPJ enquanto o usuário digita
-  const formatarCNPJ = (value: string) => {
-    // Remove caracteres não numéricos
-    const cnpjNumerico = value.replace(/[^\d]/g, "")
+  const formatCNPJ = (value: string) => {
+    const cleanedCNPJ = value.replace(/[^\d]/g, "")
 
-    // Aplica a máscara do CNPJ: XX.XXX.XXX/XXXX-XX
-    return cnpjNumerico
+    return cleanedCNPJ
       .replace(/^(\d{2})(\d)/, "$1.$2")
       .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
       .replace(/\.(\d{3})(\d)/, ".$1/$2")
       .replace(/(\d{4})(\d)/, "$1-$2")
-      .substring(0, 18) // Limita o tamanho máximo
+      .substring(0, 18)
   }
 
   return (
@@ -204,7 +145,7 @@ export default function CadastroPage() {
 
                   <FormField
                     control={form.control}
-                    name="nomeEmpresa"
+                    name="companyName"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Nome da Empresa</FormLabel>
@@ -223,7 +164,7 @@ export default function CadastroPage() {
                       <FormItem>
                         <FormLabel>CNPJ</FormLabel>
                         <FormControl>
-                          <Input placeholder="XX.XXX.XXX/XXXX-XX" {...field} value={formatarCNPJ(field.value)} />
+                          <Input placeholder="XX.XXX.XXX/XXXX-XX" {...field} value={formatCNPJ(field.value)} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -232,14 +173,14 @@ export default function CadastroPage() {
 
                   <FormField
                     control={form.control}
-                    name="senha"
+                    name="password"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Senha</FormLabel>
                         <div className="relative">
                           <FormControl>
                             <Input
-                              type={mostrarSenha ? "text" : "password"}
+                              type={showPassword ? "text" : "password"}
                               placeholder="Crie uma senha segura"
                               {...field}
                             />
@@ -249,9 +190,8 @@ export default function CadastroPage() {
                             variant="ghost"
                             size="icon"
                             className="absolute right-0 top-0 h-full px-3"
-                            onClick={() => setMostrarSenha(!mostrarSenha)}
-                          >
-                            {mostrarSenha ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            onClick={() => setShowPassword(!showPassword)}>
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                           </Button>
                         </div>
                         <FormMessage />
@@ -265,14 +205,14 @@ export default function CadastroPage() {
 
                   <FormField
                     control={form.control}
-                    name="confirmarSenha"
+                    name="confirmPassword"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Confirmar Senha</FormLabel>
                         <div className="relative">
                           <FormControl>
                             <Input
-                              type={mostrarConfirmacaoSenha ? "text" : "password"}
+                              type={showConfirmPassword ? "text" : "password"}
                               placeholder="Confirme sua senha"
                               {...field}
                             />
@@ -282,9 +222,9 @@ export default function CadastroPage() {
                             variant="ghost"
                             size="icon"
                             className="absolute right-0 top-0 h-full px-3"
-                            onClick={() => setMostrarConfirmacaoSenha(!mostrarConfirmacaoSenha)}
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                           >
-                            {mostrarConfirmacaoSenha ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                           </Button>
                         </div>
                         <FormMessage />
@@ -317,6 +257,6 @@ export default function CadastroPage() {
       </div>
 
       <GuestFooter />
-    </div>
+    </div >
   )
 }
