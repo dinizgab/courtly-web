@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -14,6 +14,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
 import api from "@/lib/axios"
+import { useAuth } from "@/app/contexts/auth-context"
+import { Checkbox } from "@radix-ui/react-checkbox"
 
 export default function LoginPage() {
     const router = useRouter()
@@ -22,6 +24,14 @@ export default function LoginPage() {
     const [error, setError] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [mostrarSenha, setMostrarSenha] = useState(false)
+    const [rememberMe, setRememberMe] = useState(false)
+    const { login, isAuthenticated, companyId } = useAuth()
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.push("/admin/dashboard")
+        }
+    }, [isAuthenticated, router])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -32,6 +42,21 @@ export default function LoginPage() {
             email,
             password,
         })
+
+        try {
+            await login(
+                email,
+                password,
+                rememberMe,
+            )
+
+            router.push("/admin/dashboard")
+        }
+        catch (error) {
+            setError(error instanceof Error ? error.message : "Email ou senha inválidos")
+        } finally {
+            setIsLoading(false)
+        }
 
         if (response.status === 200) {
             router.push("/admin/dashboard")
@@ -93,10 +118,20 @@ export default function LoginPage() {
                                     </Button>
                                 </div>
                             </div>
-                            <div className="text-right">
-                                <Link href="/recuperar-senha" className="text-sm text-green-600 hover:underline">
-                                    Esqueceu sua senha?
-                                </Link>
+                            <div className="flex items-center space-x-2">
+                                <Checkbox
+                                    id="rememberMe"
+                                    checked={rememberMe}
+                                    onCheckedChange={(checked) => setRememberMe(checked === true)}
+                                />
+                                <Label htmlFor="rememberMe" className="text-sm font-normal">
+                                    Lembrar de mim
+                                </Label>
+                                <div className="flex-1 text-right">
+                                    <Link href="/recuperar-senha" className="text-sm text-green-600 hover:underline">
+                                        Esqueceu sua senha?
+                                    </Link>
+                                </div>
                             </div>
                         </CardContent>
                         <CardFooter className="flex flex-col space-y-4">
