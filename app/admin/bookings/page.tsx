@@ -18,6 +18,7 @@ import { Booking, BookingApi } from "@/lib/types"
 import { formatBookingTime } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
 import { VerificationCodeModal } from "@/components/verification-code-modal"
+import { useAuth } from "@/app/contexts/auth-context"
 
 export default function BookingsPage() {
     const [bookings, setBookings] = useState<Booking[]>([])
@@ -26,6 +27,7 @@ export default function BookingsPage() {
     const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false)
     const [selectedBooking, setSelectedReservation] = useState<string | null>(null)
     const { toast } = useToast()
+    const { companyId } = useAuth()
 
     const filteredBookings = bookings.filter(
         (b) =>
@@ -49,7 +51,7 @@ export default function BookingsPage() {
     }
 
     const handleVerificationSubmit = async (code: string): Promise<boolean> => {
-        const response = await api.patch(`/companies/${"11111111-1111-1111-1111-111111111111"}/bookings/${selectedBooking}/confirm`, {
+        const response = await api.patch(`/companies/${companyId}/bookings/${selectedBooking}/confirm`, {
             verification_code: code,
         })
 
@@ -75,8 +77,10 @@ export default function BookingsPage() {
 
     useEffect(() => {
         const fetchBookings = async () => {
+            if (!companyId) return
+
             try {
-                await api.get(`/companies/${"11111111-1111-1111-1111-111111111111"}/bookings`)
+                await api.get(`/companies/${companyId}/bookings`)
                     .then((res: AxiosResponse<BookingApi[]>) => {
                         const parsedBookings = res.data.map((booking: BookingApi) => ({
                             id: booking.id,
@@ -104,7 +108,7 @@ export default function BookingsPage() {
         }
 
         fetchBookings()
-    }, [])
+    }, [companyId])
 
     const getStatusBadge = (status: string) => {
         switch (status) {

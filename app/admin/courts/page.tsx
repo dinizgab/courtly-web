@@ -57,6 +57,8 @@ export default function courtsPage() {
     }
 
     useEffect(() => {
+        if (!companyId) return
+
         api.get(`/companies/${companyId}/courts`).then((response: AxiosResponse<CourtApi[]>) => {
             const courtsData = response.data.map((court: CourtApi) => ({
                 id: court.id,
@@ -74,7 +76,7 @@ export default function courtsPage() {
 
             setCourts(courtsData);
         })
-    }, [])
+    }, [companyId])
 
     const filteredcourts = courts.filter(
         (court) =>
