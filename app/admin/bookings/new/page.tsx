@@ -71,7 +71,7 @@ export default function NovaReservaPage() {
 
   return (
     <div className="flex min-h-screen bg-green-50">
-      <AdminSidebar activePage="reservas" />
+      <AdminSidebar activePage="bookings" />
       <div className="flex-1">
         <AdminHeader title="Nova Reserva" />
         <main className="p-6">

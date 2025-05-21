@@ -128,7 +128,7 @@ export default function BookingsPage() {
 
     return (
         <div className="flex min-h-screen bg-green-50">
-            <AdminSidebar activePage="reservas" />
+            <AdminSidebar activePage="bookings" />
             <div className="flex-1">
                 <AdminHeader title="Gerenciar Reservas" />
                 <main className="p-6">

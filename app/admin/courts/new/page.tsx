@@ -123,7 +123,7 @@ export default function NewCourtPage() {
 
     return (
         <div className="flex min-h-screen bg-green-50">
-            <AdminSidebar activePage="quadras" />
+            <AdminSidebar activePage="courts" />
             <div className="flex-1">
                 <AdminHeader title="Nova Quadra" />
                 <main className="p-6">

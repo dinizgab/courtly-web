@@ -20,13 +20,13 @@ export function AdminSidebar({ activePage }: AdminSidebarProps) {
       name: "Quadras",
       href: "/admin/courts",
       icon: LayoutGrid,
-      id: "quadras",
+      id: "courts",
     },
     {
       name: "Reservas",
       href: "/admin/bookings",
       icon: CalendarDays,
-      id: "reservas",
+      id: "bookings",
     },
     //{
     //  name: "Clientes",
