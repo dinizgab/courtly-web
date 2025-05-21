@@ -16,11 +16,13 @@ import api from "@/lib/axios"
 import { Court, CourtApi } from "@/lib/types"
 import { useToast } from "@/components/ui/use-toast"
 import { strToTitle } from "@/lib/utils"
+import { useAuth } from "@/app/contexts/auth-context"
 
 export default function courtsPage() {
     const [courts, setCourts] = useState<Court[]>([])
     const [searchTerm, setSearchTerm] = useState("")
     const { toast } = useToast()
+    const { companyId } = useAuth()
 
     const handleDelete = (id: string) => {
         if (confirm("Tem certeza que deseja excluir esta quadra?")) {
@@ -55,7 +57,7 @@ export default function courtsPage() {
     }
 
     useEffect(() => {
-        api.get("/companies/11111111-1111-1111-1111-111111111111/courts").then((response: AxiosResponse<CourtApi[]>) => {
+        api.get(`/companies/${companyId}/courts`).then((response: AxiosResponse<CourtApi[]>) => {
             const courtsData = response.data.map((court: CourtApi) => ({
                 id: court.id,
                 companyId: court.company_id,

@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -21,6 +21,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Loader2 } from "lucide-react"
 import api from "@/lib/axios"
 import { AxiosResponse } from "axios"
+import { useAuth } from "@/app/contexts/auth-context"
 
 const courtFormSchema = z.object({
     name: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),
@@ -40,6 +41,7 @@ export default function NewCourtPage() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [fotos, setFotos] = useState<FileList | null>(null)
     const { toast } = useToast()
+    const { companyId } = useAuth()
 
     const form = useForm<CourtFormValues>({
         resolver: zodResolver(courtFormSchema),
@@ -64,8 +66,7 @@ export default function NewCourtPage() {
             formData.append("court_info", JSON.stringify(
                 {
                     name: data.name,
-                    // TODO - Add dynamic company id
-                    company_id: "11111111-1111-1111-1111-111111111111",
+                    company_id: companyId,
                     sport_type: data.sportType,
                     hourly_price: data.hourlyPrice,
                     capacity: data.capacity,
