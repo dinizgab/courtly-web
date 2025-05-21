@@ -26,6 +26,7 @@ import api from "@/lib/axios"
 import { Booking, BookingApi, Court, CourtApi } from "@/lib/types"
 import { getBookingTotalPrice, getTimeFromDateString, strToTitle } from "@/lib/utils"
 import { AxiosResponse } from "axios"
+import { useAuth } from "@/app/contexts/auth-context"
 
 export default function CourtDetailsPage() {
     const router = useRouter()
@@ -34,47 +35,81 @@ export default function CourtDetailsPage() {
     const [bookings, setBookings] = useState<Booking[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const { id } = useParams() as { id: string }
+    const { token } = useAuth()
 
     useEffect(() => {
         const fetchCourt = async () => {
             setIsLoading(true)
+
+            if (!token) return
             try {
-                await api.get(`/courts/${id}`).then((response: AxiosResponse<CourtApi>) => {
-                    const court: CourtApi = response.data
-                    const parsedCourt: Court = {
-                        id: court.id,
-                        companyId: court.company_id,
-                        name: court.name,
-                        sportType: court.sport_type,
-                        hourlyPrice: court.hourly_price,
-                        isActive: court.is_active,
-                        description: court.description,
-                        openingTime: court.opening_time,
-                        closingTime: court.closing_time,
-                        capacity: court.capacity,
-                        bookingsToday: 0,
-                        photos: court.photos || [],
+                const response = await api.get(`/api/courts/${id}`,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
+                        }
+                    }
+                )
+                const court: CourtApi = response.data
+                const parsedCourt: Court = {
+                    id: court.id,
+                    companyId: court.company_id,
+                    name: court.name,
+                    sportType: court.sport_type,
+                    hourlyPrice: court.hourly_price,
+                    isActive: court.is_active,
+                    description: court.description,
+                    openingTime: court.opening_time,
+                    closingTime: court.closing_time,
+                    capacity: court.capacity,
+                    bookingsToday: 0,
+                    photos: court.photos || [],
+                }
+
+                setCourt(parsedCourt)
+            } catch (error) {
+                console.error("Erro ao buscar dados da quadra:", error)
+                toast({
+                    title: "Erro ao carregar dados",
+                    description: "Não foi possível carregar os detalhes da quadra.",
+                    variant: "destructive",
+                })
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
+        const fetchCourtBookings = async () => {
+            setIsLoading(true)
+
+            if (!token) return
+            try {
+
+                const response = await api.get(`/api/courts/${id}/bookings`,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
+                        }
                     }
 
-                    setCourt(parsedCourt)
-                })
+                )
 
-                await api.get(`/courts/${id}/bookings`).then((response: AxiosResponse<BookingApi[]>) => {
-                    const bookings = response.data.map((booking: BookingApi) => ({
-                        id: booking.id,
-                        courtId: booking.court_id,
-                        guestName: booking.guest_name,
-                        guestEmail: booking.guest_email,
-                        guestPhone: booking.guest_phone,
-                        data: getTimeFromDateString(booking.start_time),
-                        startTime: booking.start_time,
-                        endTime: booking.end_time,
-                        verificationCode: booking.verification_code,
-                        status: booking.status
-                    }))
+                const bookings = response.data.map((booking: BookingApi) => ({
+                    id: booking.id,
+                    courtId: booking.court_id,
+                    guestName: booking.guest_name,
+                    guestEmail: booking.guest_email,
+                    guestPhone: booking.guest_phone,
+                    data: getTimeFromDateString(booking.start_time),
+                    startTime: booking.start_time,
+                    endTime: booking.end_time,
+                    verificationCode: booking.verification_code,
+                    status: booking.status
+                }))
 
-                    setBookings(bookings)
-                })
+                setBookings(bookings)
             } catch (error) {
                 console.error("Erro ao buscar dados da quadra:", error)
                 toast({
@@ -88,7 +123,8 @@ export default function CourtDetailsPage() {
         }
 
         fetchCourt()
-    }, [id, toast])
+        fetchCourtBookings()
+    }, [id, toast, token])
 
     const handleDelete = async () => {
         if (confirm("Tem certeza que deseja excluir esta quadra? Esta ação não pode ser desfeita.")) {

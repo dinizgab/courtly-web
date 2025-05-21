@@ -41,7 +41,7 @@ export default function NewCourtPage() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [fotos, setFotos] = useState<FileList | null>(null)
     const { toast } = useToast()
-    const { companyId } = useAuth()
+    const { companyId, token } = useAuth()
 
     const form = useForm<CourtFormValues>({
         resolver: zodResolver(courtFormSchema),
@@ -84,9 +84,10 @@ export default function NewCourtPage() {
             //  })
             //}
 
-            await api.post("/courts", formData, {
+            await api.post("/api/courts", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
+                    "Authorization": `Bearer ${token}`,
                 },
             })
                 .then((response: AxiosResponse) => {

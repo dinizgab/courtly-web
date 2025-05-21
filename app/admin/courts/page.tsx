@@ -22,7 +22,7 @@ export default function courtsPage() {
     const [courts, setCourts] = useState<Court[]>([])
     const [searchTerm, setSearchTerm] = useState("")
     const { toast } = useToast()
-    const { companyId } = useAuth()
+    const { companyId, token } = useAuth()
 
     const handleDelete = (id: string) => {
         if (confirm("Tem certeza que deseja excluir esta quadra?")) {
@@ -57,26 +57,45 @@ export default function courtsPage() {
     }
 
     useEffect(() => {
-        if (!companyId) return
+        const fetchCourts = async () => {
+            try {
 
-        api.get(`/companies/${companyId}/courts`).then((response: AxiosResponse<CourtApi[]>) => {
-            const courtsData = response.data.map((court: CourtApi) => ({
-                id: court.id,
-                companyId: court.company_id,
-                name: court.name,
-                sportType: court.sport_type,
-                hourlyPrice: court.hourly_price,
-                isActive: court.is_active,
-                description: court.description,
-                openingTime: court.opening_time,
-                closingTime: court.closing_time,
-                capacity: court.capacity,
-                bookingsToday: court.bookings_today,
-            } as Court));
+                if (!companyId || !token) return
 
-            setCourts(courtsData);
-        })
-    }, [companyId])
+                const response = await api.get(`/companies/${companyId}/courts`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                })
+
+                const courtsData = response.data.map((court: CourtApi) => ({
+                    id: court.id,
+                    companyId: court.company_id,
+                    name: court.name,
+                    sportType: court.sport_type,
+                    hourlyPrice: court.hourly_price,
+                    isActive: court.is_active,
+                    description: court.description,
+                    openingTime: court.opening_time,
+                    closingTime: court.closing_time,
+                    capacity: court.capacity,
+                    bookingsToday: court.bookings_today,
+                } as Court))
+
+                setCourts(courtsData);
+            } catch (error) {
+                console.error("Error fetching courts:", error)
+                toast({
+                    title: "Erro ao carregar quadras",
+                    description: "Não foi possível carregar as quadras.",
+                    variant: "destructive",
+                })
+            }
+        }
+
+        fetchCourts()
+    }, [companyId, token])
 
     const filteredcourts = courts.filter(
         (court) =>
