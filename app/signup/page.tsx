@@ -80,7 +80,7 @@ export default function SignupPage() {
         address: `${data.street}, ${data.number} - ${data.neighborhood}`,
         phone: cleanedPhone,
         email: data.email,
-        passworc: data.password,
+        password: data.password,
       }
 
       const response = await api.post("/auth/signup", signupData)
