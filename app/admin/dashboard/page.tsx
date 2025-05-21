@@ -54,12 +54,14 @@ export default function DashboardPage() {
                             <TabsTrigger value="overview" onClick={() => setActiveTab("overview")}>
                                 Visão Geral
                             </TabsTrigger>
-                            <TabsTrigger value="performance" onClick={() => setActiveTab("performance")}>
-                                Desempenho
-                            </TabsTrigger>
-                            <TabsTrigger value="analytics" onClick={() => setActiveTab("analytics")}>
-                                Análises
-                            </TabsTrigger>
+                            {
+                                //<TabsTrigger value="performance" onClick={() => setActiveTab("performance")}>
+                                //Desempenho
+                                //</TabsTrigger>
+                                //<TabsTrigger value="analytics" onClick={() => setActiveTab("analytics")}>
+                                //Análises
+                                //</TabsTrigger>
+                            }
                         </TabsList>
 
                         <TabsContent value="overview" className="space-y-6">
