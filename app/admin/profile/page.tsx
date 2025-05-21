@@ -28,7 +28,6 @@ const perfilFormSchema = z.object({
   endereco: z.string().optional(),
 })
 
-// Schema de validação do formulário de senha
 const senhaFormSchema = z
   .object({
     senhaAtual: z.string().min(1, { message: "Senha atual é obrigatória" }),

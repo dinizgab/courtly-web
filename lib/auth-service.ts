@@ -4,11 +4,6 @@ import { SignupData, LoginCredentials, AuthResponse } from "./types"
 
 const TOKEN_KEY = "courtly_auth_token"
 
-export interface AuthResponse {
-    message: string
-    token: string
-}
-
 export interface ProfileUpdateData {
     email?: string
     nomeEmpresa?: string

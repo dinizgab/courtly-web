@@ -57,14 +57,6 @@ export default function LoginPage() {
         } finally {
             setIsLoading(false)
         }
-
-        if (response.status === 200) {
-            router.push("/admin/dashboard")
-        } else {
-            setError("Email ou senha inválidos")
-        }
-
-        setIsLoading(false)
     }
 
     return (
