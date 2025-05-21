@@ -453,7 +453,7 @@ export default function CourtDetailsPage() {
                                     <Button
                                         variant="outline"
                                         className="w-full"
-                                        onClick={() => router.push(`/admin/courts/${id}/editar`)}
+                                        onClick={() => router.push(`/admin/courts/${id}/edit`)}
                                     >
                                         <Edit className="mr-2 h-4 w-4" />
                                         Editar Quadra
