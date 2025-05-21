@@ -15,10 +15,13 @@ import { Loader2, ArrowLeft, Eye, EyeOff } from "lucide-react"
 import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
 import { validateCNPJ } from "@/lib/validator"
+import { Phetsarath } from "next/font/google"
+import api from "@/lib/axios"
 
 const signupFormSchema = z
   .object({
     email: z.string().email({ message: "Email inválido" }),
+    phone: z.string().min(11, { message: "Telefone deve ter pelo menos 11 dígitos" }),
     companyName: z.string().min(3, { message: "Nome da empresa deve ter pelo menos 3 caracteres" }),
     cnpj: z
       .string()
@@ -54,6 +57,7 @@ export default function SignupPage() {
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
       email: "",
+      phone: "",
       companyName: "",
       cnpj: "",
       password: "",
@@ -68,28 +72,34 @@ export default function SignupPage() {
     try {
       setIsSubmitting(true)
       const cleanedCNPJ = data.cnpj.replace(/[^\d]/g, "")
+      const cleanedPhone = data.phone.replace(/[^\d]/g, "")
 
-      const cadastroData = {
-        email: data.email,
-        companyName: data.companyName,
+      const signupData = {
+        name: data.companyName,
         cnpj: cleanedCNPJ,
-        passworc: data.password,
         address: `${data.street}, ${data.number} - ${data.neighborhood}`,
+        phone: cleanedPhone,
+        email: data.email,
+        passworc: data.password,
       }
 
-      console.log("Dados do cadastro:", cadastroData)
+      const response = await api.post("/auth/signup", signupData)
 
-      // Simulação de envio para API
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      if (response.status === 201) {
+        toast({
+          title: "Cadastro realizado com sucesso!",
+          description: "Você já pode fazer login na plataforma.",
+        })
 
-      // Mostrar toast de sucesso
-      toast({
-        title: "Cadastro realizado com sucesso!",
-        description: "Você já pode fazer login na plataforma.",
-      })
+        router.push("/admin/login")
+      } else {
+        toast({
+          title: "Erro ao fazer cadastro",
+          description: "Não foi possível completar seu cadastro. Tente novamente.",
+          variant: "destructive",
+        })
+      }
 
-      // Redirecionar para página de login
-      router.push("/admin/login")
     } catch (error) {
       console.error("Erro ao fazer cadastro:", error)
       toast({
@@ -111,6 +121,22 @@ export default function SignupPage() {
       .replace(/\.(\d{3})(\d)/, ".$1/$2")
       .replace(/(\d{4})(\d)/, "$1-$2")
       .substring(0, 18)
+  }
+
+  const formatPhone = (value: string) => {
+    const phoneNums = value.replace(/[^\d]/g, "")
+
+    if (phoneNums.length <= 10) {
+      return phoneNums
+        .replace(/^(\d{2})(\d)/, "($1) $2")
+        .replace(/(\d{4})(\d)/, "$1-$2")
+        .substring(0, 14) // (XX) XXXX-XXXX
+    } else {
+      return phoneNums
+        .replace(/^(\d{2})(\d)/, "($1) $2")
+        .replace(/(\d{5})(\d)/, "$1-$2")
+        .substring(0, 15)
+    }
   }
 
   return (
@@ -172,6 +198,25 @@ export default function SignupPage() {
                         <FormLabel>CNPJ</FormLabel>
                         <FormControl>
                           <Input placeholder="XX.XXX.XXX/XXXX-XX" {...field} value={formatCNPJ(field.value)} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Telefone</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="(00) 00000-0000"
+                            {...field}
+                            value={formatPhone(field.value)}
+                            onChange={(e) => field.onChange(formatPhone(e.target.value))}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

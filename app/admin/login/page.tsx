@@ -13,6 +13,7 @@ import { AlertCircle, Eye, EyeOff } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
+import api from "@/lib/axios"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -26,6 +27,11 @@ export default function LoginPage() {
     e.preventDefault()
     setIsLoading(true)
     setError("")
+
+    const response = api.post("/auth/login", {
+      email,
+      password,
+    })
 
     setTimeout(() => {
       if (email === "admin@exemplo.com" && password === "senha123") {
