@@ -20,14 +20,14 @@ export default function RootLayout({
 }) {
     return (
         <html lang="pt-BR">
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light">
-          <AuthProvider>
-            {children}
-            <Toaster />
-          </AuthProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+            <body className={inter.className}>
+                <ThemeProvider attribute="class" defaultTheme="light">
+                    <AuthProvider>
+                        {children}
+                        <Toaster />
+                    </AuthProvider>
+                </ThemeProvider>
+            </body>
+        </html>
     )
 }
