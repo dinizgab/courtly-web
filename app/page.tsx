@@ -192,7 +192,7 @@ export default function LandingPage() {
                                 <Button
                                     variant="outline"
                                     size="lg"
-                                    className="border-white text-white hover:bg-white/20 hover:text-white"
+                                    className="border-white text-green-700 hover:bg-green-600 hover:text-white"
                                     onClick={() => router.push("/admin/login")}
                                 >
                                     Fazer Login
@@ -332,7 +332,7 @@ export default function LandingPage() {
                     </div>
 
                     <div className="text-center mt-12">
-                        <Button size="lg" className="bg-green-600 hover:bg-green-700" onClick={() => router.push("/cadastro")}>
+                        <Button size="lg" className="bg-green-600 hover:bg-green-700" onClick={() => router.push("/signup")}>
                             Começar Agora
                             <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
@@ -503,7 +503,7 @@ export default function LandingPage() {
                         <Button
                             variant="outline"
                             size="lg"
-                            className="border-white text-white hover:bg-white/20 hover:text-white"
+                            className="border-white text-green-700 hover:bg-green-600 hover:text-white"
                             onClick={() => router.push("/admin/login")}
                         >
                             Fazer Login
