@@ -38,11 +38,6 @@ export default function LoginPage() {
         setIsLoading(true)
         setError("")
 
-        const response = await api.post("/auth/login", {
-            email,
-            password,
-        })
-
         try {
             await login(
                 email,
