@@ -62,9 +62,10 @@ export default function courtsPage() {
 
                 if (!companyId || !token) return
 
-                const response = await api.get(`/companies/${companyId}/courts`, {
+                const response = await api.get(`/admin/companies/${companyId}/courts`, {
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
                     },
                 })
 
