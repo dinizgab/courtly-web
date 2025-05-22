@@ -95,7 +95,7 @@ const AuthService = {
             )
 
             if (response.status !== 201) {
-                const errorData = await response.json()
+                const errorData = await response.data
                 throw new Error(errorData.message || "Signup failed")
             }
 
@@ -182,7 +182,7 @@ const AuthService = {
                 throw new Error("Failed to fetch profile")
             }
 
-            return await response.json()
+            return await response.data
         } catch (error) {
             console.error("Get profile error:", error)
             throw error
