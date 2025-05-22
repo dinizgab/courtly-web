@@ -346,7 +346,7 @@ export default function CourtDetailsPage() {
                                 <Button
                                     className="w-full bg-green-600 hover:bg-green-700"
                                     size="lg"
-                                    onClick={() => router.push(`/showcase/reservar/${court.id}`)}
+                                    onClick={() => router.push(`/showcase/book/${court.id}`)}
                                 >
                                     <Calendar className="mr-2 h-5 w-5" />
                                     Reservar Agora

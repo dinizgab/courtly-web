@@ -148,7 +148,7 @@ export default function CompanyShowcasePage() {
                                             </Button>
                                             <Button
                                                 className="bg-green-600 hover:bg-green-700"
-                                                onClick={() => router.push(`/showcase/reservar/${c.id}`)}
+                                                onClick={() => router.push(`/showcase/book/${c.id}`)}
                                             >
                                                 Reservar
                                             </Button>

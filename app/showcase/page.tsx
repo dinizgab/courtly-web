@@ -212,7 +212,7 @@ export default function ShowcasePage() {
                     </Button>
                     <Button
                       className="bg-green-600 hover:bg-green-700"
-                      onClick={() => router.push(`/showcase/reservar/${quadra.id}`)}
+                      onClick={() => router.push(`/showcase/book/${quadra.id}`)}
                     >
                       Reservar
                     </Button>
