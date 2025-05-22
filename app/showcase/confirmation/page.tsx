@@ -7,14 +7,13 @@ import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
 import { CheckCircle, Calendar, Clock, MapPin } from "lucide-react"
 
-export default function ConfirmacaoPage() {
+export default function BookingConfirmationPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const reservaId = searchParams.get("reserva")
+  const bookingId = searchParams.get("booking")
 
-  // Em um caso real, você buscaria os detalhes da reserva usando o ID
   const reservaSimulada = {
-    id: reservaId || "123456",
+    id: bookingId || "123456",
     quadra: "Quadra de Futsal Coberta",
     data: "19/05/2025",
     horario: "16:00 - 17:00",
