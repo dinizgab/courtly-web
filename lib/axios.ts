@@ -1,7 +1,10 @@
 const axios = require('axios');
 
+const env = process.env.ENVIRONMENT || 'development';
+const apiUrl = env === 'production' ? 'https://booking-mvp-production.up.railway.app' : 'http://localhost:8000';
+
 const api = axios.create({
-    baseURL: 'http://localhost:8000',
+    baseURL: apiUrl,
     headers: {
         'Content-Type': 'application/json',
     },
