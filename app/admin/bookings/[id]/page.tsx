@@ -63,9 +63,9 @@ export default function BookingDetailsPage() {
                         endTime: bookingData.end_time,
                         status: bookingData.status,
                         verificationCode: bookingData.verification_code,
+                        totalPrice: bookingData.total_price,
                         court: {
                             name: bookingData.court?.name,
-                            hourlyPrice: bookingData.court?.hourly_price,
                         }
                     }
 
@@ -259,8 +259,7 @@ export default function BookingDetailsPage() {
                                             <div className="mt-2">{getStatusBadge(booking.status)}</div>
                                         </div>
                                         <div className="text-right">
-                                            <div className="text-2xl font-bold text-green-600">R$ {getBookingTotalPrice(booking).toFixed(2)}</div>
-                                            <div className="text-sm text-gray-500">valor total</div>
+                                            <div className="text-2xl font-bold text-green-600">R$ {booking.totalPrice.toFixed(2)}</div>
                                         </div>
                                     </div>
                                 </CardHeader>

@@ -103,6 +103,7 @@ export default function BookingsPage() {
                     guestEmail: booking.guest_email,
                     guestPhone: booking.guest_phone,
                     verificationCode: booking.verification_code,
+                    totalPrice: booking.total_price,
                     court: { name: booking.court?.name, hourlyPrice: booking.court?.hourly_price, }
                 } as Booking))
 
@@ -207,7 +208,7 @@ export default function BookingsPage() {
                                                 <TableCell>{booking.court?.name}</TableCell>
                                                 <TableCell>{new Date(booking.startTime).toLocaleDateString("pt-BR")}</TableCell>
                                                 <TableCell>{formatBookingTime(booking)}</TableCell>
-                                                <TableCell className="text-right">R$ {getTotalPrice(booking).toFixed(2)}</TableCell>
+                                                <TableCell className="text-right">R$ {booking.totalPrice}</TableCell>
                                                 <TableCell>{getStatusBadge(booking.status)}</TableCell>
                                                 <TableCell className="text-right">
                                                     <DropdownMenu>

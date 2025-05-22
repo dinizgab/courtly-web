@@ -204,7 +204,7 @@ export default function CreateBookingPage() {
             })
 
             const bookingId = response.data.id
-            router.push(`/showcase/confimation`) //?booking=${bookingId}`)
+            router.push(`/showcase/confimation?booking=${bookingId}`)
         } catch (error) {
             console.error("Erro ao fazer reserva:", error)
             toast({

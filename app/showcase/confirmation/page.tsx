@@ -34,9 +34,9 @@ export default function BookingConfirmationPage() {
                 const booking = {
                     startTime: bookingData.start_time,
                     endTime: bookingData.end_time,
+                    totalPrice: bookingData.total_price,
                     court: {
                         name: bookingData.court.name,
-                        hourlyPrice: bookingData.court.hourly_price,
                         company: {
                             address: bookingData.court.company.address,
                         }
@@ -139,7 +139,7 @@ export default function BookingConfirmationPage() {
                                         <div className="pt-2">
                                             <div className="flex justify-between items-center">
                                                 <span className="font-medium">Valor Total:</span>
-                                                <span className="font-bold text-green-600">R$ {getTotalPrice()}</span>
+                                                <span className="font-bold text-green-600">R$ {booking.totalPrice}</span>
                                             </div>
                                             <p className="text-sm text-gray-500 mt-1">Pagamento será realizado no local</p>
                                         </div>

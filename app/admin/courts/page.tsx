@@ -151,7 +151,7 @@ export default function courtsPage() {
                                         filteredcourts.map((court) => (
                                             <TableRow key={court.id}>
                                                 <TableCell className="font-medium">{court.name}</TableCell>
-                                                <TableCell>{strToTitle(court.sportType)}</TableCell>
+                                                <TableCell>{strToTitle(court.sportType.replace("_", " "))}</TableCell>
                                                 <TableCell className="text-right">R$ {court.hourlyPrice.toFixed(2)}</TableCell>
                                                 <TableCell>
                                                     <Badge
