@@ -27,12 +27,14 @@ import { Booking, BookingApi, Court, CourtApi } from "@/lib/types"
 import { getBookingTotalPrice, getTimeFromDateString, strToTitle } from "@/lib/utils"
 import { AxiosResponse } from "axios"
 import { useAuth } from "@/app/contexts/auth-context"
+import { generateAvailableHours } from "@/lib/booking"
 
 export default function CourtDetailsPage() {
     const router = useRouter()
     const { toast } = useToast()
     const [court, setCourt] = useState<Court | null>(null)
     const [bookings, setBookings] = useState<Booking[]>([])
+    const [availableSlots, setAvailableSlots] = useState<{ horario: string, disponivel: boolean }[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const { id } = useParams() as { id: string }
     const { token } = useAuth()
@@ -124,7 +126,30 @@ export default function CourtDetailsPage() {
 
         fetchCourt()
         fetchCourtBookings()
+
     }, [id, toast, token])
+
+    useEffect(() => {
+        const fetchAvailableSlots = async () => {
+            try {
+                if (!court) return
+
+                const response = await api.get(`/showcase/courts/${id}/available-slots?date=${new Date().toISOString()}`)
+                const unavailableSlots = response.data.map((slot: BookingApi) => ({
+                    startTime: slot.start_time,
+                    endTime: slot.end_time,
+                } as Partial<Booking>))
+
+                const availableSlots = generateAvailableHours(court, unavailableSlots)
+                setAvailableSlots(availableSlots)
+            } catch (error) {
+                console.error("Erro ao buscar horários disponíveis:", error)
+            }
+        }
+
+        fetchAvailableSlots()
+    }, [court])
+
 
     const handleDelete = async () => {
         if (confirm("Tem certeza que deseja excluir esta quadra? Esta ação não pode ser desfeita.")) {
@@ -176,29 +201,6 @@ export default function CourtDetailsPage() {
                 return <Badge>{status}</Badge>
         }
     }
-
-    //const gerarHorarios = () => {
-    //    if (!court) return []
-
-    //    const horarios = []
-    //    const [horaInicio] = court.openingTime.split(":")
-    //    const [horaFim] = court.closingTime.split(":")
-
-    //        for (let hora = Number.parseInt(horaInicio); hora < Number.parseInt(horaFim); hora++) {
-    //            const horaFormatada = hora.toString().padStart(2, "0")
-    //            const disponivel = !bookings.some((r) => {
-    //                const [inicio] = r.horario.split(" - ")[0].split(":")
-    //                return Number.parseInt(inicio) === hora && new Date(r.data).toDateString() === new Date().toDateString()
-    //            })
-
-    //            horarios.push({
-    //                horario: `${horaFormatada}:00 - ${(hora + 1).toString().padStart(2, "0")}:00`,
-    //                disponivel,
-    //            })
-    //        }
-
-    //    return horarios
-    //}
 
     const getFormattedBookingText = (booking: Booking) => {
         return `${new Date(booking.startTime).toLocaleDateString("pt-BR")} • ${getTimeFromDateString(booking.startTime)} - ${getTimeFromDateString(booking.endTime)}`
@@ -293,7 +295,7 @@ export default function CourtDetailsPage() {
                                         <div>
                                             <CardTitle className="text-2xl">{court.name}</CardTitle>
                                             <div className="flex items-center mt-2 space-x-2">
-                                                <Badge className="bg-blue-500 hover:bg-blue-600">{strToTitle(court.sportType)}</Badge>
+                                                <Badge className="bg-blue-500 hover:bg-blue-600">{strToTitle(court.sportType.replace("_", " "))}</Badge>
                                                 <Badge
                                                     className={
                                                         court.isActive
@@ -318,9 +320,7 @@ export default function CourtDetailsPage() {
                                             {
                                                 //<TabsTrigger value="fotos">Fotos</TabsTrigger>
                                             }
-                                            {
-                                                //<TabsTrigger value="horarios">Horários</TabsTrigger>
-                                            }
+                                            <TabsTrigger value="horarios">Horários</TabsTrigger>
                                             <TabsTrigger value="reservas">Reservas</TabsTrigger>
                                         </TabsList>
 
@@ -391,29 +391,26 @@ export default function CourtDetailsPage() {
                                             )}
                                         </TabsContent>
 
-                                        {
-                                            //<TabsContent value="horarios">
-                                            //    <div className="space-y-4">
-                                            //        <h3 className="font-semibold">Disponibilidade para Hoje</h3>
-                                            //
-                                            //            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                            //                {gerarHorarios().map((slot, index) => (
-                                            //                    <div
-                                            //                        key={index}
-                                            //                        className={`p-3 rounded-md border text-center ${slot.disponivel
-                                            //                            ? "border-green-200 bg-green-50 text-green-700"
-                                            //                            : "border-gray-200 bg-gray-100 text-gray-500"
-                                            //                            }`}
-                                            //                    >
-                                            //                        <div className="font-medium">{slot.horario}</div>
-                                            //                        <div className="text-xs mt-1">{slot.disponivel ? "Disponível" : "Reservado"}</div>
-                                            //                    </div>
-                                            //                ))}
-                                            //            </div>
-                                            //        }
-                                            //    </div>
-                                            //</TabsContent>
-                                        }
+                                        <TabsContent value="horarios">
+                                            <div className="space-y-4">
+                                                <h3 className="font-semibold">Disponibilidade para Hoje</h3>
+
+                                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                                    {availableSlots.map((slot, index) => (
+                                                        <div
+                                                            key={index}
+                                                            className={`p-3 rounded-md border text-center ${slot.disponivel
+                                                                ? "border-green-200 bg-green-50 text-green-700"
+                                                                : "border-gray-200 bg-gray-100 text-gray-500"
+                                                                }`}
+                                                        >
+                                                            <div className="font-medium">{slot.horario}</div>
+                                                            <div className="text-xs mt-1">{slot.disponivel ? "Disponível" : "Reservado"}</div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </TabsContent>
 
                                         <TabsContent value="reservas">
                                             {bookings.length > 0 ? (

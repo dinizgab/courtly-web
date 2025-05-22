@@ -13,11 +13,12 @@ import { ArrowLeft, Clock, Users, Calendar, CheckCircle } from "lucide-react"
 import { Booking, BookingApi, Court, CourtApi } from "@/lib/types"
 import api from "@/lib/axios"
 import { getTimeFromDateString } from "@/lib/utils"
+import { generateAvailableHours } from "@/lib/booking"
 
 export default function CourtDetailsPage() {
     const router = useRouter()
     const [court, setCourt] = useState<Court | null>(null)
-    const [unavailableSlots, setAvailableSlots] = useState<Partial<Booking>[] | null>(null)
+    const [availableSlots, setAvailableSlots] = useState<{ horario: string, disponivel: boolean }[] | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [fotoAtiva, setFotoAtiva] = useState(0)
     const { id } = useParams() as { id: string }
@@ -101,6 +102,10 @@ export default function CourtDetailsPage() {
             }
         }
 
+        fetchCourt()
+    }, [id])
+
+    useEffect(() => {
         const fetchAvailableSlots = async () => {
             try {
                 const response = await api.get(`/showcase/courts/${id}/available-slots?date=${new Date().toISOString()}`)
@@ -109,60 +114,16 @@ export default function CourtDetailsPage() {
                     endTime: slot.end_time,
                 } as Partial<Booking>))
 
-                setAvailableSlots(unavailableSlots)
+                const availableSlots = generateAvailableHours(court!, unavailableSlots)
+
+                setAvailableSlots(availableSlots)
             } catch (error) {
                 console.error("Erro ao buscar horários disponíveis:", error)
             }
         }
 
-        fetchCourt()
         fetchAvailableSlots()
-    }, [id])
-
-    const generateSlots = () => {
-        if (!court || !unavailableSlots) return []
-
-        const horarios = []
-        const openHour = new Date(court.openingTime).getUTCHours()
-        const closeHour = new Date(court.closingTime).getUTCHours()
-
-        const occupiedSlots = new Set(unavailableSlots.map(slot => new Date(slot.startTime!).getUTCHours()))
-
-        for (let hour = openHour; hour < closeHour; hour++) {
-            const horaFormatada = hour.toString().padStart(2, "0")
-
-            if (occupiedSlots.has(hour)) {
-                const slot = unavailableSlots.find((slot) => {
-                    const slotHora = new Date(slot.startTime!).getUTCHours()
-                    return slotHora === hour
-                })
-
-                if (slot) {
-                    const endHour = new Date(slot.endTime!).getUTCHours()
-
-                    for (let h = hour; h < endHour; h++) {
-                        horarios.push({
-                            horario: `${h}:00 - ${(h + 1).toString().padStart(2, "0")}:00`,
-                            disponivel: false,
-                        })
-                    }
-                }
-            } else {
-                horarios.push({
-                    horario: `${horaFormatada}:00 - ${(hour + 1).toString().padStart(2, "0")}:00`,
-                    disponivel: true,
-                })
-            }
-        }
-
-        return horarios
-    }
-
-    //const calcularMediaAvaliacoes = () => {
-    //    if (!court|| court.avaliacoes.length === 0) return 0
-    //    const soma = court.avaliacoes.reduce((acc, avaliacao) => acc + avaliacao.nota, 0)
-    //    return soma / court.avaliacoes.length
-    //}
+    }, [court])
 
     if (isLoading) {
         return (
@@ -319,7 +280,7 @@ export default function CourtDetailsPage() {
                                     <div className="space-y-4">
                                         <h3 className="font-semibold">Disponibilidade para Hoje</h3>
                                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                            {generateSlots().map((slot, index) => (
+                                            {availableSlots && availableSlots.map((slot, index) => (
                                                 <div
                                                     key={index}
                                                     className={`p-3 rounded-md border text-center ${slot.disponivel
