@@ -197,14 +197,13 @@ export default function CreateBookingPage() {
                 throw new Error("Erro ao criar reserva")
             }
 
-            const bookingId = response.data.id
-
             toast({
                 title: "Reserva realizada com sucesso!",
                 description: "Você receberá um email com os detalhes da sua reserva.",
             })
 
-            router.push(`/showcase/confirmacao?reserva=${bookingId}`)
+            const bookingId = response.data.id
+            router.push(`/showcase/confimation`) //?booking=${bookingId}`)
         } catch (error) {
             console.error("Erro ao fazer reserva:", error)
             toast({
