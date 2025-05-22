@@ -25,7 +25,7 @@ interface Quadra {
   endereco?: string
 }
 
-export default function VitrinePage() {
+export default function ShowcasePage() {
   const router = useRouter()
   const [quadras, setQuadras] = useState<Quadra[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -212,7 +212,7 @@ export default function VitrinePage() {
                     </Button>
                     <Button
                       className="bg-green-600 hover:bg-green-700"
-                      onClick={() => router.push(`/vitrine/reservar/${quadra.id}`)}
+                      onClick={() => router.push(`/showcase/reservar/${quadra.id}`)}
                     >
                       Reservar
                     </Button>
