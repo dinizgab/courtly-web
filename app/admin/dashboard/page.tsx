@@ -13,8 +13,7 @@ import api from "@/lib/axios"
 export default function DashboardPage() {
     const [activeTab, setActiveTab] = useState("overview")
     const [isLoading, setIsLoading] = useState(false)
-    const { companyId } = useAuth()
-
+    const { companyId, token } = useAuth()
     const [stats, setStats] = useState([
         {
             title: "Reservas Hoje",
@@ -50,7 +49,11 @@ export default function DashboardPage() {
         const fetchDashboardInfo = async () => {
             setIsLoading(true)
             try {
-                const response = await api.get(`/admin/companies/${companyId}/dashboard`)
+                const response = await api.get(`/admin/companies/${companyId}/dashboard`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                })
                 if (response.status !== 200) {
                     throw new Error("Erro ao buscar informações do dashboard")
                 }
