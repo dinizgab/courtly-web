@@ -84,7 +84,7 @@ export default function NewCourtPage() {
             //  })
             //}
 
-            await api.post("/api/courts", formData, {
+            await api.post("/admin/courts", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     "Authorization": `Bearer ${token}`,

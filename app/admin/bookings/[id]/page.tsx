@@ -41,7 +41,7 @@ export default function BookingDetailsPage() {
         const fetchBooking = async () => {
             setIsLoading(true)
             try {
-                const response = await api.get(`/api/bookings/${id}`,
+                const response = await api.get(`/admin/bookings/${id}`,
                     {
                         headers: {
                             "Content-Type": "application/json",

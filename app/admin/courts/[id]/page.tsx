@@ -43,7 +43,7 @@ export default function CourtDetailsPage() {
 
             if (!token) return
             try {
-                const response = await api.get(`/api/courts/${id}`,
+                const response = await api.get(`/admin/courts/${id}`,
                     {
                         headers: {
                             "Content-Type": "application/json",
@@ -86,7 +86,7 @@ export default function CourtDetailsPage() {
             if (!token) return
             try {
 
-                const response = await api.get(`/api/courts/${id}/bookings`,
+                const response = await api.get(`/admin/courts/${id}/bookings`,
                     {
                         headers: {
                             "Content-Type": "application/json",

@@ -51,7 +51,7 @@ export default function BookingsPage() {
     }
 
     const handleVerificationSubmit = async (code: string): Promise<boolean> => {
-        const response = await api.patch(`/api/companies/${companyId}/bookings/${selectedBooking}/confirm`, {
+        const response = await api.patch(`/admin/companies/${companyId}/bookings/${selectedBooking}/confirm`, {
             verification_code: code,
         }, {
             headers: {
@@ -85,7 +85,7 @@ export default function BookingsPage() {
             if (!companyId || !token) return
 
             try {
-                const response = await api.get(`/api/companies/${companyId}/bookings`,
+                const response = await api.get(`/admin/companies/${companyId}/bookings`,
                     {
                         headers: {
                             "Content-Type": "application/json",

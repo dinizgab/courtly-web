@@ -69,7 +69,7 @@ export default function EditCourtPage() {
             setIsLoading(true)
             try {
                 if (!token) return
-                const response = await api.get(`/api/courts/${id}`,
+                const response = await api.get(`/admin/courts/${id}`,
                     {
                         headers: {
                             "Content-Type": "application/json",
@@ -151,7 +151,7 @@ export default function EditCourtPage() {
             //    })
             //}
 
-            const response = await api.put(`/api/courts/${id}`, formData, {
+            const response = await api.put(`/admin/courts/${id}`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     "Authorization": `Bearer ${token}`,

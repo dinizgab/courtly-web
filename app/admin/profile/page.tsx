@@ -113,7 +113,7 @@ export default function PerfilPage() {
                 address: `${data.street}, ${data.number} - ${data.neighborhood}`
             }
 
-            const response = await api.put(`/api/companies/${companyId}`, profileData, {
+            const response = await api.put(`/admin/companies/${companyId}`, profileData, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
@@ -182,7 +182,7 @@ export default function PerfilPage() {
             if (!token || !companyId) return
 
             try {
-                const response = await api.get(`/api/companies/${companyId}`, {
+                const response = await api.get(`/admin/companies/${companyId}`, {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
