@@ -13,90 +13,84 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
 import { ArrowLeft, CalendarIcon, Clock, CheckCircle, Loader2 } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn, getTimeFromDateString } from "@/lib/utils"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useToast } from "@/components/ui/use-toast"
+import api from "@/lib/axios"
+import { Court, CourtApi } from "@/lib/types"
+import { watch } from "fs"
 
-// Tipo para a quadra
-interface Quadra {
-  id: string
-  nome: string
-  tipo: string
-  precoHora: number
-  horaInicio: string
-  horaFim: string
-}
-
-// Tipo para horário disponível
 interface HorarioDisponivel {
-  inicio: string
-  fim: string
+  start: string
+  end: string
 }
 
-// Schema de validação do formulário
-const reservaFormSchema = z.object({
-  nome: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),
+const bookFormSchema = z.object({
+  name: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),
   email: z.string().email({ message: "Email inválido" }),
-  telefone: z.string().min(10, { message: "Telefone deve ter pelo menos 10 dígitos" }),
-  data: z.date({ required_error: "Data é obrigatória" }),
-  horarioInicio: z.string({ required_error: "Horário de início é obrigatório" }),
-  duracao: z.string({ required_error: "Duração é obrigatória" }),
+  phone: z.string().min(10, { message: "Telefone deve ter pelo menos 10 dígitos" }),
+  date: z.date({ required_error: "Data é obrigatória" }),
+  startTime: z.string({ required_error: "Horário de início é obrigatório" }),
+  duration: z.string({ required_error: "Duração é obrigatória" }),
 })
 
-type ReservaFormValues = z.infer<typeof reservaFormSchema>
+type BookFormValues = z.infer<typeof bookFormSchema>
 
-export default function ReservarPage({ params }: { params: { id: string } }) {
+export default function ReservarPage() {
   const router = useRouter()
   const { toast } = useToast()
-  const [quadra, setQuadra] = useState<Quadra | null>(null)
+  const [court, setCourt] = useState<Court | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [horariosDisponiveis, setHorariosDisponiveis] = useState<HorarioDisponivel[]>([])
   const [valorTotal, setValorTotal] = useState(0)
   const { id } = useParams() as { id: string }
 
-  // Inicializar o formulário
-  const form = useForm<ReservaFormValues>({
-    resolver: zodResolver(reservaFormSchema),
+  const form = useForm<BookFormValues>({
+    resolver: zodResolver(bookFormSchema),
     defaultValues: {
-      nome: "",
+      name: "",
       email: "",
-      telefone: "",
-      data: new Date(),
-      horarioInicio: "",
-      duracao: "1",
+      phone: "",
+      date: new Date(),
+      startTime: "",
+      duration: "1",
     },
   })
 
-  // Observar mudanças nos campos de data, horário e duração para calcular o valor total
-  const watchData = form.watch("data")
-  const watchHorarioInicio = form.watch("horarioInicio")
-  const watchDuracao = form.watch("duracao")
+  const watchDate = form.watch("date")
+  const watchStartTime = form.watch("startTime")
+  const watchDuration = form.watch("duration")
 
-  // Simular busca de dados da quadra
   useEffect(() => {
-    const fetchQuadra = async () => {
+    const fetchCourt = async () => {
       setIsLoading(true)
       try {
-        // Simulação de chamada à API
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        const response = await api.get(`/showcase/courts/${id}`)
 
-        // Dados simulados
-        const quadraData: Quadra = {
-          id: id,
-          nome: "Quadra de Futsal Coberta",
-          tipo: "Futsal",
-          precoHora: 80,
-          horaInicio: "08:00",
-          horaFim: "22:00",
+        const court: CourtApi = response.data
+        const parsedCourt: Court = {
+          id: court.id,
+          companyId: court.company_id,
+          name: court.name,
+          sportType: court.sport_type,
+          hourlyPrice: court.hourly_price,
+          isActive: court.is_active,
+          description: court.description,
+          openingTime: court.opening_time,
+          closingTime: court.closing_time,
+          capacity: court.capacity,
+          bookingsToday: 0,
+          photos: court.photos || [],
         }
 
-        setQuadra(quadraData)
+
+        setCourt(parsedCourt)
       } catch (error) {
-        console.error("Erro ao buscar dados da quadra:", error)
+        console.error("Erro ao buscar dados da court.", error)
         toast({
           title: "Erro ao carregar dados",
           description: "Não foi possível carregar os detalhes da quadra.",
@@ -108,29 +102,23 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
       }
     }
 
-    fetchQuadra()
+    fetchCourt()
   }, [id, router, toast])
 
-  // Buscar horários disponíveis quando a data mudar
   useEffect(() => {
     const fetchHorariosDisponiveis = async () => {
-      if (!quadra || !watchData) return
+      if (!court || !watchDate) return
 
       try {
-        // Simulação de chamada à API
-        await new Promise((resolve) => setTimeout(resolve, 500))
-
-        // Dados simulados - em um caso real, isso viria do backend
-        const horaInicio = Number.parseInt(quadra.horaInicio.split(":")[0])
-        const horaFim = Number.parseInt(quadra.horaFim.split(":")[0])
+        const startTime = Number.parseInt(getTimeFromDateString(court.openingTime).split(":")[0])
+        const endTime = Number.parseInt(getTimeFromDateString(court.closingTime).split(":")[0])
         const horarios: HorarioDisponivel[] = []
 
-        for (let hora = horaInicio; hora < horaFim; hora++) {
-          // Simulação de disponibilidade (horários pares estão disponíveis)
+        for (let hora = startTime; hora < endTime; hora++) {
           if (hora % 2 === 0) {
             horarios.push({
-              inicio: `${hora.toString().padStart(2, "0")}:00`,
-              fim: `${(hora + 1).toString().padStart(2, "0")}:00`,
+              start: `${hora.toString().padStart(2, "0")}:00`,
+              end: `${(hora + 1).toString().padStart(2, "0")}:00`,
             })
           }
         }
@@ -147,36 +135,34 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
     }
 
     fetchHorariosDisponiveis()
-  }, [quadra, watchData, toast])
+  }, [court, watchDate, toast])
 
   // Calcular valor total quando horário ou duração mudar
   useEffect(() => {
-    if (!quadra || !watchHorarioInicio || !watchDuracao) {
+    if (!court || !watchStartTime || !watchDuration) {
       setValorTotal(0)
       return
     }
 
-    const duracaoHoras = Number.parseInt(watchDuracao)
-    setValorTotal(quadra.precoHora * duracaoHoras)
-  }, [quadra, watchHorarioInicio, watchDuracao])
+    const durationHours = Number.parseInt(watchDuration)
+    setValorTotal(court.hourlyPrice * durationHours)
+  }, [court, watchStartTime, watchDuration])
 
-  const onSubmit = async (data: ReservaFormValues) => {
+  const onSubmit = async (data: BookFormValues) => {
     try {
       setIsSubmitting(true)
 
-      // Calcular horário de fim
-      const [hora, minuto] = data.horarioInicio.split(":").map(Number)
-      const duracaoHoras = Number.parseInt(data.duracao)
+      const [hora, minuto] = data.startTime.split(":").map(Number)
+      const duracaoHoras = Number.parseInt(data.duration)
       const horaFim = hora + duracaoHoras
       const horarioFim = `${horaFim.toString().padStart(2, "0")}:${minuto.toString().padStart(2, "0")}`
 
-      // Dados da reserva
       const reservaData = {
         ...data,
-        quadraId: params.id,
+        id,
         horarioFim,
         valorTotal,
-        dataFormatada: format(data.data, "yyyy-MM-dd"),
+        dataFormatada: format(data.date, "yyyy-MM-dd"),
       }
 
       console.log("Dados da reserva:", reservaData)
@@ -218,17 +204,17 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
     )
   }
 
-  if (!quadra) {
+  if (!court) {
     return (
       <div className="min-h-screen flex flex-col bg-gray-50">
         <GuestHeader />
         <div className="flex-grow container mx-auto px-4 py-8">
           <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-700">Quadra não encontrada</h2>
-            <p className="mt-2 text-gray-500">A quadra que você está procurando não existe ou foi removida.</p>
+            <h2 className="text-2xl font-bold text-gray-700">court.não encontrada</h2>
+            <p className="mt-2 text-gray-500">A court.que você está procurando não existe ou foi removida.</p>
             <Button className="mt-4" onClick={() => router.push("/showcase")}>
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar para lista de quadras
+              Voltar para lista de court.
             </Button>
           </div>
         </div>
@@ -243,7 +229,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
 
       <div className="flex-grow container mx-auto px-4 py-8">
         <div className="mb-6">
-          <Button variant="outline" onClick={() => router.push(`/showcase/courts/${params.id}`)}>
+          <Button variant="outline" onClick={() => router.push(`/showcase/courts/${id}`)}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Voltar para detalhes da quadra
           </Button>
@@ -253,7 +239,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
           <div className="lg:col-span-2">
             <Card>
               <CardHeader>
-                <CardTitle>Reservar {quadra.nome}</CardTitle>
+                <CardTitle>Reservar {court.name}</CardTitle>
               </CardHeader>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -263,7 +249,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
 
                       <FormField
                         control={form.control}
-                        name="data"
+                        name="date"
                         render={({ field }) => (
                           <FormItem className="flex flex-col">
                             <FormLabel>Data</FormLabel>
@@ -305,7 +291,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormField
                           control={form.control}
-                          name="horarioInicio"
+                          name="startTime"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Horário de Início</FormLabel>
@@ -318,8 +304,8 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
                                 <SelectContent>
                                   {horariosDisponiveis.length > 0 ? (
                                     horariosDisponiveis.map((horario) => (
-                                      <SelectItem key={horario.inicio} value={horario.inicio}>
-                                        {horario.inicio}
+                                      <SelectItem key={horario.start} value={horario.start}>
+                                        {horario.start}
                                       </SelectItem>
                                     ))
                                   ) : (
@@ -336,7 +322,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
 
                         <FormField
                           control={form.control}
-                          name="duracao"
+                          name="duration"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Duração</FormLabel>
@@ -365,7 +351,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
                       <div className="space-y-4">
                         <FormField
                           control={form.control}
-                          name="nome"
+                          name="name"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Nome completo</FormLabel>
@@ -394,7 +380,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
 
                           <FormField
                             control={form.control}
-                            name="telefone"
+                            name="phone"
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Telefone</FormLabel>
@@ -413,14 +399,14 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => router.push(`/showcase/courts/${params.id}`)}
+                      onClick={() => router.push(`/showcase/courts/${id}`)}
                     >
                       Cancelar
                     </Button>
                     <Button
                       type="submit"
                       className="bg-green-600 hover:bg-green-700"
-                      disabled={isSubmitting || !watchHorarioInicio || horariosDisponiveis.length === 0}
+                      disabled={isSubmitting || !watchStartTime || horariosDisponiveis.length === 0}
                     >
                       {isSubmitting ? (
                         <>
@@ -444,21 +430,21 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center pb-2 border-b">
-                  <span className="font-medium">Quadra:</span>
-                  <span>{quadra.nome}</span>
+                  <span className="font-medium">court.</span>
+                  <span>{court.name}</span>
                 </div>
                 <div className="flex justify-between items-center pb-2 border-b">
                   <span className="font-medium">Data:</span>
-                  <span>{watchData ? format(watchData, "dd/MM/yyyy") : "-"}</span>
+                  <span>{watchDate ? format(watchDate, "dd/MM/yyyy") : "-"}</span>
                 </div>
                 <div className="flex justify-between items-center pb-2 border-b">
                   <span className="font-medium">Horário:</span>
                   <span>
-                    {watchHorarioInicio
-                      ? `${watchHorarioInicio} - ${watchHorarioInicio &&
-                      `${(Number.parseInt(watchHorarioInicio.split(":")[0]) + Number.parseInt(watchDuracao || "1"))
+                    {watchStartTime
+                      ? `${watchStartTime} - ${watchStartTime &&
+                      `${(Number.parseInt(watchStartTime.split(":")[0]) + Number.parseInt(watchDuration || "1"))
                         .toString()
-                        .padStart(2, "0")}:${watchHorarioInicio.split(":")[1]}`
+                        .padStart(2, "0")}:${watchStartTime.split(":")[1]}`
                       }`
                       : "-"}
                   </span>
@@ -466,7 +452,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
                 <div className="flex justify-between items-center pb-2 border-b">
                   <span className="font-medium">Duração:</span>
                   <span>
-                    {watchDuracao ? `${watchDuracao} hora${Number.parseInt(watchDuracao) > 1 ? "s" : ""}` : "-"}
+                    {watchDuration ? `${watchDuration} hora${Number.parseInt(watchDuration) > 1 ? "s" : ""}` : "-"}
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-lg font-bold text-green-600">

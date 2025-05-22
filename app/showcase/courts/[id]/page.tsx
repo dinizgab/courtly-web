@@ -10,13 +10,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
 import { ArrowLeft, Clock, Users, Calendar, CheckCircle } from "lucide-react"
-import { Court, CourtApi } from "@/lib/types"
+import { Booking, BookingApi, Court, CourtApi } from "@/lib/types"
 import api from "@/lib/axios"
 import { getTimeFromDateString } from "@/lib/utils"
 
 export default function CourtDetailsPage() {
     const router = useRouter()
     const [court, setCourt] = useState<Court | null>(null)
+    const [unavailableSlots, setAvailableSlots] = useState<Partial<Booking>[] | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [fotoAtiva, setFotoAtiva] = useState(0)
     const { id } = useParams() as { id: string }
@@ -100,25 +101,58 @@ export default function CourtDetailsPage() {
             }
         }
 
+        const fetchAvailableSlots = async () => {
+            try {
+                const response = await api.get(`/showcase/courts/${id}/available-slots?date=${new Date().toISOString()}`)
+                const unavailableSlots = response.data.map((slot: BookingApi) => ({
+                    startTime: slot.start_time,
+                    endTime: slot.end_time,
+                } as Partial<Booking>))
+
+                setAvailableSlots(unavailableSlots)
+            } catch (error) {
+                console.error("Erro ao buscar horários disponíveis:", error)
+            }
+        }
+
         fetchCourt()
+        fetchAvailableSlots()
     }, [id])
 
     const gerarHorarios = () => {
-        if (!court) return []
+        if (!court || !unavailableSlots) return []
 
         const horarios = []
-        const [horaInicio] = court.openingTime.split(":")
-        const [horaFim] = court.closingTime.split(":")
+        const [horaInicio] = getTimeFromDateString(court.openingTime).split(":")
+        const [horaFim] = getTimeFromDateString(court.closingTime).split(":")
 
-        for (let hora = Number.parseInt(horaInicio); hora < Number.parseInt(horaFim); hora++) {
-            const horaFormatada = hora.toString().padStart(2, "0")
-            // Simulação de disponibilidade (horários pares estão disponíveis)
-            const disponivel = hora % 2 === 0
+        const occupiedSlots = new Set(unavailableSlots.map(slot => new Date(slot.startTime!).getUTCHours()))
 
-            horarios.push({
-                horario: `${horaFormatada}:00 - ${(hora + 1).toString().padStart(2, "0")}:00`,
-                disponivel,
-            })
+        for (let hour = Number.parseInt(horaInicio); hour < Number.parseInt(horaFim); hour++) {
+            const horaFormatada = hour.toString().padStart(2, "0")
+
+            if (occupiedSlots.has(hour)) {
+                const slot = unavailableSlots.find((slot) => {
+                    const slotHora = new Date(slot.startTime!).getUTCHours()
+                    return slotHora === hour
+                })
+
+                if (slot) {
+                    const endHour = new Date(slot.endTime!).getUTCHours()
+
+                    for (let h = hour; h < endHour; h++) {
+                        horarios.push({
+                            horario: `${h}:00 - ${(h + 1).toString().padStart(2, "0")}:00`,
+                            disponivel: false,
+                        })
+                    }
+                }
+            } else {
+                horarios.push({
+                    horario: `${horaFormatada}:00 - ${(hour + 1).toString().padStart(2, "0")}:00`,
+                    disponivel: true,
+                })
+            }
         }
 
         return horarios
