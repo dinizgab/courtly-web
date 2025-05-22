@@ -31,17 +31,17 @@ export function GuestFooter() {
             <h3 className="text-xl font-bold mb-4">Links Rápidos</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/vitrine" className="text-gray-300 hover:text-white">
+                <Link href="/showcase" className="text-gray-300 hover:text-white">
                   Início
                 </Link>
               </li>
               <li>
-                <Link href="/vitrine#como-funciona" className="text-gray-300 hover:text-white">
+                <Link href="/showcase#como-funciona" className="text-gray-300 hover:text-white">
                   Como Funciona
                 </Link>
               </li>
               <li>
-                <Link href="/vitrine#contato" className="text-gray-300 hover:text-white">
+                <Link href="/showcase#contato" className="text-gray-300 hover:text-white">
                   Contato
                 </Link>
               </li>

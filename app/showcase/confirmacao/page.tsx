@@ -111,7 +111,7 @@ export default function ConfirmacaoPage() {
               <Button variant="outline" onClick={() => window.print()}>
                 Imprimir Comprovante
               </Button>
-              <Button className="bg-green-600 hover:bg-green-700" onClick={() => router.push("/vitrine")}>
+              <Button className="bg-green-600 hover:bg-green-700" onClick={() => router.push("/showcase")}>
                 Voltar para Início
               </Button>
             </CardFooter>

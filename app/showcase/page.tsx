@@ -206,7 +206,7 @@ export default function VitrinePage() {
                     <Button
                       variant="outline"
                       className="text-green-600 border-green-600 hover:bg-green-50"
-                      onClick={() => router.push(`/vitrine/quadras/${quadra.id}`)}
+                      onClick={() => router.push(`/showcase/courts/${quadra.id}`)}
                     >
                       Ver detalhes
                     </Button>

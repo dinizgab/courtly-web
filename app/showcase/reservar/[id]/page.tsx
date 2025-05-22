@@ -102,7 +102,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
           description: "Não foi possível carregar os detalhes da quadra.",
           variant: "destructive",
         })
-        router.push("/vitrine")
+        router.push("/showcase")
       } finally {
         setIsLoading(false)
       }
@@ -191,7 +191,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
       })
 
       // Redirecionar para página de confirmação
-      router.push(`/vitrine/confirmacao?reserva=${Math.random().toString(36).substring(2, 15)}`)
+      router.push(`/showcase/confirmacao?reserva=${Math.random().toString(36).substring(2, 15)}`)
     } catch (error) {
       console.error("Erro ao fazer reserva:", error)
       toast({
@@ -226,7 +226,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
           <div className="text-center py-12">
             <h2 className="text-2xl font-bold text-gray-700">Quadra não encontrada</h2>
             <p className="mt-2 text-gray-500">A quadra que você está procurando não existe ou foi removida.</p>
-            <Button className="mt-4" onClick={() => router.push("/vitrine")}>
+            <Button className="mt-4" onClick={() => router.push("/showcase")}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               Voltar para lista de quadras
             </Button>
@@ -243,7 +243,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
 
       <div className="flex-grow container mx-auto px-4 py-8">
         <div className="mb-6">
-          <Button variant="outline" onClick={() => router.push(`/vitrine/quadras/${params.id}`)}>
+          <Button variant="outline" onClick={() => router.push(`/showcase/courts/${params.id}`)}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Voltar para detalhes da quadra
           </Button>
@@ -413,7 +413,7 @@ export default function ReservarPage({ params }: { params: { id: string } }) {
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => router.push(`/vitrine/quadras/${params.id}`)}
+                      onClick={() => router.push(`/showcase/courts/${params.id}`)}
                     >
                       Cancelar
                     </Button>

@@ -11,20 +11,20 @@ export function GuestHeader() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link href="/vitrine" className="text-xl font-bold text-green-600">
+            <Link href="/showcase" className="text-xl font-bold text-green-600">
               QuadrasFácil
             </Link>
           </div>
 
           {/* Menu para desktop */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/vitrine" className="text-gray-600 hover:text-green-600 transition-colors">
+            <Link href="/showcase" className="text-gray-600 hover:text-green-600 transition-colors">
               Início
             </Link>
-            <Link href="/vitrine#como-funciona" className="text-gray-600 hover:text-green-600 transition-colors">
+            <Link href="/showcase#como-funciona" className="text-gray-600 hover:text-green-600 transition-colors">
               Como Funciona
             </Link>
-            <Link href="/vitrine#contato" className="text-gray-600 hover:text-green-600 transition-colors">
+            <Link href="/showcase#contato" className="text-gray-600 hover:text-green-600 transition-colors">
               Contato
             </Link>
             <Button asChild className="bg-green-600 hover:bg-green-700">
@@ -43,13 +43,13 @@ export function GuestHeader() {
               </SheetTrigger>
               <SheetContent side="right">
                 <nav className="flex flex-col space-y-4 mt-8">
-                  <Link href="/vitrine" className="text-lg font-medium">
+                  <Link href="/showcase" className="text-lg font-medium">
                     Início
                   </Link>
-                  <Link href="/vitrine#como-funciona" className="text-lg font-medium">
+                  <Link href="/showcase#como-funciona" className="text-lg font-medium">
                     Como Funciona
                   </Link>
-                  <Link href="/vitrine#contato" className="text-lg font-medium">
+                  <Link href="/showcase#contato" className="text-lg font-medium">
                     Contato
                   </Link>
                   <Button asChild className="mt-2 bg-green-600 hover:bg-green-700">
