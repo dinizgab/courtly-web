@@ -175,8 +175,8 @@ export default function CreateBookingPage() {
             setIsSubmitting(true)
 
             const [hora, minuto] = data.startTime.split(":").map(Number)
-            const duracaoHoras = Number.parseInt(data.duration)
-            const horaFim = hora + duracaoHoras
+            const totalDuration = Number.parseInt(data.duration)
+            const horaFim = hora + totalDuration 
             const horarioFim = `${horaFim.toString().padStart(2, "0")}:${minuto.toString().padStart(2, "0")}`
             const date = format(data.date, "yyyy-MM-dd")
 
@@ -187,6 +187,7 @@ export default function CreateBookingPage() {
                 company_id: court?.companyId,
                 start_time: `${date}T${data.startTime}:00Z`,
                 end_time: `${date}T${horarioFim}:00Z`,
+                total_price: court?.hourlyPrice! * totalDuration,
                 court: {
                     company_id: court?.companyId,
                 }
