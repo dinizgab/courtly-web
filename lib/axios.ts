@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const env = process.env.ENVIRONMENT ?? 'development';
+const env = process.env.NODE_ENV ?? 'development';
 
 const api = axios.create({
     baseURL: 
