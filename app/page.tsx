@@ -23,7 +23,7 @@ export default function Home() {
             variant="outline"
             size="lg"
             className="border-green-600 text-green-600 hover:bg-green-50"
-            onClick={() => router.push("/vitrine")}
+            onClick={() => router.push("/showcase")}
           >
             Ver Vitrine de Quadras
           </Button>
