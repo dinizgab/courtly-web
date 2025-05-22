@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -8,40 +8,104 @@ import { Calendar, Clock, Users, DollarSign } from "lucide-react"
 import { AdminHeader } from "@/components/admin-header"
 import { AdminSidebar } from "@/components/admin-sidebar"
 import { useAuth } from "@/app/contexts/auth-context"
+import api from "@/lib/axios"
 
 export default function DashboardPage() {
     const [activeTab, setActiveTab] = useState("overview")
+    const [isLoading, setIsLoading] = useState(false)
+    const { companyId } = useAuth()
 
-    const stats = [
+    const [stats, setStats] = useState([
         {
             title: "Reservas Hoje",
-            value: "12",
+            value: "0",
             icon: Calendar,
-            change: "+20%",
+            change: "",
             trend: "up",
         },
         {
             title: "Horas Reservadas",
-            value: "24",
+            value: "0",
             icon: Clock,
-            change: "+15%",
+            change: "",
             trend: "up",
         },
         {
             title: "Clientes",
-            value: "48",
+            value: "0",
             icon: Users,
-            change: "+10%",
+            change: "",
             trend: "up",
         },
         {
             title: "Faturamento",
-            value: "R$ 1.200",
+            value: "R$ 0",
             icon: DollarSign,
-            change: "+25%",
+            change: "",
             trend: "up",
         },
-    ]
+    ])
+
+    useEffect(() => {
+        const fetchDashboardInfo = async () => {
+            setIsLoading(true)
+            try {
+                const response = await api.get(`/admin/companies/${companyId}/dashboard`)
+                if (response.status !== 200) {
+                    throw new Error("Erro ao buscar informações do dashboard")
+                }
+
+                // TODO - Show if data increased based on the last week
+                const dashboardData = response.data
+                setStats([
+                    {
+                        title: "Reservas Hoje",
+                        value: String(dashboardData.total_bookings),
+                        icon: Calendar,
+                        change: "",
+                        trend: "up",
+                    },
+                    {
+                        title: "Horas Reservadas",
+                        value: String(dashboardData.total_booked_hours),
+                        icon: Clock,
+                        change: "",
+                        trend: "up",
+                    },
+                    {
+                        title: "Clientes",
+                        value: String(dashboardData.total_clients),
+                        icon: Users,
+                        change: "",
+                        trend: "up",
+                    },
+                    {
+                        title: "Faturamento",
+                        value: `R$ ${dashboardData.total_earnings}`,
+                        icon: DollarSign,
+                        change: "",
+                        trend: "up",
+                    },
+                ])
+            } catch (error) {
+                console.error("Erro ao buscar informações do dashboard:", error)
+            }
+
+            finally {
+                setIsLoading(false)
+            }
+        }
+
+        fetchDashboardInfo()
+    }, [companyId])
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <p>Carregando...</p>
+            </div>
+        )
+    }
 
     return (
         <div className="flex min-h-screen bg-green-50">
@@ -78,11 +142,13 @@ export default function DashboardPage() {
                                                     <stat.icon className={`h-5 w-5 ${stat.trend === "up" ? "text-green-600" : "text-red-600"}`} />
                                                 </div>
                                             </div>
-                                            <div className="mt-4">
-                                                <p className={`text-xs ${stat.trend === "up" ? "text-green-600" : "text-red-600"}`}>
-                                                    {stat.change} em relação à semana anterior
-                                                </p>
-                                            </div>
+                                            {
+                                                //<div className="mt-4">
+                                                //  <p className={`text-xs ${stat.trend === "up" ? "text-green-600" : "text-red-600"}`}>
+                                                //{stat.change} em relação à semana anterior
+                                                //  </p>
+                                                //</div>
+                                            }
                                         </CardContent>
                                     </Card>
                                 ))}
