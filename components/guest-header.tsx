@@ -43,13 +43,13 @@ export function GuestHeader() {
               </SheetTrigger>
               <SheetContent side="right">
                 <nav className="flex flex-col space-y-4 mt-8">
-                  <Link href="/showcase" className="text-lg font-medium">
+                  <Link href="/" className="text-lg font-medium">
                     Início
                   </Link>
-                  <Link href="/showcase#como-funciona" className="text-lg font-medium">
+                  <Link href="/#como-funciona" className="text-lg font-medium">
                     Como Funciona
                   </Link>
-                  <Link href="/showcase#contato" className="text-lg font-medium">
+                  <Link href="/#contato" className="text-lg font-medium">
                     Contato
                   </Link>
                   <Button asChild className="mt-2 bg-green-600 hover:bg-green-700">
