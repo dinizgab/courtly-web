@@ -119,16 +119,16 @@ export default function CourtDetailsPage() {
         fetchAvailableSlots()
     }, [id])
 
-    const gerarHorarios = () => {
+    const generateSlots = () => {
         if (!court || !unavailableSlots) return []
 
         const horarios = []
-        const [horaInicio] = getTimeFromDateString(court.openingTime).split(":")
-        const [horaFim] = getTimeFromDateString(court.closingTime).split(":")
+        const openHour = new Date(court.openingTime).getUTCHours()
+        const closeHour = new Date(court.closingTime).getUTCHours()
 
         const occupiedSlots = new Set(unavailableSlots.map(slot => new Date(slot.startTime!).getUTCHours()))
 
-        for (let hour = Number.parseInt(horaInicio); hour < Number.parseInt(horaFim); hour++) {
+        for (let hour = openHour; hour < closeHour; hour++) {
             const horaFormatada = hour.toString().padStart(2, "0")
 
             if (occupiedSlots.has(hour)) {
@@ -319,7 +319,7 @@ export default function CourtDetailsPage() {
                                     <div className="space-y-4">
                                         <h3 className="font-semibold">Disponibilidade para Hoje</h3>
                                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                            {gerarHorarios().map((slot, index) => (
+                                            {generateSlots().map((slot, index) => (
                                                 <div
                                                     key={index}
                                                     className={`p-3 rounded-md border text-center ${slot.disponivel
