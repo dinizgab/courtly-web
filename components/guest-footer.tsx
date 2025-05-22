@@ -7,7 +7,7 @@ export function GuestFooter() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-xl font-bold mb-4">QuadrasFácil</h3>
+            <h3 className="text-xl font-bold mb-4">Courtly</h3>
             <p className="text-gray-300 mb-4">
               Encontre e reserve as melhores quadras esportivas da sua região de forma rápida e fácil.
             </p>
@@ -82,7 +82,7 @@ export function GuestFooter() {
       </div>
       <div className="bg-gray-900 py-4">
         <div className="container mx-auto px-4 text-center text-gray-400 text-sm">
-          <p>&copy; {new Date().getFullYear()} QuadrasFácil. Todos os direitos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} Courtly. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>

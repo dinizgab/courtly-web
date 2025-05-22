@@ -52,7 +52,7 @@ export function AdminSidebar({ activePage }: AdminSidebarProps) {
     <aside className="hidden md:flex h-screen w-64 flex-col border-r bg-green-800 text-white">
       <div className="p-6">
         <Link href="/admin/dashboard" className="flex items-center gap-2">
-          <span className="text-xl font-bold">QuadrasFácil</span>
+          <span className="text-xl font-bold">Courtly</span>
         </Link>
       </div>
       <nav className="flex-1 space-y-1 p-4">

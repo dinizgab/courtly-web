@@ -182,7 +182,7 @@ export default function PerfilPage() {
             if (!token || !companyId) return
 
             try {
-                const response = await api.get(`/admin/companies/${companyId}`, {
+                const response = await api.get(`/adming/companies/${companyId}`, {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
