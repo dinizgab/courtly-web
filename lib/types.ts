@@ -11,6 +11,7 @@ export type Court = {
     closingTime: string
     capacity: number
     photos: string[]
+    company?: Partial<Company>
 }
 
 export type Company = {
