@@ -22,7 +22,6 @@ import { Loader2, ArrowLeft, Trash, ImageIcon } from "lucide-react"
 import Image from "next/image"
 import api from "@/lib/axios"
 import { Court, CourtApi } from "@/lib/types"
-import { AxiosResponse } from "axios"
 import { getTimeFromDateString } from "@/lib/utils"
 import { useAuth } from "@/app/contexts/auth-context"
 

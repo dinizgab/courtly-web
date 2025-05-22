@@ -13,7 +13,6 @@ import { AlertCircle, Eye, EyeOff } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
-import api from "@/lib/axios"
 import { useAuth } from "@/app/contexts/auth-context"
 import { Checkbox } from "@radix-ui/react-checkbox"
 
@@ -25,7 +24,7 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false)
     const [mostrarSenha, setMostrarSenha] = useState(false)
     const [rememberMe, setRememberMe] = useState(false)
-    const { login, isAuthenticated, companyId } = useAuth()
+    const { login, isAuthenticated } = useAuth()
 
     useEffect(() => {
         if (isAuthenticated) {
