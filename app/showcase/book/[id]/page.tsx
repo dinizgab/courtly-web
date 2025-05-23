@@ -241,7 +241,7 @@ export default function CreateBookingPage() {
                 <GuestHeader />
                 <div className="flex-grow container mx-auto px-4 py-8">
                     <div className="text-center py-12">
-                        <h2 className="text-2xl font-bold text-gray-700">court.não encontrada</h2>
+                        <h2 className="text-2xl font-bold text-gray-700">Quadra não encontrada</h2>
                         <p className="mt-2 text-gray-500">A court.que você está procurando não existe ou foi removida.</p>
                         <Button className="mt-4" onClick={() => router.push("/showcase")}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -463,7 +463,7 @@ export default function CreateBookingPage() {
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="flex justify-between items-center pb-2 border-b">
-                                    <span className="font-medium">court.</span>
+                                    <span className="font-medium">Quadra:</span>
                                     <span>{court.name}</span>
                                 </div>
                                 <div className="flex justify-between items-center pb-2 border-b">
