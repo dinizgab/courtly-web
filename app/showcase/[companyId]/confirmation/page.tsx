@@ -158,10 +158,10 @@ export default function BookingConfirmationPage() {
                                                 <span>Apresente o código de confirmação na recepção</span>
                                             </li>
                                             {
-                                                //                                        <li className="flex items-start">
-                                                //                                            <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-0.5" />
-                                                //                                            <span>Em caso de cancelamento, entre em contato com pelo menos 24h de antecedência</span>
-                                                //                                        </li>
+                                                //li className="flex items-start">
+                                                //   <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-0.5" />
+                                                //   <span>Em caso de cancelamento, entre em contato com pelo menos 24h de antecedência</span>
+                                                ///li>
                                             }
                                         </ul>
                                     </div>
