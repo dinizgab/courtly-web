@@ -1,6 +1,6 @@
 "use client"
 
-import { useSearchParams, useRouter } from "next/navigation"
+import { useSearchParams, useRouter, useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { GuestHeader } from "@/components/guest-header"
@@ -16,6 +16,7 @@ export default function BookingConfirmationPage() {
     const searchParams = useSearchParams()
     const router = useRouter()
     const bookingId = searchParams.get("id")
+    const { companyId } = useParams() as { companyId: string }
     const [booking, setBooking] = useState<Booking>()
     const [isLoading, setIsLoading] = useState(false)
     const { toast } = useToast()
@@ -170,7 +171,7 @@ export default function BookingConfirmationPage() {
                                 <Button variant="outline" onClick={() => window.print()}>
                                     Imprimir Comprovante
                                 </Button>
-                                <Button className="bg-green-600 hover:bg-green-700" onClick={() => router.push("/showcase")}>
+                                <Button className="bg-green-600 hover:bg-green-700" onClick={() => router.push(`/showcase/${companyId}`)}>
                                     Voltar para Início
                                 </Button>
                             </CardFooter>

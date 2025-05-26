@@ -13,22 +13,21 @@ import { ArrowLeft, Clock, Users, Calendar, CheckCircle } from "lucide-react"
 import { Booking, BookingApi, Court, CourtApi } from "@/lib/types"
 import api from "@/lib/axios"
 import { getTimeFromDateString } from "@/lib/utils"
-import { generateAvailableHours } from "@/lib/booking"
 
 export default function CourtDetailsPage() {
     const router = useRouter()
     const [court, setCourt] = useState<Court | null>(null)
-    const [availableSlots, setAvailableSlots] = useState<{ horario: string, disponivel: boolean }[] | null>(null)
+    const [unavailableSlots, setAvailableSlots] = useState<Partial<Booking>[] | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [fotoAtiva, setFotoAtiva] = useState(0)
-    const { id } = useParams() as { id: string }
+    const { companyId, courtId } = useParams() as { companyId: string, courtId: string }
 
     useEffect(() => {
         const fetchCourt = async () => {
             setIsLoading(true)
             try {
 
-                const response = await api.get(`/showcase/courts/${id}`)
+                const response = await api.get(`/showcase/courts/${courtId}`)
 
                 const court: CourtApi = response.data
                 const parsedCourt: Court = {
@@ -102,28 +101,68 @@ export default function CourtDetailsPage() {
             }
         }
 
-        fetchCourt()
-    }, [id])
-
-    useEffect(() => {
         const fetchAvailableSlots = async () => {
             try {
-                const response = await api.get(`/showcase/courts/${id}/available-slots?date=${new Date().toISOString()}`)
+                const response = await api.get(`/showcase/courts/${courtId}/available-slots?date=${new Date().toISOString()}`)
                 const unavailableSlots = response.data.map((slot: BookingApi) => ({
                     startTime: slot.start_time,
                     endTime: slot.end_time,
                 } as Partial<Booking>))
 
-                const availableSlots = generateAvailableHours(court!, unavailableSlots)
-
-                setAvailableSlots(availableSlots)
+                setAvailableSlots(unavailableSlots)
             } catch (error) {
                 console.error("Erro ao buscar horários disponíveis:", error)
             }
         }
 
+        fetchCourt()
         fetchAvailableSlots()
-    }, [court])
+    }, [courtId])
+
+    const gerarHorarios = () => {
+        if (!court || !unavailableSlots) return []
+
+        const horarios = []
+        const [horaInicio] = getTimeFromDateString(court.openingTime).split(":")
+        const [horaFim] = getTimeFromDateString(court.closingTime).split(":")
+
+        const occupiedSlots = new Set(unavailableSlots.map(slot => new Date(slot.startTime!).getUTCHours()))
+
+        for (let hour = Number.parseInt(horaInicio); hour < Number.parseInt(horaFim); hour++) {
+            const horaFormatada = hour.toString().padStart(2, "0")
+
+            if (occupiedSlots.has(hour)) {
+                const slot = unavailableSlots.find((slot) => {
+                    const slotHora = new Date(slot.startTime!).getUTCHours()
+                    return slotHora === hour
+                })
+
+                if (slot) {
+                    const endHour = new Date(slot.endTime!).getUTCHours()
+
+                    for (let h = hour; h < endHour; h++) {
+                        horarios.push({
+                            horario: `${h}:00 - ${(h + 1).toString().padStart(2, "0")}:00`,
+                            disponivel: false,
+                        })
+                    }
+                }
+            } else {
+                horarios.push({
+                    horario: `${horaFormatada}:00 - ${(hour + 1).toString().padStart(2, "0")}:00`,
+                    disponivel: true,
+                })
+            }
+        }
+
+        return horarios
+    }
+
+    //const calcularMediaAvaliacoes = () => {
+    //    if (!court|| court.avaliacoes.length === 0) return 0
+    //    const soma = court.avaliacoes.reduce((acc, avaliacao) => acc + avaliacao.nota, 0)
+    //    return soma / court.avaliacoes.length
+    //}
 
     if (isLoading) {
         return (
@@ -147,7 +186,7 @@ export default function CourtDetailsPage() {
                     <div className="text-center py-12">
                         <h2 className="text-2xl font-bold text-gray-700">Quadra não encontrada</h2>
                         <p className="mt-2 text-gray-500">A quadra que você está procurando não existe ou foi removida.</p>
-                        <Button className="mt-4" onClick={() => router.push("/showcase")}>
+                        <Button className="mt-4" onClick={() => router.push(`/showcase/${companyId}`)}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Voltar para lista de quadras
                         </Button>
@@ -164,7 +203,7 @@ export default function CourtDetailsPage() {
 
             <div className="flex-grow container mx-auto px-4 py-8">
                 <div className="mb-6">
-                    <Button variant="outline" onClick={() => router.push("/showcase")}>
+                    <Button variant="outline" onClick={() => router.push(`/showcase/${companyId}`)}>
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Voltar para lista
                     </Button>
@@ -280,7 +319,7 @@ export default function CourtDetailsPage() {
                                     <div className="space-y-4">
                                         <h3 className="font-semibold">Disponibilidade para Hoje</h3>
                                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                            {availableSlots && availableSlots.map((slot, index) => (
+                                            {gerarHorarios().map((slot, index) => (
                                                 <div
                                                     key={index}
                                                     className={`p-3 rounded-md border text-center ${slot.disponivel
@@ -341,7 +380,7 @@ export default function CourtDetailsPage() {
                                 <Button
                                     className="w-full bg-green-600 hover:bg-green-700"
                                     size="lg"
-                                    onClick={() => router.push(`/showcase/book/${court.id}`)}
+                                    onClick={() => router.push(`/showcase/${companyId}/book/${court.id}`)}
                                 >
                                     <Calendar className="mr-2 h-5 w-5" />
                                     Reservar Agora

@@ -21,13 +21,13 @@ export default function CompanyShowcasePage() {
     const [isLoading, setIsLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState("")
     const [filterType, setTipoFiltro] = useState("todos")
-    const { id } = useParams()
+    const { companyId } = useParams()
 
     useEffect(() => {
         const fetchCourts = async () => {
             setIsLoading(true)
             try {
-                const response = await api.get(`/showcase/companies/${id}/courts`)
+                const response = await api.get(`/showcase/companies/${companyId}/courts`)
 
                 const courtsData: Court[] = response.data.map((c: CourtApi) => ({
                     id: c.id,
@@ -142,13 +142,13 @@ export default function CompanyShowcasePage() {
                                             <Button
                                                 variant="outline"
                                                 className="text-green-600 border-green-600 hover:bg-green-50"
-                                                onClick={() => router.push(`/showcase/courts/${c.id}`)}
+                                                onClick={() => router.push(`/showcase/${companyId}/court/${c.id}`)}
                                             >
                                                 Ver detalhes
                                             </Button>
                                             <Button
                                                 className="bg-green-600 hover:bg-green-700"
-                                                onClick={() => router.push(`/showcase/book/${c.id}`)}
+                                                onClick={() => router.push(`/showcase/${companyId}/book/${c.id}`)}
                                             >
                                                 Reservar
                                             </Button>

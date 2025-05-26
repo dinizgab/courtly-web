@@ -46,7 +46,7 @@ export default function CreateBookingPage() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [availableSlots, setAvailableSlots] = useState<AvailableSlots[]>([])
     const [valorTotal, setValorTotal] = useState(0)
-    const { id } = useParams() as { id: string }
+    const { companyId, courtId } = useParams() as { companyId: string, courtId: string }
 
     const form = useForm<BookFormValues>({
         resolver: zodResolver(bookFormSchema),
@@ -68,7 +68,7 @@ export default function CreateBookingPage() {
         const fetchCourt = async () => {
             setIsLoading(true)
             try {
-                const response = await api.get(`/showcase/courts/${id}`)
+                const response = await api.get(`/showcase/courts/${courtId}`)
 
                 const court: CourtApi = response.data
                 const parsedCourt: Court = {
@@ -101,7 +101,7 @@ export default function CreateBookingPage() {
             }
         }
         fetchCourt()
-    }, [id, router, toast])
+    }, [courtId, router, toast])
 
     useEffect(() => {
         const fetchAvailableSlots = async () => {
@@ -193,7 +193,7 @@ export default function CreateBookingPage() {
                 }
             }
 
-            const response = await api.post(`/showcase/courts/${id}/bookings`, reservaData)
+            const response = await api.post(`/showcase/courts/${courtId}/bookings`, reservaData)
             if (response.status !== 201) {
                 throw new Error("Erro ao criar reserva")
             }
@@ -260,7 +260,7 @@ export default function CreateBookingPage() {
 
             <div className="flex-grow container mx-auto px-4 py-8">
                 <div className="mb-6">
-                    <Button variant="outline" onClick={() => router.push(`/showcase/courts/${id}`)}>
+                    <Button variant="outline" onClick={() => router.push(`/showcase/${companyId}/court/${courtId}`)}>
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Voltar para detalhes da quadra
                     </Button>
@@ -432,7 +432,7 @@ export default function CreateBookingPage() {
                                         <Button
                                             type="button"
                                             variant="outline"
-                                            onClick={() => router.push(`/showcase/courts/${id}`)}
+                                            onClick={() => router.push(`/showcase/courts/${courtId}`)}
                                         >
                                             Cancelar
                                         </Button>
