@@ -84,7 +84,7 @@ export default function BookingsPage() {
             if (!companyId || !token) return
 
             try {
-                const response = await api.get(`/admin/companies/${companyId}/bookings`,
+                const response = await api.get(`/admin/bookings/?company_id=${companyId}`,
                     {
                         headers: {
                             "Content-Type": "application/json",
