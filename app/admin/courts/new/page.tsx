@@ -124,7 +124,7 @@ export default function NewCourtPage() {
     }
 
     return (
-        <div className="flex min-h-screen bg-green-50">
+        <div className="flex min-h-screen bg-slate-50">
             <AdminSidebar activePage="courts" />
             <div className="flex-1">
                 <AdminHeader title="Nova Quadra" />
@@ -300,7 +300,7 @@ export default function NewCourtPage() {
                                     >
                                         Cancelar
                                     </Button>
-                                    <Button type="submit" className="bg-green-600 hover:bg-green-700" disabled={isSubmitting}>
+                                    <Button type="submit" className="bg-blue-500 hover:bg-blue-600" disabled={isSubmitting}>
                                         {isSubmitting ? (
                                             <>
                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

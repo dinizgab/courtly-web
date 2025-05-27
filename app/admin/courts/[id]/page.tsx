@@ -210,13 +210,13 @@ export default function CourtDetailsPage() {
     // TODO - Check if its better to use loading component instead of creating a component here
     if (isLoading) {
         return (
-            <div className="flex min-h-screen bg-green-50">
+            <div className="flex min-h-screen bg-slate-50">
                 <AdminSidebar activePage="quadras" />
                 <div className="flex-1">
                     <AdminHeader title="Detalhes da Quadra" />
                     <main className="p-6">
                         <div className="flex justify-center items-center h-[60vh]">
-                            <div className="animate-pulse text-green-600">Carregando detalhes da quadra...</div>
+                            <div className="animate-pulse text-slate-600">Carregando detalhes da quadra...</div>
                         </div>
                     </main>
                 </div>
@@ -226,7 +226,7 @@ export default function CourtDetailsPage() {
 
     if (!court) {
         return (
-            <div className="flex min-h-screen bg-green-50">
+            <div className="flex min-h-screen bg-slate-50">
                 <AdminSidebar activePage="quadras" />
                 <div className="flex-1">
                     <AdminHeader title="Detalhes da Quadra" />
@@ -246,7 +246,7 @@ export default function CourtDetailsPage() {
     }
 
     return (
-        <div className="flex min-h-screen bg-green-50">
+        <div className="flex min-h-screen bg-slate-50">
             <AdminSidebar activePage="quadras" />
             <div className="flex-1">
                 <AdminHeader title="Detalhes da Quadra" />
@@ -308,7 +308,7 @@ export default function CourtDetailsPage() {
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <div className="text-2xl font-bold text-green-600">R$ {court.hourlyPrice.toFixed(2)}</div>
+                                            <div className="text-2xl font-bold text-blue-500">R$ {court.hourlyPrice.toFixed(2)}</div>
                                             <div className="text-sm text-gray-500">por hora</div>
                                         </div>
                                     </div>
@@ -332,7 +332,7 @@ export default function CourtDetailsPage() {
 
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                                 <div className="flex items-start">
-                                                    <Clock className="h-5 w-5 text-green-600 mr-2 mt-0.5" />
+                                                    <Clock className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
                                                     <div>
                                                         <h4 className="font-medium">Horário de Funcionamento</h4>
                                                         <p className="text-gray-600">
@@ -342,7 +342,7 @@ export default function CourtDetailsPage() {
                                                 </div>
 
                                                 <div className="flex items-start">
-                                                    <Users className="h-5 w-5 text-green-600 mr-2 mt-0.5" />
+                                                    <Users className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
                                                     <div>
                                                         <h4 className="font-medium">Capacidade</h4>
                                                         <p className="text-gray-600">{court.capacity > 0 ? `${court.capacity} pessoas` : "Não informada"}</p>
@@ -350,7 +350,7 @@ export default function CourtDetailsPage() {
                                                 </div>
 
                                                 <div className="flex items-start">
-                                                    <Calendar className="h-5 w-5 text-green-600 mr-2 mt-0.5" />
+                                                    <Calendar className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
                                                     <div>
                                                         <h4 className="font-medium">Reservas Hoje</h4>
                                                         <p className="text-gray-600">{court.bookingsToday} reservas</p>
@@ -400,7 +400,7 @@ export default function CourtDetailsPage() {
                                                         <div
                                                             key={index}
                                                             className={`p-3 rounded-md border text-center ${slot.disponivel
-                                                                ? "border-green-200 bg-green-50 text-green-700"
+                                                                ? "border-blue-200 bg-blue-50 text-blue-600"
                                                                 : "border-gray-200 bg-gray-100 text-gray-500"
                                                                 }`}
                                                         >
@@ -433,7 +433,7 @@ export default function CourtDetailsPage() {
                                                                 <div className="mt-2 sm:mt-0 flex flex-col sm:items-end">
                                                                     {
                                                                         <div className="flex items-center">
-                                                                            <DollarSign className="h-4 w-4 text-green-600 mr-1" />
+                                                                            <DollarSign className="h-4 w-4 text-blue-500 mr-1" />
                                                                             <span className="font-medium">R$ {getBookingTotalPrice(booking).toFixed(2)}</span>
                                                                         </div>
                                                                     }
@@ -476,7 +476,7 @@ export default function CourtDetailsPage() {
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <Button
-                                        className="w-full bg-green-600 hover:bg-green-700"
+                                        className="w-full bg-blue-500 hover:bg-blue-600"
                                         onClick={() => router.push("/admin/bookings/new?court=" + court.id)}
                                     >
                                         <Calendar className="mr-2 h-4 w-4" />

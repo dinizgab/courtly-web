@@ -438,7 +438,7 @@ export default function CreateBookingPage() {
                                         </Button>
                                         <Button
                                             type="submit"
-                                            className="bg-green-600 hover:bg-green-700"
+                                            className="bg-blue-500 hover:bg-blue-600"
                                             disabled={isSubmitting || !watchStartTime || availableSlots.length === 0}
                                         >
                                             {isSubmitting ? (
@@ -488,18 +488,18 @@ export default function CreateBookingPage() {
                                         {watchDuration ? `${watchDuration} hora${Number.parseInt(watchDuration) > 1 ? "s" : ""}` : "-"}
                                     </span>
                                 </div>
-                                <div className="flex justify-between items-center text-lg font-bold text-green-600">
+                                <div className="flex justify-between items-center text-lg font-bold text-blue-500">
                                     <span>Valor Total:</span>
                                     <span>R$ {valorTotal.toFixed(2)}</span>
                                 </div>
 
                                 <div className="pt-4 space-y-2 text-sm text-gray-600">
                                     <div className="flex items-start">
-                                        <Clock className="h-4 w-4 text-green-600 mr-2 mt-0.5" />
+                                        <Clock className="h-4 w-4 text-blue-500 mr-2 mt-0.5" />
                                         <span>O pagamento será realizado no local</span>
                                     </div>
                                     <div className="flex items-start">
-                                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-0.5" />
+                                        <CheckCircle className="h-4 w-4 text-blue-500 mr-2 mt-0.5" />
                                         <span>Você receberá um código de confirmação por email</span>
                                     </div>
                                 </div>

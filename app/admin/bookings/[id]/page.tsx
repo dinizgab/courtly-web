@@ -187,13 +187,13 @@ export default function BookingDetailsPage() {
 
     if (isLoading) {
         return (
-            <div className="flex min-h-screen bg-green-50">
+            <div className="flex min-h-screen bg-slate-50">
                 <AdminSidebar activePage="reservas" />
                 <div className="flex-1">
                     <AdminHeader title="Detalhes da Reserva" />
                     <main className="p-6">
                         <div className="flex justify-center items-center h-[60vh]">
-                            <div className="animate-pulse text-green-600">Carregando detalhes da reserva...</div>
+                            <div className="animate-pulse text-slate-600">Carregando detalhes da reserva...</div>
                         </div>
                     </main>
                 </div>
@@ -203,7 +203,7 @@ export default function BookingDetailsPage() {
 
     if (!booking) {
         return (
-            <div className="flex min-h-screen bg-green-50">
+            <div className="flex min-h-screen bg-slate-50">
                 <AdminSidebar activePage="reservas" />
                 <div className="flex-1">
                     <AdminHeader title="Detalhes da Reserva" />
@@ -223,7 +223,7 @@ export default function BookingDetailsPage() {
     }
 
     return (
-        <div className="flex min-h-screen bg-green-50">
+        <div className="flex min-h-screen bg-slate-50">
             <AdminSidebar activePage="bookings" />
             <div className="flex-1">
                 <AdminHeader title="Detalhes da Reserva" />
@@ -235,7 +235,7 @@ export default function BookingDetailsPage() {
                         </Button>
                         <div className="flex gap-2">
                             {booking.status === "pending" && (
-                                <Button className="bg-green-600 hover:bg-green-700" onClick={handleConfirmar}>
+                                <Button className="bg-blue-500 hover:bg-blue-600" onClick={handleConfirmar}>
                                     <CheckCircle className="mr-2 h-4 w-4" />
                                     Confirmar Reserva
                                 </Button>
@@ -259,7 +259,7 @@ export default function BookingDetailsPage() {
                                             <div className="mt-2">{getStatusBadge(booking.status)}</div>
                                         </div>
                                         <div className="text-right">
-                                            <div className="text-2xl font-bold text-green-600">R$ {booking.totalPrice.toFixed(2)}</div>
+                                            <div className="text-2xl font-bold text-blue-500">R$ {booking.totalPrice.toFixed(2)}</div>
                                         </div>
                                     </div>
                                 </CardHeader>
@@ -269,7 +269,7 @@ export default function BookingDetailsPage() {
                                             <h3 className="font-semibold text-lg">Informações da Reserva</h3>
 
                                             <div className="flex items-start">
-                                                <Calendar className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                                                <Calendar className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
                                                 <div>
                                                     <h4 className="font-medium">Data</h4>
                                                     <p className="text-gray-600">{new Date(booking.startTime).toLocaleDateString("pt-BR")}</p>
@@ -277,7 +277,7 @@ export default function BookingDetailsPage() {
                                             </div>
 
                                             <div className="flex items-start">
-                                                <Clock className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                                                <Clock className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
                                                 <div>
                                                     <h4 className="font-medium">Horário</h4>
                                                     <p className="text-gray-600">{formatBookingTime(booking)}</p>
@@ -285,13 +285,13 @@ export default function BookingDetailsPage() {
                                             </div>
 
                                             <div className="flex items-start">
-                                                <MapPin className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                                                <MapPin className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
                                                 <div>
                                                     <h4 className="font-medium">Quadra</h4>
                                                     <p className="text-gray-600">{booking.court?.name}</p>
                                                     <Button
                                                         variant="link"
-                                                        className="p-0 h-auto text-green-600"
+                                                        className="p-0 h-auto text-blue-500"
                                                         onClick={() => router.push(`/admin/courts/${booking.courtId}`)}
                                                     >
                                                         Ver detalhes da quadra
@@ -304,7 +304,7 @@ export default function BookingDetailsPage() {
                                             <h3 className="font-semibold text-lg">Informações do Cliente</h3>
 
                                             <div className="flex items-start">
-                                                <User className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                                                <User className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
                                                 <div>
                                                     <h4 className="font-medium">Nome</h4>
                                                     <p className="text-gray-600">{booking.guestName}</p>
@@ -313,7 +313,7 @@ export default function BookingDetailsPage() {
 
                                             {booking.guestPhone && (
                                                 <div className="flex items-start">
-                                                    <Phone className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                                                    <Phone className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
                                                     <div>
                                                         <h4 className="font-medium">Telefone</h4>
                                                         <p className="text-gray-600">{booking.guestPhone}</p>
@@ -323,7 +323,7 @@ export default function BookingDetailsPage() {
 
                                             {booking.guestEmail && (
                                                 <div className="flex items-start">
-                                                    <Mail className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                                                    <Mail className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
                                                     <div>
                                                         <h4 className="font-medium">Email</h4>
                                                         <p className="text-gray-600">{booking.guestEmail}</p>
@@ -332,7 +332,7 @@ export default function BookingDetailsPage() {
                                             )}
 
                                             <div className="flex items-start">
-                                                <DollarSign className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                                                <DollarSign className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
                                                 <div>
                                                     <h4 className="font-medium">Valor</h4>
                                                     <p className="text-gray-600">R$ {getBookingTotalPrice(booking).toFixed(2)}</p>
@@ -380,7 +380,7 @@ export default function BookingDetailsPage() {
                                     </div>
 
                                     {booking.status === "pending" ? (
-                                        <Button className="w-full bg-green-600 hover:bg-green-700" onClick={handleConfirmar}>
+                                        <Button className="w-full bg-blue-500 hover:bg-blue-600" onClick={handleConfirmar}>
                                             <CheckCircle className="mr-2 h-4 w-4" />
                                             Confirmar Reserva
                                         </Button>

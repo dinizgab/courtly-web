@@ -196,13 +196,13 @@ export default function EditCourtPage() {
 
     if (isLoading) {
         return (
-            <div className="flex min-h-screen bg-green-50">
+            <div className="flex min-h-screen bg-slate-50">
                 <AdminSidebar activePage="quadras" />
                 <div className="flex-1">
                     <AdminHeader title="Editar Quadra" />
                     <main className="p-6">
                         <div className="flex justify-center items-center h-[60vh]">
-                            <div className="animate-pulse text-green-600">Carregando dados da quadra...</div>
+                            <div className="animate-pulse text-slate-600">Carregando dados da quadra...</div>
                         </div>
                     </main>
                 </div>
@@ -211,7 +211,7 @@ export default function EditCourtPage() {
     }
 
     return (
-        <div className="flex min-h-screen bg-green-50">
+        <div className="flex min-h-screen bg-slate-50">
             <AdminSidebar activePage="quadras" />
             <div className="flex-1">
                 <AdminHeader title="Editar Quadra" />
@@ -444,7 +444,7 @@ export default function EditCourtPage() {
                                     >
                                         Cancelar
                                     </Button>
-                                    <Button type="submit" className="bg-green-600 hover:bg-green-700" disabled={isSubmitting}>
+                                    <Button type="submit" className="bg-blue-500 hover:bg-blue-600" disabled={isSubmitting}>
                                         {isSubmitting ? (
                                             <>
                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
