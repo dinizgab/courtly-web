@@ -1,115 +1,25 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Calendar, Clock, Users, DollarSign } from "lucide-react"
 import { AdminHeader } from "@/components/admin-header"
 import { AdminSidebar } from "@/components/admin-sidebar"
-import { useAuth } from "@/app/contexts/auth-context"
-import api from "@/lib/axios"
+import { useDashboardStats } from "@/hooks/use-dashboard-stats"
+import { StatsGrid } from "@/components/dashboard/stats-grid"
 
 export default function DashboardPage() {
     const [activeTab, setActiveTab] = useState("overview")
-    const [isLoading, setIsLoading] = useState(false)
-    const { companyId, token } = useAuth()
-    const [stats, setStats] = useState([
-        {
-            title: "Reservas Hoje",
-            value: "0",
-            icon: Calendar,
-            change: "",
-            trend: "up",
-        },
-        {
-            title: "Horas Reservadas",
-            value: "0",
-            icon: Clock,
-            change: "",
-            trend: "up",
-        },
-        {
-            title: "Clientes",
-            value: "0",
-            icon: Users,
-            change: "",
-            trend: "up",
-        },
-        {
-            title: "Faturamento",
-            value: "R$ 0",
-            icon: DollarSign,
-            change: "",
-            trend: "up",
-        },
-    ])
-
-    useEffect(() => {
-        const fetchDashboardInfo = async () => {
-            setIsLoading(true)
-            try {
-                const response = await api.get(`/admin/companies/${companyId}/dashboard`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    }
-                })
-                if (response.status !== 200) {
-                    throw new Error("Erro ao buscar informações do dashboard")
-                }
-
-                // TODO - Show if data increased based on the last week
-                const dashboardData = response.data
-                setStats([
-                    {
-                        title: "Reservas Hoje",
-                        value: String(dashboardData.total_bookings),
-                        icon: Calendar,
-                        change: "",
-                        trend: "up",
-                    },
-                    {
-                        title: "Horas Reservadas",
-                        value: String(dashboardData.total_booked_hours),
-                        icon: Clock,
-                        change: "",
-                        trend: "up",
-                    },
-                    {
-                        title: "Clientes",
-                        value: String(dashboardData.total_clients),
-                        icon: Users,
-                        change: "",
-                        trend: "up",
-                    },
-                    {
-                        title: "Faturamento",
-                        value: `R$ ${dashboardData.total_earnings}`,
-                        icon: DollarSign,
-                        change: "",
-                        trend: "up",
-                    },
-                ])
-            } catch (error) {
-                console.error("Erro ao buscar informações do dashboard:", error)
-            }
-
-            finally {
-                setIsLoading(false)
-            }
-        }
-
-        fetchDashboardInfo()
-    }, [companyId])
+    const { data, isLoading, isError } = useDashboardStats()
 
     if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <p>Carregando...</p>
-            </div>
-        )
+        return <div className="flex items-center justify-center min-h-screen">Carregando…</div>
     }
 
+    if (isError || !data) {
+        return <div className="flex items-center justify-center min-h-screen">Erro ao carregar dados</div>
+    }
     return (
         <div className="flex min-h-screen bg-slate-50">
             <AdminSidebar activePage="dashboard" />
@@ -130,33 +40,9 @@ export default function DashboardPage() {
                                 //</TabsTrigger>
                             }
                         </TabsList>
+                        <StatsGrid stats={data.stats} />
 
                         <TabsContent value="overview" className="space-y-6">
-                            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                                {stats.map((stat, i) => (
-                                    <Card key={i}>
-                                        <CardContent className="p-6">
-                                            <div className="flex items-center justify-between">
-                                                <div>
-                                                    <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                                                    <p className="text-2xl font-bold">{stat.value}</p>
-                                                </div>
-                                                <div className={`rounded-full p-2 ${stat.trend === "up" ? "bg-green-100" : "bg-red-100"}`}>
-                                                    <stat.icon className={`h-5 w-5 ${stat.trend === "up" ? "text-green-600" : "text-red-600"}`} />
-                                                </div>
-                                            </div>
-                                            {
-                                                //<div className="mt-4">
-                                                //  <p className={`text-xs ${stat.trend === "up" ? "text-green-600" : "text-red-600"}`}>
-                                                //{stat.change} em relação à semana anterior
-                                                //  </p>
-                                                //</div>
-                                            }
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                            </div>
-
                             <div className="grid gap-4 md:grid-cols-2">
                                 <Card>
                                     <CardHeader>
