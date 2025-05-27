@@ -341,7 +341,7 @@ export default function SignupPage() {
                                     />
                                 </CardContent>
                                 <CardFooter className="flex flex-col space-y-4">
-                                    <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isSubmitting}>
+                                    <Button type="submit" className="w-full bg-slate-600 hover:bg-slate-700" disabled={isSubmitting}>
                                         {isSubmitting ? (
                                             <>
                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -353,7 +353,7 @@ export default function SignupPage() {
                                     </Button>
                                     <div className="text-center text-sm">
                                         Já tem uma conta?{" "}
-                                        <Link href="/admin/login" className="text-green-600 hover:underline">
+                                        <Link href="/admin/login" className="text-blue-600 hover:underline">
                                             Faça login
                                         </Link>
                                     </div>

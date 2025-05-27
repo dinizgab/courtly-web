@@ -59,7 +59,7 @@ export default function LoginPage() {
             <div className="flex-grow flex items-center justify-center p-4">
                 <Card className="w-full max-w-md">
                     <CardHeader>
-                        <CardTitle className="text-2xl text-center text-green-800">Login Administrativo</CardTitle>
+                        <CardTitle className="text-2xl text-center text-slate-800">Login Administrativo</CardTitle>
                         <CardDescription className="text-center">
                             Acesse o painel para gerenciar suas quadras e reservas
                         </CardDescription>
@@ -114,19 +114,19 @@ export default function LoginPage() {
                                     Lembrar de mim
                                 </Label>
                                 <div className="flex-1 text-right">
-                                    <Link href="/recuperar-senha" className="text-sm text-green-600 hover:underline">
+                                    <Link href="/recuperar-senha" className="text-sm text-blue-600 hover:underline">
                                         Esqueceu sua senha?
                                     </Link>
                                 </div>
                             </div>
                         </CardContent>
                         <CardFooter className="flex flex-col space-y-4">
-                            <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isLoading}>
+                            <Button type="submit" className="w-full bg-slate-600 hover:bg-slate-700" disabled={isLoading}>
                                 {isLoading ? "Entrando..." : "Entrar"}
                             </Button>
                             <div className="text-center text-sm">
                                 Não tem uma conta?{" "}
-                                <Link href="/signup" className="text-green-600 hover:underline">
+                                <Link href="/signup" className="text-blue-600 hover:underline">
                                     Cadastre-se
                                 </Link>
                             </div>

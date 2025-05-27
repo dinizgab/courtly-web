@@ -170,7 +170,7 @@ export default function LandingPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <div className="space-y-6">
                             {
-                                //<Badge className="bg-white text-green-700 hover:bg-gray-100">Novo: Relatórios Avançados</Badge>
+                                //<Badge className="bg-white text-slate-700 hover:bg-gray-100">Novo: Relatórios Avançados</Badge>
                             }
                             <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                                 Gerencie suas quadras esportivas com facilidade
@@ -344,7 +344,7 @@ export default function LandingPage() {
                 //      <section className="py-20 bg-gray-50">
                 //          <div className="container mx-auto px-4">
                 //              <div className="text-center max-w-3xl mx-auto mb-16">
-                //                  <Badge className="bg-green-100 text-green-700 hover:bg-green-200 mb-4">Depoimentos</Badge>
+                //                  <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-200 mb-4">Depoimentos</Badge>
                 //                  <h2 className="text-3xl md:text-4xl font-bold mb-4">O que nossos clientes dizem</h2>
                 //                  <p className="text-lg text-gray-600">
                 //                      Centenas de locadores de quadras já transformaram seus negócios com o QuadrasFácil.
@@ -383,7 +383,7 @@ export default function LandingPage() {
                 //      <section className="py-20 bg-white" id="precos">
                 //        <div className="container mx-auto px-4">
                 //          <div className="text-center max-w-3xl mx-auto mb-16">
-                //            <Badge className="bg-green-100 text-green-700 hover:bg-green-200 mb-4">Preços</Badge>
+                //            <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-200 mb-4">Preços</Badge>
                 //            <h2 className="text-3xl md:text-4xl font-bold mb-4">Planos que se adaptam ao seu negócio</h2>
                 //            <p className="text-lg text-gray-600">
                 //              Escolha o plano ideal para o tamanho do seu negócio. Todos os planos incluem teste gratuito de 14 dias.
@@ -404,11 +404,11 @@ export default function LandingPage() {
                 //              <Card
                 //                key={index}
                 //                className={`border-0 shadow-md hover:shadow-lg transition-shadow relative ${
-                //                  plan.popular ? "border-t-4 border-t-green-600" : ""
+                //                  plan.popular ? "border-t-4 border-t-slate-600" : ""
                 //                }`}
                 //              >
                 //                {plan.popular && (
-                //                  <div className="absolute top-0 right-0 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                //                  <div className="absolute top-0 right-0 bg-slate-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
                 //                    MAIS POPULAR
                 //                  </div>
                 //                )}
@@ -423,7 +423,7 @@ export default function LandingPage() {
                 //                  <ul className="space-y-3 mb-8">
                 //                    {plan.features.map((feature, i) => (
                 //                      <li key={i} className="flex items-start">
-                //                        <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                //                        <CheckCircle className="h-5 w-5 text-slate-600 mr-2 mt-0.5 flex-shrink-0" />
                 //                        <span>{feature}</span>
                 //                      </li>
                 //                    ))}
@@ -431,7 +431,7 @@ export default function LandingPage() {
                 //
                 //                  <Button
                 //                    className={`w-full ${
-                //                      plan.popular ? "bg-green-600 hover:bg-green-700" : "bg-gray-800 hover:bg-gray-900"
+                //                      plan.popular ? "bg-slate-600 hover:bg-slate-700" : "bg-gray-800 hover:bg-gray-900"
                 //                    }`}
                 //                    onClick={() => router.push("/cadastro")}
                 //                  >
