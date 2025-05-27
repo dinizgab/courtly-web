@@ -57,19 +57,19 @@ export function GuestFooter() {
             <h3 className="text-xl font-bold mb-4">Contato</h3>
             <ul className="space-y-2">
               <li className="flex items-center">
-                <Mail className="h-5 w-5 mr-2 text-green-500" />
+                <Mail className="h-5 w-5 mr-2 text-gray-100" />
                 <a href="mailto:contato@quadrasfacil.com" className="text-gray-300 hover:text-white">
                   contato@quadrasfacil.com
                 </a>
               </li>
               <li className="flex items-center">
-                <Phone className="h-5 w-5 mr-2 text-green-500" />
+                <Phone className="h-5 w-5 mr-2 text-gray-100" />
                 <a href="tel:+551199999999" className="text-gray-300 hover:text-white">
                   (11) 9999-9999
                 </a>
               </li>
               <li className="flex items-start">
-                <MapPin className="h-5 w-5 mr-2 mt-1 text-green-500" />
+                <MapPin className="h-5 w-5 mr-2 mt-1 text-gray-100" />
                 <span className="text-gray-300">
                   Rua das Quadras, 123 - Centro
                   <br />

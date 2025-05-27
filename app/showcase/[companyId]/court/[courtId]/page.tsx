@@ -199,8 +199,6 @@ export default function CourtDetailsPage() {
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50">
-            <GuestHeader />
-
             <div className="flex-grow container mx-auto px-4 py-8">
                 <div className="mb-6">
                     <Button variant="outline" onClick={() => router.push(`/showcase/${companyId}`)}>
@@ -236,13 +234,12 @@ export default function CourtDetailsPage() {
                             </div>
                         </div>
 
-                        {/* Informações da Quadra */}
                         <div className="mb-8">
                             <div className="flex flex-wrap justify-between items-start mb-4">
                                 <div>
                                     <h1 className="text-3xl font-bold">{court.name}</h1>
                                     <div className="flex items-center mt-2">
-                                        <Badge className="bg-green-600 mr-2">{court.sportType}</Badge>
+                                        <Badge className="bg-slate-600 mr-2">{court.sportType[0].toUpperCase() + court.sportType.slice(1)}</Badge>
                                         {
                                             //<div className="flex items-center text-yellow-500">
                                             //    <Star className="fill-current h-4 w-4 mr-1" />

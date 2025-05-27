@@ -142,7 +142,7 @@ export default function BookingsPage() {
     }
 
     return (
-        <div className="flex min-h-screen bg-green-50">
+        <div className="flex min-h-screen bg-slate-50">
             <AdminSidebar activePage="bookings" />
             <div className="flex-1">
                 <AdminHeader title="Gerenciar Reservas" />
@@ -170,7 +170,7 @@ export default function BookingsPage() {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <Button asChild className="bg-green-600 hover:bg-green-700">
+                        <Button asChild className="bg-slate-600 hover:bg-slate-700">
                             <Link href="/admin/bookings/new">
                                 <Plus className="mr-2 h-4 w-4" />
                                 Nova Reserva

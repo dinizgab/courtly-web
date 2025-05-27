@@ -155,7 +155,7 @@ export function VerificationCodeModal({ isOpen, onClose, onConfirm, reservationI
             type="button"
             onClick={handleSubmit}
             disabled={verificationCode.length !== 6 || isSubmitting || verificationStatus === "success"}
-            className={verificationStatus === "success" ? "bg-green-600 hover:bg-green-700" : ""}
+            className={verificationStatus === "success" ? "bg-slate-600 hover:bg-slate-700" : ""}
           >
             {isSubmitting ? (
               <>

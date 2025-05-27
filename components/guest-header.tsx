@@ -11,23 +11,23 @@ export function GuestHeader() {
             <div className="container mx-auto px-4">
                 <div className="flex h-16 items-center justify-between">
                     <div className="flex items-center">
-                        <Link href="/showcase" className="text-xl font-bold text-green-600">
+                        <Link href="/showcase" className="text-xl font-bold text-slate-600">
                             Courtly
                         </Link>
                     </div>
 
                     {/* Menu para desktop */}
                     <nav className="hidden md:flex items-center space-x-6">
-                        <Link href="/showcase" className="text-gray-600 hover:text-green-600 transition-colors">
+                        <Link href="/showcase" className="text-gray-600 hover:text-slate-600 transition-colors">
                             Início
                         </Link>
-                        <Link href="/showcase#como-funciona" className="text-gray-600 hover:text-green-600 transition-colors">
+                        <Link href="/showcase#como-funciona" className="text-gray-600 hover:text-slate-600 transition-colors">
                             Como Funciona
                         </Link>
-                        <Link href="/showcase#contato" className="text-gray-600 hover:text-green-600 transition-colors">
+                        <Link href="/showcase#contato" className="text-gray-600 hover:text-slate-600 transition-colors">
                             Contato
                         </Link>
-                        <Button asChild className="bg-green-600 hover:bg-green-700">
+                        <Button asChild className="bg-slate-600 hover:bg-slate-700">
                             <Link href="/">Área Administrativa</Link>
                         </Button>
                     </nav>
@@ -52,7 +52,7 @@ export function GuestHeader() {
                                     <Link href="/#contato" className="text-lg font-medium">
                                         Contato
                                     </Link>
-                                    <Button asChild className="mt-2 bg-green-600 hover:bg-green-700">
+                                    <Button asChild className="mt-2 bg-slate-600 hover:bg-slate-700">
                                         <Link href="/">Área Administrativa</Link>
                                     </Button>
                                 </nav>

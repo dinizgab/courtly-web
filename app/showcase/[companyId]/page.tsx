@@ -65,7 +65,7 @@ export default function CompanyShowcasePage() {
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50">
-            <section className="relative bg-green-600 text-white py-16">
+            <section className="relative bg-slate-600 text-white py-16">
                 <div className="container mx-auto px-4 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">Reserve sua quadra esportiva</h1>
                     <p className="text-xl mb-8">Encontre e reserve a quadra ideal para seu esporte favorito</p>
@@ -101,7 +101,7 @@ export default function CompanyShowcasePage() {
 
                 {isLoading ? (
                     <div className="flex justify-center items-center h-64">
-                        <div className="animate-pulse text-green-600">Carregando quadras...</div>
+                        <div className="animate-pulse text-slate-600">Carregando quadras...</div>
                     </div>
                 ) : filteredCourts.length === 0 ? (
                     <div className="text-center py-12">
@@ -120,7 +120,7 @@ export default function CompanyShowcasePage() {
                                         className="object-cover"
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                     />
-                                    <Badge className="absolute top-2 right-2 bg-green-600">{c.sportType[0].toUpperCase() + c.sportType.slice(1)}</Badge>
+                                    <Badge className="absolute top-2 right-2 bg-slate-600">{c.sportType[0].toUpperCase() + c.sportType.slice(1)}</Badge>
                                 </div>
                                 <CardContent className="p-6">
                                     <h3 className="text-xl font-bold mb-2">{c.name}</h3>
@@ -132,13 +132,13 @@ export default function CompanyShowcasePage() {
                                                 {c.openingTime} às {c.closingTime}
                                             </span>
                                         </div>
-                                        <div className="flex items-center text-sm font-medium text-green-600">
+                                        <div className="flex items-center text-sm font-medium text-slate-600">
                                             <span>R$ {c.hourlyPrice.toFixed(2)} / hora</span>
                                         </div>
                                         <div className="flex justify-between items-center">
                                             <Button
                                                 variant="outline"
-                                                className="text-green-600 border-green-600 hover:bg-green-50"
+                                                className="text-slate-600 border-slate-600 hover:bg-slate-50"
                                                 onClick={() => router.push(`/showcase/${companyId}/court/${c.id}`)}
                                             >
                                                 Ver detalhes
@@ -164,7 +164,7 @@ export default function CompanyShowcasePage() {
                     <h2 className="text-3xl font-bold mb-12 text-center">Como Funciona</h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div className="text-center">
-                            <div className="bg-green-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                            <div className="bg-slate-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                                 1
                             </div>
                             <h3 className="text-xl font-bold mb-2">Escolha sua quadra</h3>
@@ -173,14 +173,14 @@ export default function CompanyShowcasePage() {
                             </p>
                         </div>
                         <div className="text-center">
-                            <div className="bg-green-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                            <div className="bg-slate-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                                 2
                             </div>
                             <h3 className="text-xl font-bold mb-2">Selecione data e horário</h3>
                             <p className="text-gray-600">Escolha a data e o horário disponível que você deseja reservar</p>
                         </div>
                         <div className="text-center">
-                            <div className="bg-green-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                            <div className="bg-slate-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                                 3
                             </div>
                             <h3 className="text-xl font-bold mb-2">Confirme sua reserva</h3>

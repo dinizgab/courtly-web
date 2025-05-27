@@ -70,7 +70,7 @@ export default function NovaReservaPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-green-50">
+    <div className="flex min-h-screen bg-slate-50">
       <AdminSidebar activePage="bookings" />
       <div className="flex-1">
         <AdminHeader title="Nova Reserva" />
@@ -169,7 +169,7 @@ export default function NovaReservaPage() {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-green-600 hover:bg-green-700"
+                  className="bg-slate-600 hover:bg-slate-700"
                   disabled={isSubmitting || !quadraSelecionada || !data}
                 >
                   {isSubmitting ? "Salvando..." : "Salvar Reserva"}

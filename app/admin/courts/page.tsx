@@ -104,7 +104,7 @@ export default function courtsPage() {
     )
 
     return (
-        <div className="flex min-h-screen bg-green-50">
+        <div className="flex min-h-screen bg-slate-50">
             <AdminSidebar activePage="courts" />
             <div className="flex-1">
                 <AdminHeader title="Gerenciar Quadras" />
@@ -119,7 +119,7 @@ export default function courtsPage() {
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <Button asChild className="bg-green-600 hover:bg-green-700">
+                        <Button asChild className="bg-slate-600 hover:bg-slate-700">
                             <Link href="/admin/courts/new">
                                 <Plus className="mr-2 h-4 w-4" />
                                 Nova Quadra

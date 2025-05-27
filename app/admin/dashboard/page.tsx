@@ -111,7 +111,7 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="flex min-h-screen bg-green-50">
+        <div className="flex min-h-screen bg-slate-50">
             <AdminSidebar activePage="dashboard" />
             <div className="flex-1">
                 <AdminHeader title="Dashboard" />
@@ -174,7 +174,7 @@ export default function DashboardPage() {
                                                         </p>
                                                         <p className="text-sm">Cliente: João Silva</p>
                                                     </div>
-                                                    <Link href={`/admin/bookings/${i}`} className="text-sm text-green-600 hover:underline">
+                                                    <Link href={`/admin/bookings/${i}`} className="text-sm text-slate-600 hover:underline">
                                                         Ver detalhes
                                                     </Link>
                                                 </div>
@@ -197,7 +197,7 @@ export default function DashboardPage() {
                                                         <p className="text-sm font-medium">{70 - i * 10}%</p>
                                                     </div>
                                                     <div className="h-2 w-full rounded-full bg-gray-200">
-                                                        <div className="h-2 rounded-full bg-green-600" style={{ width: `${70 - i * 10}%` }} />
+                                                        <div className="h-2 rounded-full bg-slate-600" style={{ width: `${70 - i * 10}%` }} />
                                                     </div>
                                                 </div>
                                             ))}

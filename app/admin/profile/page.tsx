@@ -224,7 +224,7 @@ export default function PerfilPage() {
     }
 
     return (
-        <div className="flex min-h-screen bg-green-50">
+        <div className="flex min-h-screen bg-slate-50">
             <AdminSidebar activePage="perfil" />
             <div className="flex-1">
                 <AdminHeader title="Perfil da Empresa" />
@@ -360,7 +360,7 @@ export default function PerfilPage() {
                                             </div>
                                         </CardContent>
                                         <CardFooter>
-                                            <Button type="submit" className="bg-green-600 hover:bg-green-700" disabled={isSubmittingPerfil}>
+                                            <Button type="submit" className="bg-slate-600 hover:bg-slate-700" disabled={isSubmittingPerfil}>
                                                 {isSubmittingPerfil ? (
                                                     <>
                                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -482,7 +482,7 @@ export default function PerfilPage() {
                             //                    />
                             //                </CardContent>
                             //                <CardFooter>
-                            //                    <Button type="submit" className="bg-green-600 hover:bg-green-700" disabled={isSubmittingSenha}>
+                            //                    <Button type="submit" className="bg-slate-600 hover:bg-slate-700" disabled={isSubmittingSenha}>
                             //                        {isSubmittingSenha ? (
                             //                            <>
                             //                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
