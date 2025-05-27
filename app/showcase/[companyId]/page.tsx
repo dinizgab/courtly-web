@@ -65,9 +65,6 @@ export default function CompanyShowcasePage() {
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50">
-            <GuestHeader />
-
-            {/* Hero Section */}
             <section className="relative bg-green-600 text-white py-16">
                 <div className="container mx-auto px-4 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">Reserve sua quadra esportiva</h1>

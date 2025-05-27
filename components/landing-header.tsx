@@ -38,7 +38,7 @@ export function LandingHeader() {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-green-600">
+          <Link href="/" className="text-2xl font-bold text-slate-600">
             
           </Link>
 
@@ -48,7 +48,7 @@ export function LandingHeader() {
                 key={index}
                 href={item.href}
                 className={`text-sm font-medium transition-colors ${
-                  isScrolled ? "text-gray-700 hover:text-green-600" : "text-gray-700 hover:text-green-600"
+                  isScrolled ? "text-gray-700 hover:text-slate-600" : "text-gray-700 hover:text-slate-600"
                 }`}
               >
                 {item.label}
@@ -60,12 +60,12 @@ export function LandingHeader() {
           <div className="hidden md:flex items-center space-x-4">
             <Button
               variant="outline"
-              className="text-green-600 border-green-600 hover:bg-green-50"
+              className="text-slate-600 border-slate-600 hover:bg-slate-50"
               onClick={() => router.push("/admin/login")}
             >
               Login
             </Button>
-            <Button className="bg-green-600 hover:bg-green-700" onClick={() => router.push("/signup")}>
+            <Button className="bg-slate-600 hover:bg-slate-700" onClick={() => router.push("/signup")}>
               Cadastre-se
             </Button>
           </div>
@@ -85,7 +85,7 @@ export function LandingHeader() {
                     <Link
                       key={index}
                       href={item.href}
-                      className="text-lg font-medium text-gray-700 hover:text-green-600"
+                      className="text-lg font-medium text-gray-700 hover:text-slate-500"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.label}
@@ -103,7 +103,7 @@ export function LandingHeader() {
                       Login
                     </Button>
                     <Button
-                      className="w-full bg-green-600 hover:bg-green-700"
+                      className="w-full bg-slate-600 hover:bg-slate-700"
                       onClick={() => {
                         router.push("/signup")
                         setIsMobileMenuOpen(false)

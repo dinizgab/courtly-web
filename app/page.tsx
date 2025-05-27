@@ -165,8 +165,7 @@ export default function LandingPage() {
         <div className="flex flex-col min-h-screen">
             <LandingHeader />
 
-            {/* Hero Section */}
-            <section className="relative bg-gradient-to-r from-green-600 to-green-700 text-white py-20">
+            <section className="relative bg-gradient-to-r from-slate-700 to-slate-800 text-white py-20">
                 <div className="container mx-auto px-4">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <div className="space-y-6">
@@ -183,7 +182,7 @@ export default function LandingPage() {
                             <div className="flex flex-col sm:flex-row gap-4 pt-4">
                                 <Button
                                     size="lg"
-                                    className="bg-white text-green-700 hover:bg-gray-100"
+                                    className="bg-white text-slate-700 hover:bg-gray-100"
                                     onClick={() => router.push("/signup")}
                                 >
                                     Começar Gratuitamente
@@ -192,7 +191,7 @@ export default function LandingPage() {
                                 <Button
                                     variant="outline"
                                     size="lg"
-                                    className="border-white text-green-700 hover:bg-green-600 hover:text-white"
+                                    className="border-white text-slate-700 hover:bg-slate-700 hover:text-white"
                                     onClick={() => router.push("/admin/login")}
                                 >
                                     Fazer Login
@@ -250,7 +249,7 @@ export default function LandingPage() {
             <section className="py-20 bg-gray-50" id="recursos">
                 <div className="container mx-auto px-4">
                     <div className="text-center max-w-3xl mx-auto mb-16">
-                        <Badge className="bg-green-100 text-green-700 hover:bg-green-200 mb-4">Recursos</Badge>
+                        <Badge className="bg-slate-200 text-slate-700 hover:bg-slate-300 mb-4">Recursos</Badge>
                         <h2 className="text-3xl md:text-4xl font-bold mb-4">Tudo o que você precisa para gerenciar suas quadras</h2>
                         <p className="text-lg text-gray-600">
                             Nossa plataforma foi desenvolvida especialmente para atender às necessidades de locadores de quadras
@@ -262,8 +261,8 @@ export default function LandingPage() {
                         {features.map((feature, index) => (
                             <Card key={index} className="border-0 shadow-md hover:shadow-lg transition-shadow">
                                 <CardContent className="p-6">
-                                    <div className="rounded-full bg-green-100 w-12 h-12 flex items-center justify-center mb-4">
-                                        <feature.icon className="h-6 w-6 text-green-600" />
+                                    <div className="rounded-full bg-blue-100 w-12 h-12 flex items-center justify-center mb-4">
+                                        <feature.icon className="h-6 w-6 text-blue-600" />
                                     </div>
                                     <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
                                     <p className="text-gray-600">{feature.description}</p>
@@ -278,7 +277,7 @@ export default function LandingPage() {
             <section className="py-20 bg-white" id="como-funciona">
                 <div className="container mx-auto px-4">
                     <div className="text-center max-w-3xl mx-auto mb-16">
-                        <Badge className="bg-green-100 text-green-700 hover:bg-green-200 mb-4">Como Funciona</Badge>
+                        <Badge className="bg-slate-200 text-slate-700 hover:bg-slate-300 mb-4">Como Funciona</Badge>
                         <h2 className="text-3xl md:text-4xl font-bold mb-4">Simplifique a gestão das suas quadras em 3 passos</h2>
                         <p className="text-lg text-gray-600">
                             Começar a usar o QuadrasFácil é simples e rápido. Em poucos minutos você já pode estar gerenciando suas
@@ -321,7 +320,7 @@ export default function LandingPage() {
                                             className="w-full object-cover"
                                         />
                                     </div>
-                                    <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center text-lg font-bold">
+                                    <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-slate-600 text-white flex items-center justify-center text-lg font-bold">
                                         {step.step}
                                     </div>
                                 </div>
@@ -332,7 +331,7 @@ export default function LandingPage() {
                     </div>
 
                     <div className="text-center mt-12">
-                        <Button size="lg" className="bg-green-600 hover:bg-green-700" onClick={() => router.push("/signup")}>
+                        <Button size="lg" className="bg-slate-600 hover:bg-slate-700" onClick={() => router.push("/signup")}>
                             Começar Agora
                             <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
@@ -458,7 +457,7 @@ export default function LandingPage() {
             <section className="py-20 bg-gray-50" id="faq">
                 <div className="container mx-auto px-4">
                     <div className="text-center max-w-3xl mx-auto mb-16">
-                        <Badge className="bg-green-100 text-green-700 hover:bg-green-200 mb-4">Perguntas Frequentes</Badge>
+                        <Badge className="bg-slate-200 text-slate-700 hover:bg-slate-300 mb-4">Perguntas Frequentes</Badge>
                         <h2 className="text-3xl md:text-4xl font-bold mb-4">Dúvidas comuns</h2>
                         <p className="text-lg text-gray-600">
                             Encontre respostas para as perguntas mais frequentes sobre nossa plataforma.
@@ -484,7 +483,7 @@ export default function LandingPage() {
             </section>
 
             {/* CTA Section */}
-            <section className="py-20 bg-gradient-to-r from-green-600 to-green-700 text-white">
+            <section className="py-20 bg-gradient-to-r from-slate-700 to-slate-800 text-white">
                 <div className="container mx-auto px-4 text-center">
                     <h2 className="text-3xl md:text-4xl font-bold mb-4">Pronto para transformar a gestão das suas quadras?</h2>
                     <p className="text-xl opacity-90 mb-8 max-w-3xl mx-auto">
@@ -494,7 +493,7 @@ export default function LandingPage() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Button
                             size="lg"
-                            className="bg-white text-green-700 hover:bg-gray-100"
+                            className="bg-white text-slate-700 hover:bg-gray-100"
                             onClick={() => router.push("/cadastro")}
                         >
                             Começar Gratuitamente
@@ -503,7 +502,7 @@ export default function LandingPage() {
                         <Button
                             variant="outline"
                             size="lg"
-                            className="border-white text-green-700 hover:bg-green-600 hover:text-white"
+                            className="border-white text-slate-700 hover:bg-slate-700 hover:text-white"
                             onClick={() => router.push("/admin/login")}
                         >
                             Fazer Login
