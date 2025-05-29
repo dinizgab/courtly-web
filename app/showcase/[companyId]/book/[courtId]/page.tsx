@@ -35,6 +35,10 @@ const bookFormSchema = z.object({
     date: z.date({ required_error: "Data é obrigatória" }),
     startTime: z.string({ required_error: "Horário de início é obrigatório" }),
     duration: z.string({ required_error: "Duração é obrigatória" }),
+    paymentMethod: z.enum(["pix", "on-site"], {
+        required_error: "Método de pagamento é obrigatório",
+        invalid_type_error: "Método de pagamento inválido",
+    }),
 })
 
 type BookFormValues = z.infer<typeof bookFormSchema>
@@ -43,7 +47,7 @@ export default function CreateBookingPage() {
     const router = useRouter()
     const { toast } = useToast()
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [paymentMethod, setPaymentMethod] = useState("")
+    const [paymentMethod, setPaymentMethod] = useState("pix")
     const [valorTotal, setValorTotal] = useState(0)
     const { companyId, courtId } = useParams() as { companyId: string, courtId: string }
 
@@ -56,6 +60,7 @@ export default function CreateBookingPage() {
             date: new Date(),
             startTime: "",
             duration: "1",
+            paymentMethod: "pix",
         },
     })
 
@@ -129,10 +134,10 @@ export default function CreateBookingPage() {
                 company_id: court?.companyId,
                 start_time: `${date}T${data.startTime}:00Z`,
                 end_time: `${date}T${horarioFim}:00Z`,
-                total_price: court?.hourlyPrice! * totalDuration,
                 court: {
                     company_id: court?.companyId,
-                }
+                },
+                payment_method: data.paymentMethod,
             }
 
             const response = await api.post(`/showcase/courts/${courtId}/bookings`, reservaData)
@@ -146,7 +151,8 @@ export default function CreateBookingPage() {
             })
 
             const bookingId = response.data.id
-            router.push(`/showcase/${companyId}/confirmation?id=${bookingId}`)
+            // TODO - Check this redirect
+            router.push(`/showcase/${companyId}/payment/pix`)
         } catch (error) {
             console.error("Erro ao fazer reserva:", error)
             toast({
@@ -381,16 +387,18 @@ export default function CreateBookingPage() {
                                                         </div>
                                                     </Label>
                                                 </div>
-                                                <div className="flex items-center space-x-3 p-4 border border-slate-200 rounded-lg hover:bg-slate-50">
-                                                    <RadioGroupItem value="on-site" id="on-site" />
-                                                    <CreditCard className="h-5 w-5 text-blue-600" />
-                                                    <Label htmlFor="on-site" className="flex-1 cursor-pointer">
-                                                        <div>
-                                                            <div className="font-medium">Pagar no Local</div>
-                                                            <div className="text-sm text-slate-600">Dinheiro ou cartão na hora</div>
-                                                        </div>
-                                                    </Label>
-                                                </div>
+                                                {
+                                                    //<div className="flex items-center space-x-3 p-4 border border-slate-200 rounded-lg hover:bg-slate-50">
+                                                    //    <RadioGroupItem value="on-site" id="on-site" />
+                                                    //    <CreditCard className="h-5 w-5 text-blue-600" />
+                                                    //    <Label htmlFor="on-site" className="flex-1 cursor-pointer">
+                                                    //        <div>
+                                                    //            <div className="font-medium">Pagar no Local</div>
+                                                    //            <div className="text-sm text-slate-600">Dinheiro ou cartão na hora</div>
+                                                    //        </div>
+                                                    //    </Label>
+                                                    //</div>
+                                                }
                                             </RadioGroup>
                                         </div>
 
