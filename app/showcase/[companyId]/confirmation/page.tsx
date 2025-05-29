@@ -8,7 +8,7 @@ import { GuestFooter } from "@/components/guest-footer"
 import { CheckCircle, Calendar, Clock, MapPin } from "lucide-react"
 import { useEffect, useState } from "react"
 import api from "@/lib/axios"
-import { Booking } from "@/lib/types"
+import { Booking } from "@/types/booking"
 import { useToast } from "@/components/ui/use-toast"
 import { getTimeFromDateString } from "@/lib/utils"
 

@@ -17,7 +17,7 @@ import { AdminSidebar } from "@/components/admin-sidebar"
 import { validateCNPJ } from "@/lib/validator"
 import api from "@/lib/axios"
 import { useAuth } from "@/app/contexts/auth-context"
-import { Company } from "@/lib/types"
+import { Company } from "@/types/company"
 
 const profileFormSchema = z.object({
     email: z.string().email({ message: "Email inválido" }),

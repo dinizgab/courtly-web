@@ -23,7 +23,7 @@ import {
     AlertTriangle,
     Copy,
 } from "lucide-react"
-import { Booking, BookingApi } from "@/lib/types"
+import { Booking, BookingApi } from "@/types/booking"
 import { formatBookingTime, getBookingTotalPrice } from "@/lib/utils"
 import api from "@/lib/axios"
 import { useAuth } from "@/app/contexts/auth-context"
