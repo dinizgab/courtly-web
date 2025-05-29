@@ -1,6 +1,6 @@
 import api from "./axios"
 import { decodeToken, isTokenExpired } from "./jwt"
-import { SignupData, LoginCredentials, AuthResponse } from "./types"
+import { SignupData, LoginCredentials, AuthResponse } from "@/types/auth"
 
 const TOKEN_KEY = "courtly_auth_token"
 

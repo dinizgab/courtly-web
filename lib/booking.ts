@@ -1,5 +1,11 @@
-import { Booking, Court } from "./types"
+import { Court } from "@/types/court"
+import { Booking } from "@/types/booking"
 import { getTimeFromDateString } from "./utils"
+
+interface AvailableSlot {
+    start: string
+    maxDuration: number
+}
 
 export const generateAvailableHours = (court: Court, unavailableSlots: Partial<Booking>[]) => {
     if (!court || !unavailableSlots) return []
@@ -39,3 +45,28 @@ export const generateAvailableHours = (court: Court, unavailableSlots: Partial<B
 
     return horarios
 }
+
+export function calculateMaxBookingDuration(
+    openingTime: string,
+    closingTime: string,
+    startHour: number,
+    unavailableSlots: { startTime: number, endTime: number }[]
+): number {
+    const open = new Date(openingTime).getUTCHours()
+    const close = new Date(closingTime).getUTCHours()
+
+    if (startHour < open || startHour >= close) return 0
+
+    let max = 0
+    for (let h = startHour; h < close; h++) {
+        const isOccupied = unavailableSlots.some(
+            slot => h >= slot.startTime && h < slot.endTime
+        )
+
+        if (isOccupied) break
+        max++;
+    }
+
+    return max;
+}
+
