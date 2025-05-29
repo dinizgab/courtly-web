@@ -5,6 +5,8 @@ import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from "./contexts/auth-context"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ReactQueryProvider } from "./contexts/query-context"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -22,10 +24,12 @@ export default function RootLayout({
         <html lang="pt-BR">
             <body className={inter.className}>
                 <ThemeProvider attribute="class" defaultTheme="light">
-                    <AuthProvider>
-                        {children}
-                        <Toaster />
-                    </AuthProvider>
+                    <ReactQueryProvider>
+                        <AuthProvider>
+                            {children}
+                            <Toaster />
+                        </AuthProvider>
+                    </ReactQueryProvider>
                 </ThemeProvider>
             </body>
         </html>

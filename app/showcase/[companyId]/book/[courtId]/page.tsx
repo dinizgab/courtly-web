@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { format, addDays } from "date-fns"
 import { ptBR } from "date-fns/locale"
@@ -12,7 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
-import { ArrowLeft, CalendarIcon, Clock, CheckCircle, Loader2 } from "lucide-react"
+import { ArrowLeft, CalendarIcon, Loader2, QrCode, CreditCard } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -20,12 +20,13 @@ import * as z from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useToast } from "@/components/ui/use-toast"
 import api from "@/lib/axios"
-import { BookingApi, Court, CourtApi } from "@/lib/types"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+import BookingSummary from "@/components/booking/booking-summary"
+import { useCourtShowcase } from "@/hooks/use-court"
+import { useAlreadyBookedHours } from "@/hooks/use-already-booked-hours"
+import { calculateMaxBookingDuration } from "@/lib/booking"
 
-interface AvailableSlots {
-    start: string
-    maxDuration: number
-}
 
 const bookFormSchema = z.object({
     name: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),
@@ -41,10 +42,8 @@ type BookFormValues = z.infer<typeof bookFormSchema>
 export default function CreateBookingPage() {
     const router = useRouter()
     const { toast } = useToast()
-    const [court, setCourt] = useState<Court | null>(null)
-    const [isLoading, setIsLoading] = useState(true)
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [availableSlots, setAvailableSlots] = useState<AvailableSlots[]>([])
+    const [paymentMethod, setPaymentMethod] = useState("")
     const [valorTotal, setValorTotal] = useState(0)
     const { companyId, courtId } = useParams() as { companyId: string, courtId: string }
 
@@ -64,101 +63,44 @@ export default function CreateBookingPage() {
     const watchStartTime = form.watch("startTime")
     const watchDuration = form.watch("duration")
 
-    useEffect(() => {
-        const fetchCourt = async () => {
-            setIsLoading(true)
-            try {
-                const response = await api.get(`/showcase/courts/${courtId}`)
+    const { data: court, isLoading, isError } = useCourtShowcase(courtId)
+    const { data: alreadyBookedHours, isLoading: isBookedHoursLoading } = useAlreadyBookedHours(court?.id, watchDate)
 
-                const court: CourtApi = response.data
-                const parsedCourt: Court = {
-                    id: court.id,
-                    companyId: court.company_id,
-                    name: court.name,
-                    sportType: court.sport_type,
-                    hourlyPrice: court.hourly_price,
-                    isActive: court.is_active,
-                    description: court.description,
-                    openingTime: court.opening_time,
-                    closingTime: court.closing_time,
-                    capacity: court.capacity,
-                    bookingsToday: 0,
-                    photos: court.photos || [],
-                }
+    const maxDuration = useMemo(() => {
+        if (!court || !watchStartTime || !alreadyBookedHours) return 1
+        const startHour = Number.parseInt(watchStartTime.split(":")[0])
 
+        return calculateMaxBookingDuration(
+            court.openingTime,
+            court.closingTime,
+            startHour,
+            alreadyBookedHours
+        )
+    }, [court, watchStartTime, alreadyBookedHours])
 
-                setCourt(parsedCourt)
-            } catch (error) {
-                console.error("Erro ao buscar dados da court.", error)
-                toast({
-                    title: "Erro ao carregar dados",
-                    description: "Não foi possível carregar os detalhes da quadra.",
-                    variant: "destructive",
-                })
-                router.push("/showcase")
-            } finally {
-                setIsLoading(false)
-            }
+    const durationOptions = useMemo(
+        () => Array.from({ length: maxDuration }, (_, i) => (i + 1)),
+        [maxDuration]
+    )
+
+    const availableSlots = useMemo(() => {
+        if (!court || !alreadyBookedHours) return []
+
+        const open = new Date(court.openingTime).getUTCHours()
+        const close = new Date(court.closingTime).getUTCHours()
+
+        const occupied = new Set<number>()
+        alreadyBookedHours.forEach(({ startTime, endTime }) => {
+            for (let h = startTime; h < endTime; h++) occupied.add(h)
+        })
+
+        const times: string[] = []
+        for (let h = open; h < close; h++) {
+            if (!occupied.has(h)) times.push(`${h.toString().padStart(2, "0")}:00`)
         }
-        fetchCourt()
-    }, [courtId, router, toast])
+        return times
+    }, [court, alreadyBookedHours])
 
-    useEffect(() => {
-        const fetchAvailableSlots = async () => {
-            if (!court || !watchDate) return
-
-            try {
-                const response = await api.get(`/showcase/courts/${court.id}/available-slots`, {
-                    params: {
-                        date: format(watchDate, "yyyy-MM-dd"),
-                    },
-                })
-
-                const unavailableSlots = response.data.map((slot: Partial<BookingApi>) => ({
-                    startTime: new Date(slot.start_time!).getUTCHours(),
-                    endTime: new Date(slot.end_time!).getUTCHours(),
-                } as { startTime: number, endTime: number }
-                ))
-
-                const slots: AvailableSlots[] = [];
-                const parsedCourtOpeningTime = new Date(court.openingTime).getUTCHours()
-                const parsedCourtClosingTime = new Date(court.closingTime).getUTCHours()
-
-                const occupiedHours = new Set<number>();
-                for (const slot of unavailableSlots) {
-                    for (let h = slot.startTime!; h < slot.endTime!; h++) {
-                        occupiedHours.add(h);
-                    }
-                }
-
-                for (let hour = parsedCourtOpeningTime; hour < parsedCourtClosingTime; hour++) {
-                    if (!occupiedHours.has(hour)) {
-                        let max = 0;
-                        for (let h = hour; h < parsedCourtClosingTime; h++) {
-                            if (occupiedHours.has(h)) break;
-                            max++;
-                        }
-
-                        slots.push({
-                            start: `${hour.toString().padStart(2, "0")}:00`,
-                            maxDuration: max,
-                        });
-                    }
-                }
-
-                setAvailableSlots(slots)
-            } catch (error) {
-                console.error("Erro ao buscar horários disponíveis:", error)
-                toast({
-                    title: "Erro ao carregar horários",
-                    description: "Não foi possível carregar os horários disponíveis.",
-                    variant: "destructive",
-                })
-            }
-        }
-
-        fetchAvailableSlots()
-    }, [court, watchDate, toast])
 
     useEffect(() => {
         if (!court || !watchStartTime || !watchDuration) {
@@ -176,7 +118,7 @@ export default function CreateBookingPage() {
 
             const [hora, minuto] = data.startTime.split(":").map(Number)
             const totalDuration = Number.parseInt(data.duration)
-            const horaFim = hora + totalDuration 
+            const horaFim = hora + totalDuration
             const horarioFim = `${horaFim.toString().padStart(2, "0")}:${minuto.toString().padStart(2, "0")}`
             const date = format(data.date, "yyyy-MM-dd")
 
@@ -217,11 +159,7 @@ export default function CreateBookingPage() {
         }
     }
 
-    const currentSlot = availableSlots.find((slot) => slot.start === watchStartTime)
-    const durationOptions = Array.from({ length: currentSlot?.maxDuration || 1 }, (_, i) => i + 1)
-
-
-    if (isLoading) {
+    if (isLoading || isBookedHoursLoading) {
         return (
             <div className="min-h-screen flex flex-col bg-gray-50">
                 <GuestHeader />
@@ -235,7 +173,7 @@ export default function CreateBookingPage() {
         )
     }
 
-    if (!court) {
+    if (!court || isError) {
         return (
             <div className="min-h-screen flex flex-col bg-gray-50">
                 <GuestHeader />
@@ -260,10 +198,12 @@ export default function CreateBookingPage() {
 
             <div className="flex-grow container mx-auto px-4 py-8">
                 <div className="mb-6">
-                    <Button variant="outline" onClick={() => router.push(`/showcase/${companyId}/court/${courtId}`)}>
+                    <Button variant="outline" onClick={() => router.push(`/showcase/${companyId}/court/${courtId}`)} className="mb-4">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Voltar para detalhes da quadra
                     </Button>
+                    <h1 className="text-3xl font-bold text-slate-800">Reservar Quadra</h1>
+                    <p className="text-slate-600 mt-2">Complete os dados para finalizar sua reserva</p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -276,6 +216,55 @@ export default function CreateBookingPage() {
                                 <form onSubmit={form.handleSubmit(onSubmit)}>
                                     <CardContent className="space-y-6">
                                         <div className="space-y-4">
+                                            <h3 className="text-lg font-medium mb-4">Seus dados</h3>
+                                            <div className="space-y-4">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="name"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>Nome completo</FormLabel>
+                                                            <FormControl>
+                                                                <Input placeholder="Digite seu nome completo" {...field} />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="email"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Email</FormLabel>
+                                                                <FormControl>
+                                                                    <Input type="email" placeholder="seu@email.com" {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="phone"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Telefone</FormLabel>
+                                                                <FormControl>
+                                                                    <Input placeholder="(00) 00000-0000" {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="pt-4 space-y-4">
                                             <h3 className="text-lg font-medium">Selecione a data e horário</h3>
 
                                             <FormField
@@ -335,8 +324,8 @@ export default function CreateBookingPage() {
                                                                 <SelectContent>
                                                                     {availableSlots.length > 0 ? (
                                                                         availableSlots.map((slot) => (
-                                                                            <SelectItem key={slot.start} value={slot.start}>
-                                                                                {slot.start}
+                                                                            <SelectItem key={slot} value={slot}>
+                                                                                {slot}
                                                                             </SelectItem>
                                                                         ))
                                                                     ) : (
@@ -379,54 +368,32 @@ export default function CreateBookingPage() {
                                             </div>
                                         </div>
 
-                                        <div className="pt-4 border-t">
-                                            <h3 className="text-lg font-medium mb-4">Seus dados</h3>
-                                            <div className="space-y-4">
-                                                <FormField
-                                                    control={form.control}
-                                                    name="name"
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>Nome completo</FormLabel>
-                                                            <FormControl>
-                                                                <Input placeholder="Digite seu nome completo" {...field} />
-                                                            </FormControl>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
-
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    <FormField
-                                                        control={form.control}
-                                                        name="email"
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormLabel>Email</FormLabel>
-                                                                <FormControl>
-                                                                    <Input type="email" placeholder="seu@email.com" {...field} />
-                                                                </FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
-
-                                                    <FormField
-                                                        control={form.control}
-                                                        name="phone"
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormLabel>Telefone</FormLabel>
-                                                                <FormControl>
-                                                                    <Input placeholder="(00) 00000-0000" {...field} />
-                                                                </FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
+                                        <div className="space-y-4">
+                                            <h3 className="text-lg font-semibold text-slate-700">Forma de Pagamento</h3>
+                                            <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
+                                                <div className="flex items-center space-x-3 p-4 border border-slate-200 rounded-lg hover:bg-slate-50">
+                                                    <RadioGroupItem value="pix" id="pix" />
+                                                    <QrCode className="h-5 w-5 text-blue-600" />
+                                                    <Label htmlFor="pix" className="flex-1 cursor-pointer">
+                                                        <div>
+                                                            <div className="font-medium">PIX</div>
+                                                            <div className="text-sm text-slate-600">Pagamento instantâneo</div>
+                                                        </div>
+                                                    </Label>
                                                 </div>
-                                            </div>
+                                                <div className="flex items-center space-x-3 p-4 border border-slate-200 rounded-lg hover:bg-slate-50">
+                                                    <RadioGroupItem value="on-site" id="on-site" />
+                                                    <CreditCard className="h-5 w-5 text-blue-600" />
+                                                    <Label htmlFor="on-site" className="flex-1 cursor-pointer">
+                                                        <div>
+                                                            <div className="font-medium">Pagar no Local</div>
+                                                            <div className="text-sm text-slate-600">Dinheiro ou cartão na hora</div>
+                                                        </div>
+                                                    </Label>
+                                                </div>
+                                            </RadioGroup>
                                         </div>
+
                                     </CardContent>
                                     <CardFooter className="flex justify-between">
                                         <Button
@@ -439,7 +406,7 @@ export default function CreateBookingPage() {
                                         <Button
                                             type="submit"
                                             className="bg-blue-500 hover:bg-blue-600"
-                                            disabled={isSubmitting || !watchStartTime || availableSlots.length === 0}
+                                            disabled={isSubmitting || !watchStartTime}
                                         >
                                             {isSubmitting ? (
                                                 <>
@@ -457,54 +424,14 @@ export default function CreateBookingPage() {
                     </div>
 
                     <div>
-                        <Card className="sticky top-4">
-                            <CardHeader>
-                                <CardTitle>Resumo da Reserva</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex justify-between items-center pb-2 border-b">
-                                    <span className="font-medium">Quadra:</span>
-                                    <span>{court.name}</span>
-                                </div>
-                                <div className="flex justify-between items-center pb-2 border-b">
-                                    <span className="font-medium">Data:</span>
-                                    <span>{watchDate ? format(watchDate, "dd/MM/yyyy") : "-"}</span>
-                                </div>
-                                <div className="flex justify-between items-center pb-2 border-b">
-                                    <span className="font-medium">Horário:</span>
-                                    <span>
-                                        {watchStartTime
-                                            ? `${watchStartTime} - ${watchStartTime &&
-                                            `${(Number.parseInt(watchStartTime.split(":")[0]) + Number.parseInt(watchDuration || "1"))
-                                                .toString()
-                                                .padStart(2, "0")}:${watchStartTime.split(":")[1]}`
-                                            }`
-                                            : "-"}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between items-center pb-2 border-b">
-                                    <span className="font-medium">Duração:</span>
-                                    <span>
-                                        {watchDuration ? `${watchDuration} hora${Number.parseInt(watchDuration) > 1 ? "s" : ""}` : "-"}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between items-center text-lg font-bold text-blue-500">
-                                    <span>Valor Total:</span>
-                                    <span>R$ {valorTotal.toFixed(2)}</span>
-                                </div>
-
-                                <div className="pt-4 space-y-2 text-sm text-gray-600">
-                                    <div className="flex items-start">
-                                        <Clock className="h-4 w-4 text-blue-500 mr-2 mt-0.5" />
-                                        <span>O pagamento será realizado no local</span>
-                                    </div>
-                                    <div className="flex items-start">
-                                        <CheckCircle className="h-4 w-4 text-blue-500 mr-2 mt-0.5" />
-                                        <span>Você receberá um código de confirmação por email</span>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <BookingSummary
+                            courtName={court.name}
+                            date={watchDate}
+                            startTime={watchStartTime}
+                            duration={watchDuration}
+                            totalValue={valorTotal}
+                            paymentMethod={paymentMethod}
+                        />
                     </div>
                 </div>
             </div>
