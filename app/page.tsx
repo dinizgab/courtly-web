@@ -165,7 +165,7 @@ export default function LandingPage() {
         <div className="flex flex-col min-h-screen">
             <LandingHeader />
 
-            <section className="relative bg-gradient-to-r from-slate-700 to-slate-800 text-white py-20">
+            <section className="relative bg-gradient-to-r from-slate-600 to-slate-700 text-white py-20">
                 <div className="container mx-auto px-4">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <div className="space-y-6">
@@ -182,7 +182,7 @@ export default function LandingPage() {
                             <div className="flex flex-col sm:flex-row gap-4 pt-4">
                                 <Button
                                     size="lg"
-                                    className="bg-white text-slate-700 hover:bg-gray-100"
+                                    className="bg-white text-slate-700 hover:bg-gray-200"
                                     onClick={() => router.push("/signup")}
                                 >
                                     Começar Gratuitamente
@@ -191,7 +191,7 @@ export default function LandingPage() {
                                 <Button
                                     variant="outline"
                                     size="lg"
-                                    className="border-white text-slate-700 hover:bg-slate-700 hover:text-white"
+                                    className="border-white text-slate-600 hover:bg-slate-600 hover:text-white"
                                     onClick={() => router.push("/admin/login")}
                                 >
                                     Fazer Login
@@ -201,9 +201,9 @@ export default function LandingPage() {
                                 //<p className="text-sm opacity-80">Teste grátis por 14 dias. Sem necessidade de cartão de crédito.</p>
                             }
                         </div>
-                        <div className="relative h-[400px] rounded-lg overflow-hidden shadow-2xl hidden lg:block">
+                        <div className="relative h-[400px] rounded-lg overflow-hidden hidden lg:block">
                             <Image
-                                src="/placeholder.svg?height=400&width=600"
+                                src="/landing_page_example_no_bg.png?height=400&width=600"
                                 alt="Dashboard do sistema de gestão de quadras"
                                 fill
                                 className="object-cover"
