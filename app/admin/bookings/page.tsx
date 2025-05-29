@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AdminHeader } from "@/components/admin-header"
 import { AdminSidebar } from "@/components/admin-sidebar"
 import api from "@/lib/axios"
-import { Booking, BookingApi } from "@/lib/types"
+import { Booking, BookingApi } from "@/types/booking"
 import { formatBookingTime } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
 import { VerificationCodeModal } from "@/components/verification-code-modal"
