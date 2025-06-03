@@ -152,7 +152,7 @@ export default function CreateBookingPage() {
 
             const bookingId = response.data.id
             // TODO - Check this redirect
-            router.push(`/showcase/${companyId}/payment/pix`)
+            router.push(`/showcase/${companyId}/payment/pix?bookingId=${bookingId}`)
         } catch (error) {
             console.error("Erro ao fazer reserva:", error)
             toast({

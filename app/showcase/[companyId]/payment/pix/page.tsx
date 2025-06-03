@@ -7,51 +7,38 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Copy, Check, Clock, QrCode } from "lucide-react"
 import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
+import { useBookingPaymentStatus } from "@/hooks/use-booking-payment-status"
+import { useBookingInformationShowcase } from "@/hooks/use-booking"
+import { formatBookingDateTimeString, formatTimePtBr } from "@/utils/date"
 
-export default function PixPaymentPage({ params }: { params: { companyId: string } }) {
+export default function PixPaymentPage() {
     const router = useRouter()
     const searchParams = useSearchParams()
+    const bookingId = searchParams.get("bookingId")
     const { companyId } = useParams()
-    const [timeLeft, setTimeLeft] = useState(15 * 60) // 15 minutes in seconds
+    const [timeLeft, setTimeLeft] = useState(15 * 60)
     const [copied, setCopied] = useState(false)
     const [paymentConfirmed, setPaymentConfirmed] = useState(false)
+    const { data: status } = useBookingPaymentStatus(bookingId!)
+    const { data: booking, isLoading } = useBookingInformationShowcase(bookingId!)
 
-    // Get reservation data from URL params
-    const reservationData = {
-        name: searchParams.get("name") || "",
-        email: searchParams.get("email") || "",
-        phone: searchParams.get("phone") || "",
-        date: searchParams.get("date") || "",
-        time: searchParams.get("time") || "",
-        duration: searchParams.get("duration") || "1",
-        courtName: searchParams.get("courtName") || "",
-        price: searchParams.get("price") || "0",
-        reservationId: searchParams.get("reservationId") || "",
-        companyName: searchParams.get("companyName") || "",
-    }
-
+    // TODO - Get charge brcode and pix code from the backend
     // Mock PIX code
     const pixCode =
         "00020126580014BR.GOV.BCB.PIX013636c4b8c4-4c4c-4c4c-4c4c-4c4c4c4c4c4c5204000053039865802BR5925CENTRO ESPORTIVO ELITE6009SAO PAULO62070503***6304"
 
-    // Timer effect
     useEffect(() => {
-        if (timeLeft > 0 && !paymentConfirmed) {
-            const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
-            return () => clearTimeout(timer)
-        } else if (timeLeft === 0) {
-            // Simulate payment confirmation after timer expires
+        // TODO - Handle if the payment time expires
+        if (status === "paid") {
             setPaymentConfirmed(true)
-            setTimeout(() => {
-                const confirmationParams = new URLSearchParams()
-                Object.entries(reservationData).forEach(([key, value]) => {
-                    confirmationParams.set(key, value.toString())
-                })
-                confirmationParams.set("paymentStatus", "confirmed")
-                router.push(`/showcase/${companyId}/confirmacao?${confirmationParams.toString()}`)
-            }, 2000)
+
+            router.replace(`/showcase/${companyId}/confirmation?id=${bookingId}`)
+        } else {
+            const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
+
+            return () => clearTimeout(timer)
         }
-    }, [timeLeft, paymentConfirmed, router, companyId])
+    }, [status])
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60)
@@ -70,9 +57,16 @@ export default function PixPaymentPage({ params }: { params: { companyId: string
     }
 
     const getTimerColor = () => {
-        if (timeLeft > 300) return "text-green-600" // > 5 minutes
-        if (timeLeft > 60) return "text-yellow-600" // > 1 minute
-        return "text-red-600" // < 1 minute
+        if (timeLeft > 300) return "text-green-600"
+        if (timeLeft > 60) return "text-yellow-600"
+        return "text-red-600"
+    }
+
+    const formatBookingDuration = () => {
+        if (!booking) return "00:00"
+
+        const start = new Date(booking.startTime)
+        const end = new Date(booking.endTime)
     }
 
     if (paymentConfirmed) {
@@ -88,6 +82,14 @@ export default function PixPaymentPage({ params }: { params: { companyId: string
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-700 mx-auto"></div>
                     </CardContent>
                 </Card>
+            </div>
+        )
+    }
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-pulse text-slate-600">Carregando informações...</div>
             </div>
         )
     }
@@ -179,21 +181,21 @@ export default function PixPaymentPage({ params }: { params: { companyId: string
                                 <div className="space-y-1 text-sm text-blue-700">
                                     <div className="flex justify-between">
                                         <span>Quadra:</span>
-                                        <span>{reservationData.courtName}</span>
+                                        <span>{booking?.court?.name}</span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span>Data/Hora:</span>
                                         <span>
-                                            {reservationData.date} às {reservationData.time}
+                                            {formatBookingDateTimeString(booking?.startTime!)}
                                         </span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span>Duração:</span>
-                                        <span>{reservationData.duration}h</span>
+                                        <span>{`${formatTimePtBr(booking?.startTime!)} - ${formatTimePtBr(booking?.endTime!)}`}</span>
                                     </div>
                                     <div className="flex justify-between font-semibold border-t border-blue-200 pt-2 mt-2">
                                         <span>Total:</span>
-                                        <span>R$ {reservationData.price}</span>
+                                        <span>R$ {booking?.totalPrice.toFixed(2)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -207,3 +209,11 @@ export default function PixPaymentPage({ params }: { params: { companyId: string
     )
 }
 
+//startTime: data.start_time,
+//endTime: data.end_time,
+//totalPrice: data.total_price,
+//court: {
+//    name: data.court.name,
+//    company: {
+//        address: data.court.company.address,
+//    }
