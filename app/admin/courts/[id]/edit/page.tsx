@@ -23,7 +23,7 @@ import Image from "next/image"
 import api from "@/lib/axios"
 import { Court, CourtApi } from "@/types/court"
 import { getTimeFromDateString } from "@/lib/utils"
-import { useAuth } from "@/app/contexts/auth-context"
+import { useAuth } from "@/contexts/auth-context"
 
 const courtFormSchema = z.object({
     name: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),

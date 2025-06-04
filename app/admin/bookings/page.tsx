@@ -17,7 +17,7 @@ import { Booking, BookingApi } from "@/types/booking"
 import { formatBookingTime } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
 import { VerificationCodeModal } from "@/components/verification-code-modal"
-import { useAuth } from "@/app/contexts/auth-context"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function BookingsPage() {
     const [bookings, setBookings] = useState<Booking[]>([])

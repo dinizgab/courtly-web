@@ -26,7 +26,7 @@ import {
 import { Booking, BookingApi } from "@/types/booking"
 import { formatBookingTime, getBookingTotalPrice } from "@/lib/utils"
 import api from "@/lib/axios"
-import { useAuth } from "@/app/contexts/auth-context"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function BookingDetailsPage() {
     const router = useRouter()

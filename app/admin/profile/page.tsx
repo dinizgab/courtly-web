@@ -16,7 +16,7 @@ import { AdminHeader } from "@/components/admin-header"
 import { AdminSidebar } from "@/components/admin-sidebar"
 import { validateCNPJ } from "@/lib/validator"
 import api from "@/lib/axios"
-import { useAuth } from "@/app/contexts/auth-context"
+import { useAuth } from "@/contexts/auth-context"
 import { Company } from "@/types/company"
 
 const profileFormSchema = z.object({

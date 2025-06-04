@@ -4,9 +4,8 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
-import { AuthProvider } from "./contexts/auth-context"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { ReactQueryProvider } from "./contexts/query-context"
+import { AuthProvider } from "@/contexts/auth-context"
+import { ReactQueryProvider } from "@/contexts/query-context"
 
 const inter = Inter({ subsets: ["latin"] })
 

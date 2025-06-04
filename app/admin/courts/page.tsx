@@ -16,7 +16,7 @@ import api from "@/lib/axios"
 import { Court, CourtApi } from "@/types/court"
 import { useToast } from "@/components/ui/use-toast"
 import { strToTitle } from "@/lib/utils"
-import { useAuth } from "@/app/contexts/auth-context"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function courtsPage() {
     const [courts, setCourts] = useState<Court[]>([])

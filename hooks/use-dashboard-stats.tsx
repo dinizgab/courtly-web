@@ -1,5 +1,5 @@
 // hooks/use-dashboard-stats.ts
-import { useAuth } from "@/app/contexts/auth-context"
+import { useAuth } from "@/contexts/auth-context"
 import { useState, useEffect } from "react"
 import api from "@/lib/axios"
 import axios from "axios"

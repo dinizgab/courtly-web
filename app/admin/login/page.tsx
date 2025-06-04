@@ -13,7 +13,7 @@ import { AlertCircle, Eye, EyeOff } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
-import { useAuth } from "@/app/contexts/auth-context"
+import { useAuth } from "@/contexts/auth-context"
 import { Checkbox } from "@radix-ui/react-checkbox"
 
 export default function LoginPage() {

@@ -16,7 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
 import { validateCNPJ } from "@/lib/validator"
-import { useAuth } from "../contexts/auth-context"
+import { useAuth } from "@/contexts/auth-context"
 
 const signupFormSchema = z
     .object({

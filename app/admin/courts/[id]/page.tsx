@@ -27,7 +27,7 @@ import { Booking, BookingApi } from "@/types/booking"
 import { Court, CourtApi }  from "@/types/court"
 import { getBookingTotalPrice, getTimeFromDateString, strToTitle } from "@/lib/utils"
 import { AxiosResponse } from "axios"
-import { useAuth } from "@/app/contexts/auth-context"
+import { useAuth } from "@/contexts/auth-context"
 import { generateAvailableHours } from "@/lib/booking"
 
 export default function CourtDetailsPage() {
