@@ -78,9 +78,11 @@ export function AdminHeader({ title }: AdminHeaderProps) {
                         <DropdownMenuItem asChild>
                             <Link href="/admin/profile">Perfil</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                            <Link href="/admin/configuracoes">Configurações</Link>
-                        </DropdownMenuItem>
+                        {
+                            //<DropdownMenuItem asChild>
+                            //    <Link href="/admin/configuracoes">Configurações</Link>
+                            //</DropdownMenuItem>
+                        }
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild onClick={handleLogout}>
                             <span className="text-red-500">
