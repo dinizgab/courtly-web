@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import api from "@/lib/axios"
 import axios from "axios"
 
+const CENTS_VALUE = 100
+
 export interface DashboardStat {
     key: "bookings" | "hours" | "clients" | "revenue"
     value: number
@@ -30,7 +32,7 @@ export function useDashboardStats() {
                     { key: "bookings", value: data.total_bookings },
                     { key: "hours", value: data.total_booked_hours },
                     { key: "clients", value: data.total_clients },
-                    { key: "revenue", value: data.total_earnings },
+                    { key: "revenue", value: data.total_earnings / CENTS_VALUE },
                 ])
             } catch (err) {
                 const isAbort =
