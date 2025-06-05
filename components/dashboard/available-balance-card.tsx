@@ -10,7 +10,54 @@ export function AvailableBalanceCard() {
     const { data: available, isLoading } = useBalance()
     const withdraw = useWithdrawal()
 
-    if (isLoading || !available) return null
+    if (isLoading) return (
+        <Card className="animate-pulse">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <Wallet className="h-5 w-5 text-slate-600" />
+                    Saldo Disponível
+                </CardTitle>
+                <CardDescription>Carregando...</CardDescription>
+            </CardHeader>
+            <CardContent className="text-center">
+                <p className="text-4xl font-bold text-slate-700">R$ 0,00</p>
+            </CardContent>
+        </Card>
+    )
+
+    if (available === null || available === undefined) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Wallet className="h-5 w-5 text-red-600" />
+                        Saldo Indisponível
+                    </CardTitle>
+                    <CardDescription>Ocorreu um erro buscando o saldo, tente novamente</CardDescription>
+                </CardHeader>
+                <CardContent className="text-center">
+                    <p className="text-4xl font-bold text-red-700">R$ 0,00</p>
+                </CardContent>
+            </Card>
+        )
+    }
+
+    if (available === 0) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Wallet className="h-5 w-5 text-slate-600" />
+                        Saldo Disponível
+                    </CardTitle>
+                    <CardDescription>Você não possui saldo disponível para saque</CardDescription>
+                </CardHeader>
+                <CardContent className="text-center">
+                    <p className="text-4xl font-bold text-slate-700">R$ 0,00</p>
+                </CardContent>
+            </Card>
+        )
+    }
 
     const minWithdraw = 50
     const disabled = available < minWithdraw || withdraw.isPending
