@@ -8,10 +8,14 @@ import { AdminHeader } from "@/components/admin-header"
 import { AdminSidebar } from "@/components/admin-sidebar"
 import { useDashboardStats } from "@/hooks/use-dashboard-stats"
 import { StatsGrid } from "@/components/dashboard/stats-grid"
+import { AvailableBalanceCard } from "@/components/dashboard/available-balance-card"
+import { WithdrawalStatusCard } from "@/components/dashboard/withdrawal-status-card"
+import { WithdrawalInfoCard } from "@/components/dashboard/withdrawal-info-card"
 
 export default function DashboardPage() {
     const [activeTab, setActiveTab] = useState("overview")
     const { data, isLoading, isError } = useDashboardStats()
+
 
     if (isLoading) {
         return <div className="flex items-center justify-center min-h-screen">Carregando…</div>
@@ -30,6 +34,9 @@ export default function DashboardPage() {
                         <TabsList>
                             <TabsTrigger value="overview" onClick={() => setActiveTab("overview")}>
                                 Visão Geral
+                            </TabsTrigger>
+                            <TabsTrigger value="balance" onClick={() => setActiveTab("performance")}>
+                                Saldo
                             </TabsTrigger>
                             {
                                 //<TabsTrigger value="performance" onClick={() => setActiveTab("performance")}>
@@ -103,6 +110,14 @@ export default function DashboardPage() {
                                     <p>Conteúdo da aba de desempenho será exibido aqui.</p>
                                 </CardContent>
                             </Card>
+                        </TabsContent>
+
+                        <TabsContent value="balance" className="space-y-6">
+                            <div className="grid gap-6 md:grid-cols-2">
+                                <AvailableBalanceCard />
+                                <WithdrawalStatusCard />
+                            </div>
+                            <WithdrawalInfoCard />
                         </TabsContent>
 
                         <TabsContent value="analytics">
