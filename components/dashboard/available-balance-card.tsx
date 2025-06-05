@@ -55,6 +55,12 @@ export function AvailableBalanceCard() {
                 <CardContent className="text-center">
                     <p className="text-4xl font-bold text-slate-700">R$ 0,00</p>
                 </CardContent>
+                <Button
+                    disabled={true}
+                    className="w-full bg-slate-700 hover:bg-slate-800"
+                >
+                    Solicitar Saque
+                </Button>
             </Card>
         )
     }
