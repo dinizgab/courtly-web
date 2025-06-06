@@ -33,3 +33,10 @@ export function mapBookingApi(api: BookingApi): Booking {
         verificationCode: api.verification_code,
     }
 }
+
+export function mapChargeApi(api: ChargeApi): Charge {
+    return {
+        brCode: api.br_code,
+        qrCodeImage: api.qr_code_image,
+    }
+}

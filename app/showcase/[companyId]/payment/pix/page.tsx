@@ -10,22 +10,19 @@ import { GuestFooter } from "@/components/guest-footer"
 import { useBookingPaymentStatus } from "@/hooks/use-booking-payment-status"
 import { useBookingInformationShowcase } from "@/hooks/use-booking"
 import { formatBookingDateTimeString, formatTimePtBr } from "@/utils/date"
+import { useChargePaymentInformation } from "@/hooks/use-charge-information"
 
 export default function PixPaymentPage() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const bookingId = searchParams.get("bookingId")
     const { companyId } = useParams()
-    const [timeLeft, setTimeLeft] = useState(15 * 60)
+    const [timeLeft, setTimeLeft] = useState(30 * 60)
     const [copied, setCopied] = useState(false)
     const [paymentConfirmed, setPaymentConfirmed] = useState(false)
     const { data: status } = useBookingPaymentStatus(bookingId!)
     const { data: booking, isLoading } = useBookingInformationShowcase(bookingId!)
-
-    // TODO - Get charge brcode and pix code from the backend
-    // Mock PIX code
-    const pixCode =
-        "00020126580014BR.GOV.BCB.PIX013636c4b8c4-4c4c-4c4c-4c4c-4c4c4c4c4c4c5204000053039865802BR5925CENTRO ESPORTIVO ELITE6009SAO PAULO62070503***6304"
+    const { data: charge } = useChargePaymentInformation(bookingId!)
 
     useEffect(() => {
         // TODO - Handle if the payment time expires
@@ -38,7 +35,7 @@ export default function PixPaymentPage() {
 
             return () => clearTimeout(timer)
         }
-    }, [status])
+    }, [status, timeLeft])
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60)
@@ -48,7 +45,7 @@ export default function PixPaymentPage() {
 
     const copyPixCode = async () => {
         try {
-            await navigator.clipboard.writeText(pixCode)
+            await navigator.clipboard.writeText(charge!.brCode)
             setCopied(true)
             setTimeout(() => setCopied(false), 2000)
         } catch (err) {
@@ -57,16 +54,9 @@ export default function PixPaymentPage() {
     }
 
     const getTimerColor = () => {
-        if (timeLeft > 300) return "text-green-600"
+        if (timeLeft > 900) return "text-green-600"
         if (timeLeft > 60) return "text-yellow-600"
         return "text-red-600"
-    }
-
-    const formatBookingDuration = () => {
-        if (!booking) return "00:00"
-
-        const start = new Date(booking.startTime)
-        const end = new Date(booking.endTime)
     }
 
     if (paymentConfirmed) {
@@ -86,7 +76,7 @@ export default function PixPaymentPage() {
         )
     }
 
-    if (isLoading) {
+    if (isLoading || !booking || !charge) {
         return (
             <div className="flex justify-center items-center h-64">
                 <div className="animate-pulse text-slate-600">Carregando informações...</div>
@@ -109,7 +99,6 @@ export default function PixPaymentPage() {
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {/* QR Code */}
                         <Card>
                             <CardHeader>
                                 <CardTitle className="text-slate-800 flex items-center gap-2">
@@ -119,13 +108,12 @@ export default function PixPaymentPage() {
                             </CardHeader>
                             <CardContent className="text-center">
                                 <div className="bg-white p-6 rounded-lg border-2 border-slate-200 mb-4">
-                                    <img src="/placeholder.svg?height=200&width=200" alt="QR Code PIX" className="w-48 h-48 mx-auto" />
+                                    <img src={`${charge.qrCodeImage}?height=200&width=200`} alt="QR Code PIX" className="w-48 h-48 mx-auto" />
                                 </div>
                                 <p className="text-sm text-slate-600">Abra o app do seu banco e escaneie o código</p>
                             </CardContent>
                         </Card>
 
-                        {/* PIX Code */}
                         <Card>
                             <CardHeader>
                                 <CardTitle className="text-slate-800 flex items-center gap-2">
@@ -135,7 +123,7 @@ export default function PixPaymentPage() {
                             </CardHeader>
                             <CardContent>
                                 <div className="bg-slate-100 p-4 rounded-lg mb-4">
-                                    <code className="text-xs break-all text-slate-700">{pixCode}</code>
+                                    <code className="text-xs break-all text-slate-700">{charge.brCode}</code>
                                 </div>
                                 <Button onClick={copyPixCode} className="w-full bg-slate-700 hover:bg-slate-800" disabled={copied}>
                                     {copied ? (
@@ -154,7 +142,6 @@ export default function PixPaymentPage() {
                         </Card>
                     </div>
 
-                    {/* Timer and Instructions */}
                     <Card className="mt-8">
                         <CardContent className="p-6">
                             <div className="text-center mb-6">
@@ -208,12 +195,3 @@ export default function PixPaymentPage() {
         </div>
     )
 }
-
-//startTime: data.start_time,
-//endTime: data.end_time,
-//totalPrice: data.total_price,
-//court: {
-//    name: data.court.name,
-//    company: {
-//        address: data.court.company.address,
-//    }
