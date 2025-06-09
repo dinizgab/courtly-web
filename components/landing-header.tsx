@@ -38,8 +38,8 @@ export function LandingHeader() {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-slate-600">
-            
+          <Link href="/" className="text-2xl font-bold text-primary-heavy ">
+            Courtly
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8">
@@ -60,12 +60,12 @@ export function LandingHeader() {
           <div className="hidden md:flex items-center space-x-4">
             <Button
               variant="outline"
-              className="text-slate-600 border-slate-600 hover:bg-slate-50"
+              className="text-primary border-primary hover:bg-primary-light"
               onClick={() => router.push("/admin/login")}
             >
               Login
             </Button>
-            <Button className="bg-slate-600 hover:bg-slate-700" onClick={() => router.push("/signup")}>
+            <Button className="bg-primary hover:bg-primary-heavy" onClick={() => router.push("/signup")}>
               Cadastre-se
             </Button>
           </div>
