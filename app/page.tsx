@@ -21,7 +21,6 @@ import { LandingFooter } from "@/components/landing-footer";
 
 export default function LandingPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState("mensal");
 
   const features = [
     {
@@ -83,96 +82,27 @@ export default function LandingPage() {
     },
   ];
 
-  const pricingPlans = [
-    {
-      name: "Básico",
-      price: {
-        mensal: "R$ 99,90",
-        anual: "R$ 79,90",
-      },
-      description: "Ideal para locadores com até 2 quadras",
-      features: [
-        "Até 2 quadras",
-        "Sistema de reservas",
-        "Vitrine online",
-        "Cadastro de clientes",
-        "Relatórios básicos",
-      ],
-      cta: "Começar Agora",
-      popular: false,
-    },
-    {
-      name: "Profissional",
-      price: {
-        mensal: "R$ 199,90",
-        anual: "R$ 159,90",
-      },
-      description: "Perfeito para negócios em crescimento",
-      features: [
-        "Até 5 quadras",
-        "Sistema de reservas avançado",
-        "Vitrine online personalizada",
-        "Cadastro de clientes com histórico",
-        "Relatórios detalhados",
-        "Notificações por email",
-        "Suporte prioritário",
-      ],
-      cta: "Escolher Plano",
-      popular: true,
-    },
-    {
-      name: "Empresarial",
-      price: {
-        mensal: "R$ 349,90",
-        anual: "R$ 279,90",
-      },
-      description: "Para complexos esportivos completos",
-      features: [
-        "Quadras ilimitadas",
-        "Sistema de reservas avançado",
-        "Vitrine online premium",
-        "Gestão completa de clientes",
-        "Relatórios avançados e exportáveis",
-        "Notificações por email e SMS",
-        "Suporte VIP",
-        "API para integrações",
-      ],
-      cta: "Falar com Consultor",
-      popular: false,
-    },
-  ];
-
   const faqs = [
-    {
-      question: "Como funciona o período de teste gratuito?",
-      answer:
-        "Oferecemos 14 dias de teste gratuito com acesso a todas as funcionalidades do plano Profissional. Não é necessário cartão de crédito para começar o teste.",
-    },
     {
       question: "Preciso instalar algum software?",
       answer:
-        "Não, o QuadrasFácil é uma plataforma 100% online. Você só precisa de um navegador e conexão com a internet para acessar o sistema de qualquer dispositivo.",
+        "Não, o Courtly é uma plataforma 100% online. Você só precisa de um navegador e conexão com a internet para acessar o sistema de qualquer dispositivo.",
     },
     {
       question: "Como os clientes fazem reservas?",
       answer:
         "Seus clientes podem fazer reservas através da sua vitrine online personalizada ou você pode registrar reservas manualmente no sistema administrativo.",
     },
-    {
-      question: "É possível personalizar a vitrine com minha marca?",
-      answer:
-        "Sim, nos planos Profissional e Empresarial você pode personalizar a vitrine com suas cores, logo e informações específicas do seu negócio.",
-    },
-    {
-      question: "Como funciona o pagamento das reservas?",
-      answer:
-        "O sistema permite configurar diferentes métodos de pagamento, incluindo pagamento no local, transferência bancária ou integração com gateways de pagamento (disponível no plano Empresarial).",
-    },
-    {
-      question: "Posso cancelar minha assinatura a qualquer momento?",
-      answer:
-        "Sim, você pode cancelar sua assinatura quando quiser. Se cancelar uma assinatura anual, o serviço continuará disponível até o final do período pago.",
-    },
+    //{
+    //  question: "É possível personalizar a vitrine com minha marca?",
+    //  answer:
+    //    "Sim, nos planos Profissional e Empresarial você pode personalizar a vitrine com suas cores, logo e informações específicas do seu negócio.",
+    //},
+    //{
+    //  question: "Como funciona o pagamento das reservas?",
+    //  answer:
+    //    "O sistema permite configurar diferentes métodos de pagamento, incluindo pagamento no local, transferência bancária ou integração com gateways de pagamento (disponível no plano Empresarial).",
+    //},
   ];
 
   return (
@@ -183,9 +113,6 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              {
-                //<Badge className="bg-white text-slate-700 hover:bg-gray-100">Novo: Relatórios Avançados</Badge>
-              }
               <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                 Gerencie suas quadras esportivas com facilidade
               </h1>
@@ -212,9 +139,6 @@ export default function LandingPage() {
                   Fazer Login
                 </Button>
               </div>
-              {
-                //<p className="text-sm opacity-80">Teste grátis por 14 dias. Sem necessidade de cartão de crédito.</p>
-              }
             </div>
             <div className="relative h-[400px] rounded-lg overflow-hidden hidden lg:block">
               <Image
@@ -306,7 +230,7 @@ export default function LandingPage() {
               Simplifique a gestão das suas quadras em 3 passos
             </h2>
             <p className="text-lg text-gray-600">
-              Começar a usar o QuadrasFácil é simples e rápido. Em poucos
+              Começar a usar o Courtly é simples e rápido. Em poucos
               minutos você já pode estar gerenciando suas quadras de forma
               eficiente.
             </p>
@@ -433,7 +357,7 @@ export default function LandingPage() {
                   reserva!
                 </h3>
                 <p className="text-gray-700 text-lg mb-6">
-                  **É simples, transparente e justo.** Você não tem
+                  <strong>É simples, transparente e justo.</strong> Você não tem
                   mensalidades, nem taxas escondidas. Você só paga uma taxa fixa
                   de R$3,00 por cada reserva confirmada através da plataforma.
                 </p>
@@ -444,37 +368,37 @@ export default function LandingPage() {
                   </h4>
                   <ul className="space-y-3">
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-slate-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="text-primary h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                       <span>
-                        **Cadastro ilimitado de quadras:** Adicione quantas
+                        <strong>Cadastro ilimitado de quadras:</strong> Adicione quantas
                         quadras quiser, de diferentes esportes e modalidades.
                       </span>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-slate-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="text-primary h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                       <span>
-                        **Controle total de ocupação:** Gerencie horários,
+                        <strong>Controle total de ocupação:</strong> Gerencie horários,
                         disponibilidade e bloqueios de forma intuitiva.
                       </span>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-slate-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="text-primary h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                       <span>
-                        **Vitrine online personalizada:** Sua página exclusiva
+                        <strong>Vitrine online personalizada:</strong> Sua página exclusiva
                         para atrair mais clientes.
                       </span>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-slate-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="text-primary h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                       <span>
-                        **Relatórios de desempenho:** Acompanhe o crescimento do
+                        <strong>Relatórios de desempenho:</strong> Acompanhe o crescimento do
                         seu negócio.
                       </span>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-slate-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="text-primary h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                       <span>
-                        **Suporte dedicado:** Estamos aqui para te ajudar em
+                        <strong>Suporte dedicado:</strong> Estamos aqui para te ajudar em
                         cada passo.
                       </span>
                     </li>
@@ -482,13 +406,13 @@ export default function LandingPage() {
                 </div>
 
                 <p className="text-gray-700 text-lg mb-6">
-                  **Receba seus pagamentos a qualquer momento:** Os valores das
+                  <strong>Receba seus pagamentos a qualquer momento:</strong> Os valores das
                   reservas (descontando nossa pequena taxa) ficam disponíveis
                   para saque direto na sua conta, quando você quiser!
                 </p>
 
                 <Button
-                  className="w-full bg-primary hover:bg-primary-heavy py-3 text-xl"
+                  className="w-full bg-primary hover:bg-primary-heavy py-3 text-lg"
                   onClick={() => router.push("/cadastro")}
                 >
                   Comece a receber reservas Agora!
