@@ -17,6 +17,8 @@ export function useDashboardStats() {
     const [isLoading, setLoading] = useState(true)
     const [isError, setIsError] = useState(false)
 
+    console.log("useDashboardStats", { companyId, token })
+
     useEffect(() => {
         if (!companyId || !token) return
         const ac = new AbortController()
