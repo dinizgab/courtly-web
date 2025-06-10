@@ -407,7 +407,7 @@ export default function CreateBookingPage() {
                                         <Button
                                             type="button"
                                             variant="outline"
-                                            onClick={() => router.push(`/showcase/courts/${courtId}`)}
+                                            onClick={() => router.push(`/showcase/${companyId}`)}
                                         >
                                             Cancelar
                                         </Button>
