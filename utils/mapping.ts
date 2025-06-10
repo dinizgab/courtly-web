@@ -1,5 +1,5 @@
 import { Booking, BookingApi } from "@/types/booking"
-import { CourtApi } from "@/types/court"
+import { CourtApi, CourtPhoto, CourtPhotoApi } from "@/types/court"
 
 export function mapCourtApi(api: CourtApi) {
     return {
@@ -14,7 +14,7 @@ export function mapCourtApi(api: CourtApi) {
         closingTime: api.closing_time,
         capacity: api.capacity,
         bookingsToday: 0,
-        photos: api.photos ?? [],
+        photos: (api.photos ?? []).map(mapCourtPhotoApi),
     }
 }
 
@@ -24,7 +24,7 @@ export function mapBookingApi(api: BookingApi): Booking {
         startTime: api.start_time,
         endTime: api.end_time,
         totalPrice: api.total_price,
-        court: mapCourtApi(api.court || {} as CourtApi),
+        court: api.court ? mapCourtApi(api.court) : undefined,
         courtId: api.court_id,
         guestName: api.guest_name,
         guestEmail: api.guest_email,
@@ -38,5 +38,15 @@ export function mapChargeApi(api: ChargeApi): Charge {
     return {
         brCode: api.br_code,
         qrCodeImage: api.qr_code_image,
+    }
+}
+
+export function mapCourtPhotoApi(api: CourtPhotoApi): CourtPhoto {
+    return {
+        id: api.id,
+        courtId: api.court_id,
+        path: api.path,
+        position: api.position,
+        isCover: api.is_cover,
     }
 }
