@@ -10,9 +10,10 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Search, Clock } from "lucide-react"
 import { GuestFooter } from "@/components/guest-footer"
-import { Court, CourtApi } from "@/types/court"
+import { Court } from "@/types/court"
 import api from "@/lib/axios"
-import { getTimeFromDateString } from "@/lib/utils"
+import { mapCourtApi } from "@/utils/mapping"
+import { format } from "date-fns"
 
 export default function CompanyShowcasePage() {
     const router = useRouter()
@@ -27,21 +28,9 @@ export default function CompanyShowcasePage() {
             setIsLoading(true)
             try {
                 const response = await api.get(`/showcase/companies/${companyId}/courts`)
+                const courts: Court[] = response.data.map(mapCourtApi)
 
-                const courtsData: Court[] = response.data.map((c: CourtApi) => ({
-                    id: c.id,
-                    name: c.name,
-                    isActive: c.is_active,
-                    capacity: c.capacity,
-                    sportType: c.sport_type,
-                    hourlyPrice: c.hourly_price,
-                    description: c.description,
-                    openingTime: getTimeFromDateString(c.opening_time),
-                    closingTime: getTimeFromDateString(c.closing_time),
-                    photos: [] as string[],
-                } as Court))
-
-                setCourts(courtsData)
+                setCourts(courts)
             } catch (error) {
                 console.error("Erro ao buscar quadras:", error)
             } finally {
@@ -113,7 +102,7 @@ export default function CompanyShowcasePage() {
                             <Card key={c.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                                 <div className="relative h-48">
                                     <Image
-                                        src={c.photos.length > 0 ? c.photos[0] : "/placeholder.svg"}
+                                        src={c.photos.length > 0 ? c.photos[0].path : "/placeholder.svg"}
                                         alt={c.name}
                                         fill
                                         className="object-cover"
@@ -128,7 +117,7 @@ export default function CompanyShowcasePage() {
                                         <div className="flex items-center text-sm text-gray-500">
                                             <Clock className="h-4 w-4 mr-2" />
                                             <span>
-                                                {c.openingTime} às {c.closingTime}
+                                                {format(c.openingTime, "HH:mm")} às {format(c.closingTime, "HH:mm")}
                                             </span>
                                         </div>
                                         <div className="flex items-center text-sm font-medium text-slate-600">

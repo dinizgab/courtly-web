@@ -29,6 +29,7 @@ import { getBookingTotalPrice, getTimeFromDateString, strToTitle } from "@/lib/u
 import { AxiosResponse } from "axios"
 import { useAuth } from "@/contexts/auth-context"
 import { generateAvailableHours } from "@/lib/booking"
+import { mapCourtApi } from "@/utils/mapping"
 
 export default function CourtDetailsPage() {
     const router = useRouter()
@@ -54,23 +55,10 @@ export default function CourtDetailsPage() {
                         }
                     }
                 )
-                const court: CourtApi = response.data
-                const parsedCourt: Court = {
-                    id: court.id,
-                    companyId: court.company_id,
-                    name: court.name,
-                    sportType: court.sport_type,
-                    hourlyPrice: court.hourly_price,
-                    isActive: court.is_active,
-                    description: court.description,
-                    openingTime: court.opening_time,
-                    closingTime: court.closing_time,
-                    capacity: court.capacity,
-                    bookingsToday: 0,
-                    photos: court.photos || [],
-                }
 
-                setCourt(parsedCourt)
+                const court = mapCourtApi(response.data as CourtApi)
+
+                setCourt(court)
             } catch (error) {
                 console.error("Erro ao buscar dados da quadra:", error)
                 toast({
@@ -318,9 +306,7 @@ export default function CourtDetailsPage() {
                                     <Tabs defaultValue="info" className="mt-4">
                                         <TabsList className="mb-4">
                                             <TabsTrigger value="info">Informações</TabsTrigger>
-                                            {
-                                                //<TabsTrigger value="fotos">Fotos</TabsTrigger>
-                                            }
+                                            <TabsTrigger value="fotos">Fotos</TabsTrigger>
                                             <TabsTrigger value="horarios">Horários</TabsTrigger>
                                             <TabsTrigger value="reservas">Reservas</TabsTrigger>
                                         </TabsList>
@@ -376,7 +362,7 @@ export default function CourtDetailsPage() {
                                                     {court.photos.map((photo, index) => (
                                                         <div key={index} className="relative aspect-video rounded-md overflow-hidden border">
                                                             <Image
-                                                                src={photo || "/placeholder.svg"}
+                                                                src={photo.path || "/placeholder.svg"}
                                                                 alt={`Foto ${index + 1} da ${court.name}`}
                                                                 fill
                                                                 className="object-cover"

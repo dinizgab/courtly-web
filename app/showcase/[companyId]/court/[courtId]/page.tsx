@@ -14,6 +14,7 @@ import { Booking, BookingApi } from "@/types/booking"
 import { Court, CourtApi } from "@/types/court"
 import api from "@/lib/axios"
 import { getTimeFromDateString } from "@/lib/utils"
+import { mapCourtApi } from "@/utils/mapping"
 
 export default function CourtDetailsPage() {
     const router = useRouter()
@@ -30,24 +31,10 @@ export default function CourtDetailsPage() {
 
                 const response = await api.get(`/showcase/courts/${courtId}`)
 
-                const court: CourtApi = response.data
-                const parsedCourt: Court = {
-                    id: court.id,
-                    companyId: court.company_id,
-                    name: court.name,
-                    sportType: court.sport_type,
-                    hourlyPrice: court.hourly_price,
-                    isActive: court.is_active,
-                    description: court.description,
-                    openingTime: court.opening_time,
-                    closingTime: court.closing_time,
-                    capacity: court.capacity,
-                    bookingsToday: 0,
-                    photos: court.photos || [],
-                }
+                const court: Court = mapCourtApi(response.data)
 
                 // TODO - Add ratings, resources, and address
-                setCourt(parsedCourt)
+                setCourt(court)
 
                 //const quadraData: Quadra = {
                 //    id: id,
@@ -214,25 +201,27 @@ export default function CourtDetailsPage() {
                         <div className="mb-8">
                             <div className="relative aspect-video rounded-lg overflow-hidden mb-4">
                                 <Image
-                                    src={court.photos.length > 0 ? court.photos[fotoAtiva] : "/placeholder.svg"}
+                                    src={court.photos.length > 0 ? court.photos[0].path : "/placeholder.svg"}
                                     alt={court.name}
                                     fill
                                     className="object-cover"
                                     sizes="(max-width: 1024px) 100vw, 66vw"
                                 />
                             </div>
-                            <div className="grid grid-cols-4 gap-2">
-                                {court.photos.map((photo, index) => (
-                                    <div
-                                        key={index}
-                                        className={`relative aspect-video rounded-md overflow-hidden cursor-pointer ${index === fotoAtiva ? "ring-2 ring-green-600" : ""
-                                            }`}
-                                        onClick={() => setFotoAtiva(index)}
-                                    >
-                                        <Image src={photo || "/placeholder.svg"} alt={`Foto ${index + 1}`} fill className="object-cover" />
-                                    </div>
-                                ))}
-                            </div>
+                            {
+                                //<div className="grid grid-cols-4 gap-2">
+                                //    {court.photos.map((photo, index) => (
+                                //        <div
+                                //            key={index}
+                                //            className={`relative aspect-video rounded-md overflow-hidden cursor-pointer ${index === fotoAtiva ? "ring-2 ring-green-600" : ""
+                                //                }`}
+                                //            onClick={() => setFotoAtiva(index)}
+                                //        >
+                                //            <Image src={photo || "/placeholder.svg"} alt={`Foto ${index + 1}`} fill className="object-cover" />
+                                //        </div>
+                                //    ))}
+                                //</div>
+                            }
                         </div>
 
                         <div className="mb-8">
