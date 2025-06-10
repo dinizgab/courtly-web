@@ -10,7 +10,6 @@ export const formatTimePtBr = (iso: string | Date) =>
 export const formatBookingDateTimeString = (
     startIso: string | Date,
 ) => {
-    console.log("startIso", startIso);
     return `${formatDatePtBr(startIso)} às ${formatTimePtBr(startIso)}`;
 }
 export const formatBookingDuration = (

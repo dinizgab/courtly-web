@@ -67,6 +67,7 @@ const AuthService = {
             }
 
             const data: AuthResponse = await response.data
+
             AuthService.setToken(data.token, credentials.rememberMe)
 
             // Setup token refresh

@@ -14,8 +14,6 @@ export function decodeToken(token: string): any {
             .replace(/_/g, "/")
             .padEnd(Math.ceil(payload.length / 4) * 4, "="))
 
-        console.log("Decoded payload:", JSON.parse(decoded))
-
         return JSON.parse(decoded)
     } catch (error) {
         console.error("Error decoding token:", error)

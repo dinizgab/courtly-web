@@ -77,12 +77,11 @@ export default function NewCourtPage() {
                 }
             ))
 
-            // TODO - Check how to send photos to the backend
-            //if (fotos) {
-            //  Array.from(fotos).forEach((file, index) => {
-            //    formData.append(`photo_${index}`, file)
-            //  })
-            //}
+            if (fotos) {
+              Array.from(fotos).forEach((file, index) => {
+                formData.append(`photo_${index}`, file)
+              })
+            }
 
             await api.post("/admin/courts", formData, {
                 headers: {
