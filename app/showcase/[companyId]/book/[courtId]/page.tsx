@@ -424,7 +424,7 @@ export default function CreateBookingPage() {
                                         </Button>
                                         <Button
                                             type="submit"
-                                            className="bg-blue-500 hover:bg-blue-600"
+                                            className="bg-primary hover:bg-primary-heavy"
                                             disabled={isSubmitting || !watchStartTime}
                                         >
                                             {isSubmitting ? (

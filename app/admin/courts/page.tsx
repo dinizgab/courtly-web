@@ -120,7 +120,7 @@ export default function courtsPage() {
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <Button asChild className="bg-slate-600 hover:bg-slate-700">
+                        <Button asChild className="bg-primary hover:bg-primary-heavy">
                             <Link href="/admin/courts/new">
                                 <Plus className="mr-2 h-4 w-4" />
                                 Nova Quadra

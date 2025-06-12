@@ -127,7 +127,7 @@ export default function LandingPage() {
                   className="bg-white text-slate-700 hover:bg-gray-200"
                   onClick={() => router.push("/signup")}
                 >
-                  Começar Gratuitamente
+                  Começar Agora
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button
@@ -413,7 +413,7 @@ export default function LandingPage() {
 
                 <Button
                   className="w-full bg-primary hover:bg-primary-heavy py-3 text-lg"
-                  onClick={() => router.push("/cadastro")}
+                  onClick={() => router.push("/signup")}
                 >
                   Comece a receber reservas Agora!
                 </Button>
@@ -425,7 +425,7 @@ export default function LandingPage() {
             <p className="text-gray-600 mb-4">
               Tem alguma dúvida ou precisa de mais informações?
             </p>
-            <Button variant="outline" onClick={() => router.push("/contato")}>
+            <Button variant="outline" onClick={() => router.push("https://wa.me/5583986644385")}>
               Falar com um Consultor
             </Button>
           </div>
@@ -458,7 +458,7 @@ export default function LandingPage() {
 
           <div className="text-center mt-12">
             <p className="text-gray-600 mb-4">Não encontrou o que procurava?</p>
-            <Button variant="outline" onClick={() => router.push("/contato")}>
+            <Button variant="outline" onClick={() => router.push("https://wa.me/5583986644385")}>
               Entre em Contato
             </Button>
           </div>
@@ -472,16 +472,16 @@ export default function LandingPage() {
             Pronto para transformar a gestão das suas quadras?
           </h2>
           <p className="text-xl opacity-90 mb-8 max-w-3xl mx-auto">
-            Comece hoje mesmo com nosso período de teste gratuito de 14 dias.
+            Comece hoje mesmo e deixe que nos da courtly vamos te auxiliar em todo o processo das reservas de suas quadras.
             Sem compromisso, sem necessidade de cartão de crédito.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
               className="bg-white text-slate-700 hover:bg-gray-100"
-              onClick={() => router.push("/cadastro")}
+              onClick={() => router.push("/signup")}
             >
-              Começar Gratuitamente
+              Começar Agora
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button

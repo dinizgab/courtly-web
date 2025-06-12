@@ -26,6 +26,7 @@ const config: Config = {
 
         primary: {
           DEFAULT: "#52b788",
+          hiper_light: "#eff8f3",
           light: "#c4e9d6",
           heavy: " #2d6a4f",
           foreground: "#fcfcfc"

@@ -31,17 +31,17 @@ export function GuestFooter() {
             <h3 className="text-xl font-bold mb-4">Links Rápidos</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/showcase" className="text-gray-300 hover:text-white">
+                <Link href="/" className="text-gray-300 hover:text-white">
                   Início
                 </Link>
               </li>
               <li>
-                <Link href="/showcase#como-funciona" className="text-gray-300 hover:text-white">
+                <Link href="/#como-funciona" className="text-gray-300 hover:text-white">
                   Como Funciona
                 </Link>
               </li>
               <li>
-                <Link href="/showcase#contato" className="text-gray-300 hover:text-white">
+                <Link href="/#contato" className="text-gray-300 hover:text-white">
                   Contato
                 </Link>
               </li>
@@ -58,14 +58,14 @@ export function GuestFooter() {
             <ul className="space-y-2">
               <li className="flex items-center">
                 <Mail className="h-5 w-5 mr-2 text-gray-100" />
-                <a href="mailto:contato@quadrasfacil.com" className="text-gray-300 hover:text-white">
-                  contato@quadrasfacil.com
+                <a href="mailto:suporte@courtly.com.br" className="text-gray-300 hover:text-white">
+                  suporte@courtly.com.br
                 </a>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 mr-2 text-gray-100" />
-                <a href="tel:+551199999999" className="text-gray-300 hover:text-white">
-                  (11) 9999-9999
+                <a href="tel:+5583986644385" className="text-gray-300 hover:text-white">
+                  (83) 98664-4385
                 </a>
               </li>
               <li className="flex items-start">
