@@ -5,7 +5,7 @@ const env = process.env.NODE_ENV ?? 'development';
 const api = axios.create({
     baseURL: 
         env == 'production'
-            ? 'https://booking-mvp-production.up.railway.app'
+            ? 'https://courtly-api.up.railway.app'
             : 'http://localhost:8000',
 });
 
