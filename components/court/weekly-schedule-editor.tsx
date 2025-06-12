@@ -19,6 +19,9 @@ const DAY_NAMES = [
 ] as const;
 
 export interface DaySchedule {
+    id?: string
+    courtId?: string
+    weekday?: number
     isOpen: boolean
     openingTime: string
     closingTime: string
@@ -86,7 +89,12 @@ export function WeeklyScheduleEditor({ value, onChange }: WeeklyScheduleEditorPr
 
         dayNames.forEach(({ key }) => {
             if (key !== template) {
-                updatedSchedule[key as keyof WeeklySchedule] = { ...templateDay }
+                updatedSchedule[key as keyof WeeklySchedule] = {
+                    ...updatedSchedule[key as keyof WeeklySchedule],
+                    isOpen: templateDay.isOpen,
+                    openingTime: templateDay.openingTime,
+                    closingTime: templateDay.closingTime,
+                }
             }
         })
 
@@ -103,7 +111,12 @@ export function WeeklyScheduleEditor({ value, onChange }: WeeklyScheduleEditorPr
         const template = schedule.monday
 
         weekdays.forEach((day) => {
-            updatedSchedule[day as keyof WeeklySchedule] = { ...template }
+            updatedSchedule[day as keyof WeeklySchedule] = {
+                ...updatedSchedule[day as keyof WeeklySchedule],
+                isOpen: template.isOpen,
+                openingTime: template.openingTime,
+                closingTime: template.closingTime,
+            }
         })
 
         setSchedule(updatedSchedule)
@@ -118,7 +131,12 @@ export function WeeklyScheduleEditor({ value, onChange }: WeeklyScheduleEditorPr
         const template = schedule.saturday
 
         weekends.forEach((day) => {
-            updatedSchedule[day as keyof WeeklySchedule] = { ...template }
+            updatedSchedule[day as keyof WeeklySchedule] = {
+                ...updatedSchedule[day as keyof WeeklySchedule],
+                isOpen: template.isOpen,
+                openingTime: template.openingTime,
+                closingTime: template.closingTime,
+            }
         })
 
         setSchedule(updatedSchedule)
@@ -208,6 +226,7 @@ export function WeeklyScheduleEditor({ value, onChange }: WeeklyScheduleEditorPr
 
 // Função para converter o WeeklySchedule para o formato de array para o backend
 export function convertScheduleToArray(schedule: WeeklySchedule): Array<{
+    id?: string
     weekday: number
     is_open: boolean
     opening_time: string
@@ -216,6 +235,7 @@ export function convertScheduleToArray(schedule: WeeklySchedule): Array<{
     return DAY_NAMES.map((day, index) => {
         const daySchedule = schedule[day]
         return {
+            id: daySchedule.id ?? undefined,
             weekday: index,
             is_open: daySchedule.isOpen,
             opening_time: `1970-01-01T${daySchedule.openingTime}:00Z`,
@@ -228,6 +248,9 @@ export function convertScheduleToArray(schedule: WeeklySchedule): Array<{
 export function convertArrayToSchedule(
     scheduleArray:
         | Array<{
+            id: string
+            courtId: string
+            weekday: number
             isOpen: boolean
             openingTime: string
             closingTime: string
@@ -238,13 +261,31 @@ export function convertArrayToSchedule(
         return defaultWeeklySchedule
     }
 
-    return {
-        sunday: scheduleArray[0],
-        monday: scheduleArray[1],
-        tuesday: scheduleArray[2],
-        wednesday: scheduleArray[3],
-        thursday: scheduleArray[4],
-        friday: scheduleArray[5],
-        saturday: scheduleArray[6],
+    const weeklySchedule: WeeklySchedule = {
+        sunday: { ...defaultDay, weekday: 0 },
+        monday: { ...defaultDay, weekday: 1 },
+        tuesday: { ...defaultDay, weekday: 2 },
+        wednesday: { ...defaultDay, weekday: 3 },
+        thursday: { ...defaultDay, weekday: 4 },
+        friday: { ...defaultDay, weekday: 5 },
+        saturday: { ...defaultDay, weekday: 6 },
     }
+
+    for (const day of DAY_NAMES) {
+        const dayData = scheduleArray.find((item) => item.weekday === DAY_NAMES.indexOf(day))
+        if (dayData) {
+            weeklySchedule[day] = {
+                id: dayData.id,
+                courtId: dayData.courtId,
+                weekday: dayData.weekday,
+                isOpen: dayData.isOpen,
+                openingTime: dayData.openingTime.split("T")[1].slice(0, 5),
+                closingTime: dayData.closingTime.split("T")[1].slice(0, 5),
+            }
+        } else {
+            weeklySchedule[day] = { ...defaultDay }
+        }
+    }
+
+    return weeklySchedule
 }

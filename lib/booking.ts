@@ -5,7 +5,6 @@ import { getTimeFromDateString } from "./utils"
 export const generateAvailableHours = (court: Court, unavailableSlots: Partial<Booking>[], day: number) => {
     if (!court || !unavailableSlots) return []
 
-    const currentDayIndex = new Date().getUTCDay()
     const horarios = []
     const [horaInicio] = getTimeFromDateString(court.courtSchedule![day].openingTime).split(":")
     const [horaFim] = getTimeFromDateString(court.courtSchedule![day].closingTime).split(":")

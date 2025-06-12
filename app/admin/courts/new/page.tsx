@@ -275,7 +275,7 @@ export default function NewCourtPage() {
                                             </div>
                                         </TabsContent>
 
-                                        <TabsContent value="fotos">
+                                        <TabsContent value="fotos" forceMount>
                                             <div className="space-y-4">
                                                 <div>
                                                     <Label htmlFor="fotos">Fotos da Quadra</Label>

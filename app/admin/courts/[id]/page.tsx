@@ -140,7 +140,6 @@ export default function CourtDetailsPage() {
         fetchAvailableSlots()
     }, [court])
 
-
     const handleDelete = async () => {
         if (confirm("Tem certeza que deseja excluir esta quadra? Esta ação não pode ser desfeita.")) {
             await api.delete(`/courts/${id}`).then((response: AxiosResponse) => {
@@ -194,6 +193,11 @@ export default function CourtDetailsPage() {
 
     const getFormattedBookingText = (booking: Booking) => {
         return `${new Date(booking.startTime).toLocaleDateString("pt-BR")} • ${getTimeFromDateString(booking.startTime)} - ${getTimeFromDateString(booking.endTime)}`
+    }
+
+    function getDayName(dayIndex: number): string {
+        const days = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
+        return days[dayIndex]
     }
 
     // TODO - Componentize this page
@@ -381,6 +385,32 @@ export default function CourtDetailsPage() {
 
                                         <TabsContent value="horarios">
                                             <div className="space-y-4">
+                                                <h3 className="font-semibold mb-2">Horários de Funcionamento</h3>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    {court.courtSchedule?.map((horario, index) => (
+                                                        <div
+                                                            key={index}
+                                                            className={`p-4 rounded-md border ${horario.isOpen ? "border-slate-200 bg-white" : "border-slate-200 bg-slate-50"
+                                                                }`}
+                                                        >
+                                                            <div className="flex justify-between items-center">
+                                                                <h4 className="font-medium">{getDayName(index)}</h4>
+                                                                {horario.isOpen ? (
+                                                                    <Badge className="bg-green-500">Aberto</Badge>
+                                                                ) : (
+                                                                    <Badge variant="outline" className="text-slate-500">
+                                                                        Fechado
+                                                                    </Badge>
+                                                                )}
+                                                            </div>
+                                                            {horario.isOpen && (
+                                                                <p className="text-slate-600 mt-1">
+                                                                    {getTimeFromDateString(horario.openingTime)} às {getTimeFromDateString(horario.closingTime)}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
                                                 <h3 className="font-semibold">Disponibilidade para Hoje</h3>
 
                                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">

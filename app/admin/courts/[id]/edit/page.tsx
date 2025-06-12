@@ -18,7 +18,7 @@ import { AdminHeader } from "@/components/admin-header"
 import { AdminSidebar } from "@/components/admin-sidebar"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useToast } from "@/components/ui/use-toast"
-import { Loader2, ArrowLeft, Trash, ImageIcon } from "lucide-react"
+import { Loader2, ArrowLeft } from "lucide-react"
 import Image from "next/image"
 import api from "@/lib/axios"
 import { useAuth } from "@/contexts/auth-context"
@@ -38,8 +38,6 @@ const courtFormSchema = z.object({
     hourlyPrice: z.coerce.number().positive({ message: "Preço deve ser maior que zero" }),
     capacity: z.coerce.number().int().positive().optional(),
     description: z.string().optional(),
-    openingTime: z.string({ required_error: "Horário de abertura é obrigatório" }),
-    closingTime: z.string({ required_error: "Horário de fechamento é obrigatório" }),
     isActive: z.boolean().default(true),
 })
 
@@ -65,8 +63,6 @@ export default function EditCourtPage() {
             hourlyPrice: 0,
             capacity: undefined,
             description: "",
-            openingTime: "08:00",
-            closingTime: "22:00",
             isActive: true,
         },
     })
@@ -92,11 +88,11 @@ export default function EditCourtPage() {
                     hourlyPrice: court.hourlyPrice,
                     capacity: court.capacity,
                     description: court.description || "",
-                    openingTime: court.openingTime,
-                    closingTime: court.closingTime,
                     isActive: court.isActive
                 })
 
+                const scheduleArray = convertArrayToSchedule(court.courtSchedule || [])
+                setWeeklySchedule(scheduleArray)
                 //setFotosExistentes(court.photos)
             } catch (error) {
                 console.error("Erro ao buscar dados da quadra:", error)
@@ -127,8 +123,6 @@ export default function EditCourtPage() {
                     hourly_price: data.hourlyPrice,
                     capacity: data.capacity,
                     description: data.description,
-                    opening_time: `1970-01-01T${data.openingTime}:00Z`,
-                    closing_time: `1970-01-01T${data.closingTime}:00Z`,
                     is_active: data.isActive,
                 }
             ))
@@ -143,6 +137,9 @@ export default function EditCourtPage() {
             //        formData.append(`foto_${index}`, file)
             //    })
             //}
+            //
+            const scheduleArray = convertScheduleToArray(weeklySchedule)
+            formData.append("schedule", JSON.stringify(scheduleArray))
 
             const response = await api.put(`/admin/courts/${id}`, formData, {
                 headers: {
@@ -224,176 +221,125 @@ export default function EditCourtPage() {
                                     <CardTitle>Editar Quadra</CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <FormField
-                                            control={form.control}
-                                            name="name"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Nome da Quadra</FormLabel>
-                                                    <FormControl>
-                                                        <Input placeholder="Ex: Quadra de Futsal Coberta" {...field} />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
+                                    <Tabs defaultValue="info">
+                                        <TabsList className="mb-6">
+                                            <TabsTrigger value="info">Informações Básicas</TabsTrigger>
+                                            <TabsTrigger value="horarios">Horários de Funcionamento</TabsTrigger>
+                                            <TabsTrigger value="fotos">Fotos</TabsTrigger>
+                                        </TabsList>
 
-                                        <FormField
-                                            control={form.control}
-                                            name="sportType"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Tipo de Quadra</FormLabel>
-                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <TabsContent value="info" className="space-y-6">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="name"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>Nome da Quadra</FormLabel>
+                                                            <FormControl>
+                                                                <Input placeholder="Ex: Quadra de Futsal Coberta" {...field} />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+
+                                                <FormField
+                                                    control={form.control}
+                                                    name="sportType"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>Tipo de Quadra</FormLabel>
+                                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                                <FormControl>
+                                                                    <SelectTrigger>
+                                                                        <SelectValue placeholder="Selecione o sportType" />
+                                                                    </SelectTrigger>
+                                                                </FormControl>
+                                                                <SelectContent>
+                                                                    <SelectItem value="futsal">Futsal</SelectItem>
+                                                                    <SelectItem value="society">Society</SelectItem>
+                                                                    <SelectItem value="volei">Vôlei</SelectItem>
+                                                                    <SelectItem value="beach-tennis">Beach Tennis</SelectItem>
+                                                                    <SelectItem value="tenis">Tênis</SelectItem>
+                                                                    <SelectItem value="basquete">Basquete</SelectItem>
+                                                                    <SelectItem value="outro">Outro</SelectItem>
+                                                                </SelectContent>
+                                                            </Select>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="hourlyPrice"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>Preço por Hora (R$)</FormLabel>
+                                                            <FormControl>
+                                                                <Input type="number" min="0" step="0.01" placeholder="0.00" {...field} />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+
+                                                <FormField
+                                                    control={form.control}
+                                                    name="capacity"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>Capacidade (pessoas)</FormLabel>
+                                                            <FormControl>
+                                                                <Input
+                                                                    type="number"
+                                                                    min="1"
+                                                                    placeholder="10"
+                                                                    {...field}
+                                                                    value={field.value || ""}
+                                                                    onChange={(e) => {
+                                                                        const value = e.target.value === "" ? undefined : Number.parseInt(e.target.value)
+                                                                        field.onChange(value)
+                                                                    }}
+                                                                />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
+
+                                            {
+                                                //     <FormField
+                                                //         control={form.control}
+                                                //         name="endereco"
+                                                //         render={({ field }) => (
+                                                //             <FormItem>
+                                                //                 <FormLabel>Endereço</FormLabel>
+                                                //                 <FormControl>
+                                                //                     <Input placeholder="Endereço da quadra" {...field} value={field.value || ""} />
+                                                //                 </FormControl>
+                                                //                 <FormMessage />
+                                                //             </FormItem>
+                                                //         )}
+                                                //     />
+                                            }
+
+                                            <FormField
+                                                control={form.control}
+                                                name="description"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Descrição</FormLabel>
                                                         <FormControl>
-                                                            <SelectTrigger>
-                                                                <SelectValue placeholder="Selecione o sportType" />
-                                                            </SelectTrigger>
-                                                        </FormControl>
-                                                        <SelectContent>
-                                                            <SelectItem value="futsal">Futsal</SelectItem>
-                                                            <SelectItem value="society">Society</SelectItem>
-                                                            <SelectItem value="volei">Vôlei</SelectItem>
-                                                            <SelectItem value="beach-tennis">Beach Tennis</SelectItem>
-                                                            <SelectItem value="tenis">Tênis</SelectItem>
-                                                            <SelectItem value="basquete">Basquete</SelectItem>
-                                                            <SelectItem value="outro">Outro</SelectItem>
-                                                        </SelectContent>
-                                                    </Select>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <FormField
-                                            control={form.control}
-                                            name="hourlyPrice"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Preço por Hora (R$)</FormLabel>
-                                                    <FormControl>
-                                                        <Input type="number" min="0" step="0.01" placeholder="0.00" {...field} />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        <FormField
-                                            control={form.control}
-                                            name="capacity"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Capacidade (pessoas)</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="number"
-                                                            min="1"
-                                                            placeholder="10"
-                                                            {...field}
-                                                            value={field.value || ""}
-                                                            onChange={(e) => {
-                                                                const value = e.target.value === "" ? undefined : Number.parseInt(e.target.value)
-                                                                field.onChange(value)
-                                                            }}
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-
-                                    {
-                                        //     <FormField
-                                        //         control={form.control}
-                                        //         name="endereco"
-                                        //         render={({ field }) => (
-                                        //             <FormItem>
-                                        //                 <FormLabel>Endereço</FormLabel>
-                                        //                 <FormControl>
-                                        //                     <Input placeholder="Endereço da quadra" {...field} value={field.value || ""} />
-                                        //                 </FormControl>
-                                        //                 <FormMessage />
-                                        //             </FormItem>
-                                        //         )}
-                                        //     />
-                                    }
-
-                                    <FormField
-                                        control={form.control}
-                                        name="description"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Descrição</FormLabel>
-                                                <FormControl>
-                                                    <Textarea
-                                                        placeholder="Descreva detalhes sobre a quadra, como dimensões, sportType de piso, etc."
-                                                        className="min-h-[100px]"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-
-                                    <div className="space-y-4">
-                                        <Label>Fotos Existentes</Label>
-                                        {fotosExistentes.length > 0 ? (
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                                                {fotosExistentes.map((foto, index) => (
-                                                    <div key={index} className="relative group">
-                                                        <div className="relative aspect-video rounded-md overflow-hidden border">
-                                                            <Image
-                                                                src={foto || "/placeholder.svg"}
-                                                                alt={`Foto ${index + 1}`}
-                                                                fill
-                                                                className="object-cover"
+                                                            <Textarea
+                                                                placeholder="Descreva detalhes sobre a quadra, como dimensões, sportType de piso, etc."
+                                                                className="min-h-[100px]"
+                                                                {...field}
                                                             />
-                                                        </div>
-                                                        <Button
-                                                            type="button"
-                                                            variant="destructive"
-                                                            size="sm"
-                                                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                                                            onClick={() => handleRemoveFoto(foto)}
-                                                        >
-                                                            <Trash className="h-4 w-4" />
-                                                        </Button>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <div className="text-center py-8 border rounded-md">
-                                                <ImageIcon className="h-10 w-10 mx-auto text-gray-400" />
-                                                <p className="mt-2 text-gray-500">Nenhuma foto disponível</p>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="fotos">Adicionar Novas Fotos</Label>
-                                        <Input id="fotos" type="file" multiple accept="image/*" onChange={handleFileChange} />
-                                        <p className="text-sm text-muted-foreground">
-                                            Você pode selecionar múltiplas fotos. Formatos aceitos: JPG, PNG.
-                                        </p>
-                                    </div>
-
-                                    <div className="space-y-4">
-                                        <Label>Horários Disponíveis</Label>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <FormField
-                                                control={form.control}
-                                                name="openingTime"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Horário de Abertura</FormLabel>
-                                                        <FormControl>
-                                                            <Input type="time" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -402,32 +348,51 @@ export default function EditCourtPage() {
 
                                             <FormField
                                                 control={form.control}
-                                                name="closingTime"
+                                                name="isActive"
                                                 render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Horário de Fechamento</FormLabel>
+                                                    <FormItem className="flex flex-row items-center space-x-2 space-y-0">
                                                         <FormControl>
-                                                            <Input type="time" {...field} />
+                                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
                                                         </FormControl>
-                                                        <FormMessage />
+                                                        <FormLabel>Quadra ativa e disponível para reservas</FormLabel>
                                                     </FormItem>
                                                 )}
                                             />
-                                        </div>
-                                    </div>
+                                        </TabsContent>
 
-                                    <FormField
-                                        control={form.control}
-                                        name="isActive"
-                                        render={({ field }) => (
-                                            <FormItem className="flex flex-row items-center space-x-2 space-y-0">
-                                                <FormControl>
-                                                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                                                </FormControl>
-                                                <FormLabel>Quadra ativa e disponível para reservas</FormLabel>
-                                            </FormItem>
-                                        )}
-                                    />
+                                        <TabsContent value="horarios">
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <h3 className="text-lg font-medium mb-2">Horários de Funcionamento</h3>
+                                                    <p className="text-sm text-slate-500 mb-4">
+                                                        Configure os horários de funcionamento para cada dia da semana. Você pode marcar dias em que
+                                                        a quadra não abre.
+                                                    </p>
+                                                </div>
+
+                                                <WeeklyScheduleEditor value={weeklySchedule} onChange={setWeeklySchedule} />
+                                            </div>
+                                        </TabsContent>
+
+                                        <TabsContent value="fotos">
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <Label htmlFor="fotos">Fotos da Quadra</Label>
+                                                    <Input
+                                                        id="fotos"
+                                                        type="file"
+                                                        multiple
+                                                        accept="image/*"
+                                                        onChange={handleFileChange}
+                                                        className="mt-2"
+                                                    />
+                                                    <p className="text-sm text-slate-500 mt-1">
+                                                        Você pode selecionar múltiplas fotos. Formatos aceitos: JPG, PNG.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </TabsContent>
+                                    </Tabs>
                                 </CardContent>
                                 <CardFooter className="flex justify-between">
                                     <Button
