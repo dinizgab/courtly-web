@@ -241,7 +241,7 @@ export default function CourtDetailsPage() {
                                     </div>
                                 </div>
                                 <div className="text-right mt-2 lg:mt-0">
-                                    <div className="text-2xl font-bold text-blue-500">R$ {court.hourlyPrice.toFixed(2)}</div>
+                                    <div className="text-2xl font-bold text-primary">R$ {court.hourlyPrice.toFixed(2)}</div>
                                     <div className="text-sm text-gray-500">por hora</div>
                                 </div>
                             </div>
@@ -263,7 +263,7 @@ export default function CourtDetailsPage() {
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                         <div className="flex items-start">
-                                            <Clock className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
+                                            <Clock className="h-5 w-5 text-primary mr-2 mt-0.5" />
                                             <div>
                                                 <h4 className="font-medium">Horário de Funcionamento</h4>
                                                 <p className="text-gray-600">
@@ -273,7 +273,7 @@ export default function CourtDetailsPage() {
                                         </div>
 
                                         <div className="flex items-start">
-                                            <Users className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
+                                            <Users className="h-5 w-5 text-primary mr-2 mt-0.5" />
                                             <div>
                                                 <h4 className="font-medium">Capacidade</h4>
                                                 <p className="text-gray-600">{court.capacity > 0 ? `${court.capacity} pessoas` : "Não informada"}</p>
@@ -311,7 +311,7 @@ export default function CourtDetailsPage() {
                                                 <div
                                                     key={index}
                                                     className={`p-3 rounded-md border text-center ${slot.disponivel
-                                                        ? "border-blue-200 bg-blue-50 text-blue-500"
+                                                        ? "border-primary bg-primary-hiper_light text-primary"
                                                         : "border-gray-200 bg-gray-100 text-gray-500"
                                                         }`}
                                                 >
@@ -366,7 +366,7 @@ export default function CourtDetailsPage() {
                                     Selecione a data e horário desejados para verificar a disponibilidade e fazer sua reserva.
                                 </p>
                                 <Button
-                                    className="w-full bg-blue-500 hover:bg-blue-600"
+                                    className="w-full bg-primary hover:bg-primary-heavy"
                                     size="lg"
                                     onClick={() => router.push(`/showcase/${companyId}/book/${court.id}`)}
                                 >
@@ -378,15 +378,15 @@ export default function CourtDetailsPage() {
                                     <h3 className="font-medium mb-2">Informações importantes:</h3>
                                     <ul className="space-y-2 text-sm text-gray-600">
                                         <li className="flex items-start">
-                                            <CheckCircle className="h-4 w-4 text-blue-500 mr-2 mt-0.5" />
+                                            <CheckCircle className="h-4 w-4 text-primary mr-2 mt-0.5" />
                                             <span>Pagamento realizado no local</span>
                                         </li>
                                         <li className="flex items-start">
-                                            <CheckCircle className="h-4 w-4 text-blue-500 mr-2 mt-0.5" />
+                                            <CheckCircle className="h-4 w-4 text-primary mr-2 mt-0.5" />
                                             <span>Cancelamento gratuito com até 24h de antecedência</span>
                                         </li>
                                         <li className="flex items-start">
-                                            <CheckCircle className="h-4 w-4 text-blue-500 mr-2 mt-0.5" />
+                                            <CheckCircle className="h-4 w-4 text-primary mr-2 mt-0.5" />
                                             <span>Chegue 15 minutos antes do horário reservado</span>
                                         </li>
                                     </ul>

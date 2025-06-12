@@ -90,7 +90,7 @@ export default function DashboardPage() {
                                                         <p className="text-sm font-medium">{70 - i * 10}%</p>
                                                     </div>
                                                     <div className="h-2 w-full rounded-full bg-gray-200">
-                                                        <div className="h-2 rounded-full bg-slate-600" style={{ width: `${70 - i * 10}%` }} />
+                                                        <div className="h-2 rounded-full bg-primary" style={{ width: `${70 - i * 10}%` }} />
                                                     </div>
                                                 </div>
                                             ))}

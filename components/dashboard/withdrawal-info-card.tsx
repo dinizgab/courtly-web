@@ -22,7 +22,8 @@ export function WithdrawalInfoCard() {
           items={[
             //"Taxa da plataforma: 8 % por reserva",
             //"Saque mínimo: R$ 50,00",
-            "Taxa de saque: R$ 1,00 por transação",
+            "Para saques abaixo de R$500: R$ 1,00 por transação",
+            "Para saques acima de R$500: Sem custo",
           ]}
         />
       </CardContent>

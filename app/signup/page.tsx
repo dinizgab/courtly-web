@@ -155,7 +155,7 @@ export default function SignupPage() {
                 <div className="max-w-md mx-auto">
                     <Card>
                         <CardHeader className="space-y-1">
-                            <CardTitle className="text-2xl font-bold text-center">Cadastro de Empresa</CardTitle>
+                            <CardTitle className="text-2xl font-bold text-center text-primary-heavy">Cadastro de Empresa</CardTitle>
                             <CardDescription className="text-center">
                                 Crie sua conta para gerenciar suas quadras e reservas
                             </CardDescription>
@@ -341,7 +341,7 @@ export default function SignupPage() {
                                     />
                                 </CardContent>
                                 <CardFooter className="flex flex-col space-y-4">
-                                    <Button type="submit" className="w-full bg-slate-600 hover:bg-slate-700" disabled={isSubmitting}>
+                                    <Button type="submit" className="w-full bg-primary hover:bg-primary-heavy" disabled={isSubmitting}>
                                         {isSubmitting ? (
                                             <>
                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

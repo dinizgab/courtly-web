@@ -29,8 +29,8 @@ export function StatsGrid({ stats }: { stats: { key: keyof typeof ICONS; value: 
                   </p>
                   <p className="text-2xl font-bold">{formatted}</p>
                 </div>
-                <div className="rounded-full p-2 bg-slate-200">
-                  <Icon className="h-5 w-5 text-slate-600" />
+                <div className="rounded-full p-2 bg-primary-light">
+                  <Icon className="h-5 w-5 text-primary-heavy" />
                 </div>
               </div>
             </CardContent>

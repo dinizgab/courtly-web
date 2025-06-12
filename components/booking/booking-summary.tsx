@@ -46,7 +46,7 @@ export default function BookingSummary({ courtName, date, startTime, duration, t
                             {duration ? `${duration} hora${Number.parseInt(duration) > 1 ? "s" : ""}` : "-"}
                         </span>
                     </div>
-                    <div className="flex justify-between items-center text-lg font-bold text-blue-500">
+                    <div className="flex justify-between items-center text-lg font-bold text-primary">
                         <span>Valor Total:</span>
                         <span>R$ {totalValue.toFixed(2)}</span>
                     </div>
@@ -55,17 +55,17 @@ export default function BookingSummary({ courtName, date, startTime, duration, t
                         {
                             paymentMethod === "pix" ?
                                 <div className="flex items-start">
-                                    <CheckCircle className="h-4 w-4 text-blue-500 mr-2 mt-0.5" />
+                                    <CheckCircle className="h-4 w-4 text-primary-heavy mr-2 mt-0.5" />
                                     <span>Pagamento via PIX</span>
                                 </div> :
 
                                 <div className="flex items-start">
-                                    <Clock className="h-4 w-4 text-blue-500 mr-2 mt-0.5" />
+                                    <Clock className="h-4 w-4 text-primary-heavy mr-2 mt-0.5" />
                                     <span>O pagamento será realizado no local</span>
                                 </div>
                         }
                         <div className="flex items-start">
-                            <CheckCircle className="h-4 w-4 text-blue-500 mr-2 mt-0.5" />
+                            <CheckCircle className="h-4 w-4 text-primary-heavy mr-2 mt-0.5" />
                             <span>Você receberá um código de confirmação por email</span>
                         </div>
                     </div>

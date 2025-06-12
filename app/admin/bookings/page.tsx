@@ -170,7 +170,7 @@ export default function BookingsPage() {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <Button asChild className="bg-slate-600 hover:bg-slate-700">
+                        <Button asChild className="bg-primary hover:bg-primary-heavy">
                             <Link href="/admin/bookings/new">
                                 <Plus className="mr-2 h-4 w-4" />
                                 Nova Reserva

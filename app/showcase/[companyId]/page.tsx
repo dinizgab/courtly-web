@@ -53,7 +53,7 @@ export default function CompanyShowcasePage() {
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50">
-            <section className="relative bg-slate-600 text-white py-16">
+            <section className="relative bg-gradient-to-t from-primary to-[#2b7556] text-white py-16">
                 <div className="container mx-auto px-4 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">Reserve sua quadra esportiva</h1>
                     <p className="text-xl mb-8">Encontre e reserve a quadra ideal para seu esporte favorito</p>
@@ -132,7 +132,7 @@ export default function CompanyShowcasePage() {
                                                 Ver detalhes
                                             </Button>
                                             <Button
-                                                className="bg-blue-500 hover:bg-blue-600"
+                                                className="bg-primary hover:bg-primary-heavy"
                                                 onClick={() => router.push(`/showcase/${companyId}/book/${c.id}`)}
                                             >
                                                 Reservar
@@ -147,31 +147,31 @@ export default function CompanyShowcasePage() {
                 }
             </section >
 
-            < section className="py-12 bg-gray-100" >
+            < section className="py-12 bg-primary-hiper_light" >
                 <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-bold mb-12 text-center">Como Funciona</h2>
+                    <h2 className="text-3xl font-bold mb-12 text-center text-primary-heavy">Como Funciona</h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div className="text-center">
-                            <div className="bg-slate-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                            <div className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                                 1
                             </div>
-                            <h3 className="text-xl font-bold mb-2">Escolha sua quadra</h3>
+                            <h3 className="text-xl font-bold mb-2 text-primary-heavy">Escolha sua quadra</h3>
                             <p className="text-gray-600">
                                 Navegue pelas quadras disponíveis e escolha a que melhor atende suas necessidades
                             </p>
                         </div>
                         <div className="text-center">
-                            <div className="bg-slate-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                            <div className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                                 2
                             </div>
-                            <h3 className="text-xl font-bold mb-2">Selecione data e horário</h3>
+                            <h3 className="text-xl font-bold mb-2 text-primary-heavy">Selecione data e horário</h3>
                             <p className="text-gray-600">Escolha a data e o horário disponível que você deseja reservar</p>
                         </div>
                         <div className="text-center">
-                            <div className="bg-slate-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                            <div className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                                 3
                             </div>
-                            <h3 className="text-xl font-bold mb-2">Confirme sua reserva</h3>
+                            <h3 className="text-xl font-bold mb-2 text-primary-heavy">Confirme sua reserva</h3>
                             <p className="text-gray-600">Informe seus dados e confirme sua reserva. O pagamento é feito no local</p>
                         </div>
                     </div>

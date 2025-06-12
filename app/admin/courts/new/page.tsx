@@ -304,7 +304,7 @@ export default function NewCourtPage() {
                                     >
                                         Cancelar
                                     </Button>
-                                    <Button type="submit" className="bg-slate-700 hover:bg-slate-800" disabled={isSubmitting}>
+                                    <Button type="submit" className="bg-primary hover:bg-primary-heavy" disabled={isSubmitting}>
                                         {isSubmitting ? (
                                             <>
                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

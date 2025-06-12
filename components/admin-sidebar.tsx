@@ -49,7 +49,7 @@ export function AdminSidebar({ activePage }: AdminSidebarProps) {
   ]
 
   return (
-    <aside className="hidden md:flex h-screen w-64 flex-col border-r bg-slate-800 text-white">
+    <aside className="hidden md:flex h-screen w-64 flex-col border-r bg-primary-heavy text-white">
       <div className="p-6">
         <Link href="/admin/dashboard" className="flex items-center gap-2">
           <span className="text-xl font-bold">Courtly</span>
@@ -62,7 +62,7 @@ export function AdminSidebar({ activePage }: AdminSidebarProps) {
             href={item.href}
             className={cn(
               "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-              activePage === item.id ? "bg-slate-700 text-white" : "text-slate-100 hover:bg-slate-700 hover:text-white",
+              activePage === item.id ? "bg-primary text-white" : "text-slate-100 hover:bg-primary-light hover:text-primary-heavy",
             )}
           >
             <item.icon className="h-5 w-5" />
@@ -73,7 +73,7 @@ export function AdminSidebar({ activePage }: AdminSidebarProps) {
       <div className="border-t border-slate-700 p-4">
         <Link
           href="/"
-          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 hover:text-white transition-colors"
+          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-100 hover:bg-primary-light hover:text-primary-heavy transition-colors"
         >
           <LogOut className="h-5 w-5" />
           Sair

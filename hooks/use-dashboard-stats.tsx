@@ -39,7 +39,7 @@ export function useDashboardStats() {
                     (axios.isAxiosError(err) && err.code === "ERR_CANCELED") ||
                     (err as Error).name === "CanceledError"
                 if (isAbort) return
-
+                setLoading(false)
                 setIsError(true)
                 console.error("Falha ao buscar dashboard:", err)
             } finally {
