@@ -23,6 +23,7 @@ export default function CourtDetailsPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [fotoAtiva, setFotoAtiva] = useState(0)
     const { companyId, courtId } = useParams() as { companyId: string, courtId: string }
+    const currentDayIndex = new Date().getDay()
 
     useEffect(() => {
         const fetchCourt = async () => {
@@ -111,8 +112,8 @@ export default function CourtDetailsPage() {
         if (!court || !unavailableSlots) return []
 
         const horarios = []
-        const [horaInicio] = getTimeFromDateString(court.openingTime).split(":")
-        const [horaFim] = getTimeFromDateString(court.closingTime).split(":")
+        const [horaInicio] = getTimeFromDateString(court.courtSchedule![currentDayIndex].openingTime).split(":")
+        const [horaFim] = getTimeFromDateString(court.courtSchedule![currentDayIndex].closingTime).split(":")
 
         const occupiedSlots = new Set(unavailableSlots.map(slot => new Date(slot.startTime!).getUTCHours()))
 
@@ -201,7 +202,7 @@ export default function CourtDetailsPage() {
                         <div className="mb-8">
                             <div className="relative aspect-video rounded-lg overflow-hidden mb-4">
                                 <Image
-                                    src={court.photos.length > 0 ? court.photos[0].path : "/placeholder.svg"}
+                                    src={court.photos!.length > 0 ? court.photos![0].path : "/placeholder.svg"}
                                     alt={court.name}
                                     fill
                                     className="object-cover"
@@ -266,7 +267,7 @@ export default function CourtDetailsPage() {
                                             <div>
                                                 <h4 className="font-medium">Horário de Funcionamento</h4>
                                                 <p className="text-gray-600">
-                                                    {getTimeFromDateString(court.openingTime)} às {getTimeFromDateString(court.closingTime)}
+                                                    {getTimeFromDateString(court.courtSchedule![currentDayIndex].openingTime)} às {getTimeFromDateString(court.courtSchedule![currentDayIndex].closingTime)}
                                                 </p>
                                             </div>
                                         </div>

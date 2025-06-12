@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { format, addDays } from "date-fns"
+import { format, addDays, isBefore, isAfter, startOfDay } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -75,9 +75,13 @@ export default function CreateBookingPage() {
         if (!court || !watchStartTime || !alreadyBookedHours) return 1
         const startHour = Number.parseInt(watchStartTime.split(":")[0])
 
+        const selectedDaySchedule = court.courtSchedule?.find(
+            (schedule) => schedule.weekday === watchDate.getDay()
+        )
+
         return calculateMaxBookingDuration(
-            court.openingTime,
-            court.closingTime,
+            selectedDaySchedule!.openingTime,
+            selectedDaySchedule!.closingTime,
             startHour,
             alreadyBookedHours
         )
@@ -91,8 +95,12 @@ export default function CreateBookingPage() {
     const availableSlots = useMemo(() => {
         if (!court || !alreadyBookedHours) return []
 
-        const open = new Date(court.openingTime).getUTCHours()
-        const close = new Date(court.closingTime).getUTCHours()
+        const selectedDaySchedule = court.courtSchedule?.find(
+            (schedule) => schedule.weekday === watchDate.getDay()
+        )
+
+        const open = new Date(selectedDaySchedule!.openingTime).getUTCHours()
+        const close = new Date(selectedDaySchedule!.closingTime).getUTCHours()
 
         const occupied = new Set<number>()
         alreadyBookedHours.forEach(({ startTime, endTime }) => {
@@ -303,7 +311,10 @@ export default function CreateBookingPage() {
                                                                     mode="single"
                                                                     selected={field.value}
                                                                     onSelect={field.onChange}
-                                                                    disabled={(date) => date < new Date() || date > addDays(new Date(), 30)}
+                                                                    disabled={(date) =>
+                                                                        isBefore(date, startOfDay(new Date())) ||
+                                                                        isAfter(date, startOfDay(addDays(new Date(), 30)))
+                                                                    }
                                                                     initialFocus
                                                                     locale={ptBR}
                                                                 />

@@ -21,9 +21,16 @@ import { useToast } from "@/components/ui/use-toast"
 import { Loader2, ArrowLeft, Trash, ImageIcon } from "lucide-react"
 import Image from "next/image"
 import api from "@/lib/axios"
-import { Court, CourtApi } from "@/types/court"
-import { getTimeFromDateString } from "@/lib/utils"
 import { useAuth } from "@/contexts/auth-context"
+import {
+    WeeklyScheduleEditor,
+    defaultWeeklySchedule,
+    convertScheduleToArray,
+    convertArrayToSchedule,
+    type WeeklySchedule,
+} from "@/components/court/weekly-schedule-editor"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { mapCourtApi } from "@/utils/mapping"
 
 const courtFormSchema = z.object({
     name: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),
@@ -48,6 +55,7 @@ export default function EditCourtPage() {
     const [fotosParaRemover, setFotosParaRemover] = useState<string[]>([])
     const { id } = useParams() as { id: string }
     const { token, companyId } = useAuth()
+    const [weeklySchedule, setWeeklySchedule] = useState<WeeklySchedule>(defaultWeeklySchedule)
 
     const form = useForm<CourtFormValues>({
         resolver: zodResolver(courtFormSchema),
@@ -76,34 +84,20 @@ export default function EditCourtPage() {
                         }
                     })
 
-                const court: CourtApi = response.data
-                const parsedCourt: Court = {
-                    id: court.id,
-                    companyId: court.company_id,
-                    name: court.name,
-                    sportType: court.sport_type,
-                    hourlyPrice: court.hourly_price,
-                    isActive: court.is_active,
-                    description: court.description,
-                    openingTime: getTimeFromDateString(court.opening_time),
-                    closingTime: getTimeFromDateString(court.closing_time),
-                    capacity: court.capacity,
-                    bookingsToday: 0,
-                    photos: court.photos || [],
-                }
+                const court = mapCourtApi(response.data)
 
                 form.reset({
-                    name: parsedCourt.name,
-                    sportType: parsedCourt.sportType,
-                    hourlyPrice: parsedCourt.hourlyPrice,
-                    capacity: parsedCourt.capacity,
-                    description: parsedCourt.description || "",
-                    openingTime: parsedCourt.openingTime,
-                    closingTime: parsedCourt.closingTime,
-                    isActive: parsedCourt.isActive
+                    name: court.name,
+                    sportType: court.sportType,
+                    hourlyPrice: court.hourlyPrice,
+                    capacity: court.capacity,
+                    description: court.description || "",
+                    openingTime: court.openingTime,
+                    closingTime: court.closingTime,
+                    isActive: court.isActive
                 })
 
-                setFotosExistentes(parsedCourt.photos)
+                //setFotosExistentes(court.photos)
             } catch (error) {
                 console.error("Erro ao buscar dados da quadra:", error)
                 toast({

@@ -24,7 +24,7 @@ import {
 import { useToast } from "@/components/ui/use-toast"
 import api from "@/lib/axios"
 import { Booking, BookingApi } from "@/types/booking"
-import { Court, CourtApi }  from "@/types/court"
+import { Court, CourtApi } from "@/types/court"
 import { getBookingTotalPrice, getTimeFromDateString, strToTitle } from "@/lib/utils"
 import { AxiosResponse } from "axios"
 import { useAuth } from "@/contexts/auth-context"
@@ -40,6 +40,7 @@ export default function CourtDetailsPage() {
     const [isLoading, setIsLoading] = useState(true)
     const { id } = useParams() as { id: string }
     const { token } = useAuth()
+    const currentDayIndex = new Date().getDay()
 
     useEffect(() => {
         const fetchCourt = async () => {
@@ -129,7 +130,7 @@ export default function CourtDetailsPage() {
                     endTime: slot.end_time,
                 } as Partial<Booking>))
 
-                const availableSlots = generateAvailableHours(court, unavailableSlots)
+                const availableSlots = generateAvailableHours(court, unavailableSlots, currentDayIndex)
                 setAvailableSlots(availableSlots)
             } catch (error) {
                 console.error("Erro ao buscar horários disponíveis:", error)
@@ -321,9 +322,9 @@ export default function CourtDetailsPage() {
                                                 <div className="flex items-start">
                                                     <Clock className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
                                                     <div>
-                                                        <h4 className="font-medium">Horário de Funcionamento</h4>
+                                                        <h4 className="font-medium">Horário de Funcionamento (Hoje)</h4>
                                                         <p className="text-gray-600">
-                                                            {getTimeFromDateString(court.openingTime)} às {getTimeFromDateString(court.closingTime)}
+                                                            {getTimeFromDateString(court.courtSchedule![currentDayIndex].openingTime)} às {getTimeFromDateString(court.courtSchedule![currentDayIndex].closingTime)}
                                                         </p>
                                                     </div>
                                                 </div>

@@ -14,6 +14,24 @@ export type Court = {
     capacity: number
     photos?: CourtPhoto[]
     company?: Partial<Company>
+    courtSchedule?: CourtSchedule[]
+}
+
+export type CourtPhoto = {
+    id : string
+    courtId: string
+    path: string
+    position: number
+    isCover: boolean
+}
+
+export type CourtSchedule = {
+    id: string
+    courtId: string
+    weekday: number
+    isOpen: boolean
+    openingTime: string
+    closingTime: string
 }
 
 export type CourtApi = {
@@ -29,14 +47,7 @@ export type CourtApi = {
     closing_time: string
     capacity: number
     photos: CourtPhotoApi[]
-}
-
-export type CourtPhoto = {
-    id : string
-    courtId: string
-    path: string
-    position: number
-    isCover: boolean
+    court_schedule: CourtScheduleApi[]
 }
 
 export type CourtPhotoApi = {
@@ -45,4 +56,13 @@ export type CourtPhotoApi = {
     path: string
     position: number
     is_cover: boolean
+}
+
+export type CourtScheduleApi = {
+    id: string
+    court_id: string
+    weekday: number
+    is_open: boolean
+    opening_time: string
+    closing_time: string
 }

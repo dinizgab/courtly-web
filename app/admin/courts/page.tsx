@@ -28,7 +28,8 @@ export default function courtsPage() {
         if (confirm("Tem certeza que deseja excluir esta quadra?")) {
             setCourts(courts.filter((court) => court.id !== id))
 
-            api.delete(`/courts/${id}`).then((response: AxiosResponse) => {
+            // TODO - Add token to header 
+            api.delete(`/admin/courts/${id}`).then((response: AxiosResponse) => {
                 if (response.status === 200) {
                     toast({
                         title: "Quadra excluída",

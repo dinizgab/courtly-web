@@ -13,7 +13,7 @@ import { GuestFooter } from "@/components/guest-footer"
 import { Court } from "@/types/court"
 import api from "@/lib/axios"
 import { mapCourtApi } from "@/utils/mapping"
-import { format } from "date-fns"
+import { getTimeFromDateString } from "@/lib/utils"
 
 export default function CompanyShowcasePage() {
     const router = useRouter()
@@ -102,7 +102,7 @@ export default function CompanyShowcasePage() {
                             <Card key={c.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                                 <div className="relative h-48">
                                     <Image
-                                        src={c.photos.length > 0 ? c.photos[0].path : "/placeholder.svg"}
+                                        src={c.photos!.length > 0 ? c.photos![0].path : "/placeholder.svg"}
                                         alt={c.name}
                                         fill
                                         className="object-cover"
@@ -117,7 +117,7 @@ export default function CompanyShowcasePage() {
                                         <div className="flex items-center text-sm text-gray-500">
                                             <Clock className="h-4 w-4 mr-2" />
                                             <span>
-                                                {format(c.openingTime, "HH:mm")} às {format(c.closingTime, "HH:mm")}
+                                                {getTimeFromDateString(c.courtSchedule![0].openingTime)} às {getTimeFromDateString(c.courtSchedule![0].closingTime)}
                                             </span>
                                         </div>
                                         <div className="flex items-center text-sm font-medium text-slate-600">

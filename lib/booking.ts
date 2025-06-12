@@ -2,17 +2,13 @@ import { Court } from "@/types/court"
 import { Booking } from "@/types/booking"
 import { getTimeFromDateString } from "./utils"
 
-interface AvailableSlot {
-    start: string
-    maxDuration: number
-}
-
-export const generateAvailableHours = (court: Court, unavailableSlots: Partial<Booking>[]) => {
+export const generateAvailableHours = (court: Court, unavailableSlots: Partial<Booking>[], day: number) => {
     if (!court || !unavailableSlots) return []
 
+    const currentDayIndex = new Date().getUTCDay()
     const horarios = []
-    const [horaInicio] = getTimeFromDateString(court.openingTime).split(":")
-    const [horaFim] = getTimeFromDateString(court.closingTime).split(":")
+    const [horaInicio] = getTimeFromDateString(court.courtSchedule![day].openingTime).split(":")
+    const [horaFim] = getTimeFromDateString(court.courtSchedule![day].closingTime).split(":")
 
     const occupiedSlots = new Set(unavailableSlots.map(slot => new Date(slot.startTime!).getUTCHours()))
 
