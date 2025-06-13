@@ -1,26 +1,26 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu } from "lucide-react"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
 
 export function LandingHeader() {
-  const router = useRouter()
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const router = useRouter();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Handle scroll event to change header style
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
-    }
+      setIsScrolled(window.scrollY > 10);
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navItems = [
     { label: "Recursos", href: "#recursos" },
@@ -28,7 +28,7 @@ export function LandingHeader() {
     //{ label: "Preços", href: "#precos" },
     { label: "FAQ", href: "#faq" },
     { label: "Contato", href: "#contato" },
-  ]
+  ];
 
   return (
     <header
@@ -38,17 +38,21 @@ export function LandingHeader() {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-primary-heavy ">
-            Courtly
-          </Link>
-
+          <img
+            src={"/courtly.svg"}
+            width={100}
+            height={10}
+            className='p-0'
+          />
           <nav className="hidden md:flex items-center space-x-8">
             {navItems.map((item, index) => (
               <Link
                 key={index}
                 href={item.href}
                 className={`text-sm font-medium transition-colors ${
-                  isScrolled ? "text-gray-700 hover:text-slate-600" : "text-gray-700 hover:text-slate-600"
+                  isScrolled
+                    ? "text-gray-700 hover:text-slate-600"
+                    : "text-gray-700 hover:text-slate-600"
                 }`}
               >
                 {item.label}
@@ -65,7 +69,10 @@ export function LandingHeader() {
             >
               Login
             </Button>
-            <Button className="bg-primary hover:bg-primary-heavy" onClick={() => router.push("/signup")}>
+            <Button
+              className="bg-primary hover:bg-primary-heavy"
+              onClick={() => router.push("/signup")}
+            >
               Cadastre-se
             </Button>
           </div>
@@ -96,8 +103,8 @@ export function LandingHeader() {
                       variant="outline"
                       className="w-full"
                       onClick={() => {
-                        router.push("/admin/login")
-                        setIsMobileMenuOpen(false)
+                        router.push("/admin/login");
+                        setIsMobileMenuOpen(false);
                       }}
                     >
                       Login
@@ -105,8 +112,8 @@ export function LandingHeader() {
                     <Button
                       className="w-full bg-slate-600 hover:bg-slate-700"
                       onClick={() => {
-                        router.push("/signup")
-                        setIsMobileMenuOpen(false)
+                        router.push("/signup");
+                        setIsMobileMenuOpen(false);
                       }}
                     >
                       Cadastre-se
@@ -119,6 +126,5 @@ export function LandingHeader() {
         </div>
       </div>
     </header>
-  )
+  );
 }
-
