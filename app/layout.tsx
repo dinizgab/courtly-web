@@ -10,6 +10,7 @@ import { ReactQueryProvider } from "@/contexts/query-context"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
+    icons: '/courtly-logo.svg',
     title: "Sistema de Reserva de Quadras",
     description: "Gerencie suas quadras esportivas e reservas de forma simples e eficiente.",
 }
