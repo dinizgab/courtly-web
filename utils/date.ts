@@ -26,3 +26,5 @@ export const formatBookingDuration = (
         .join(" ");
 };
 
+export const getHourPrecision = (date: Date) =>
+  date.toISOString().slice(0, 13);

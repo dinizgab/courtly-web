@@ -1,4 +1,3 @@
-// components/stats-grid.tsx
 import { Calendar, Clock, Users, DollarSign } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 
@@ -44,7 +43,7 @@ export function StatsGrid({ stats }: { stats: { key: keyof typeof ICONS; value: 
 function labelFor(key: string) {
   switch (key) {
     case "bookings":
-      return "Reservas Hoje"
+      return "Reservas na semana"
     case "hours":
       return "Horas Reservadas"
     case "clients":
