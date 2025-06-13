@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     const token = AuthService.getToken()
                     if (token) {
                         const decoded = decodeToken(token)
-                        setCompanyId(decoded?.company_id || null)
+                        setCompanyId(decoded?.sub || null)
                         setToken(token)
 
                         try {
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
             const token = response.token
             const decoded = decodeToken(token)
-            setCompanyId(decoded?.sub|| null)
+            setCompanyId(decoded?.sub || null)
             setToken(token)
 
             //const profile = await AuthService.getProfile()
@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
             const token = response.token
             const decoded = decodeToken(token)
-            setCompanyId(decoded?.company_id || null)
+            setCompanyId(decoded?.sub || null)
             setToken(token)
 
             //const profile = await AuthService.getProfile()

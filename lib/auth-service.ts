@@ -46,7 +46,7 @@ const AuthService = {
         const token = AuthService.getToken()
         if (!token) return null
 
-        return decodeToken(token)?.company_id || null
+        return decodeToken(token)?.sub || null
     },
 
     login: async (credentials: LoginCredentials): Promise<AuthResponse> => {

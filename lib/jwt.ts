@@ -38,11 +38,11 @@ export function isTokenExpired(token: string): boolean {
 /**
  * Extracts company ID from token
  * @param token JWT token string
- * @returns company_id from token or null
+ * @returns sub claim from token or null
  */
 export function getCompanyIdFromToken(token: string): string | null {
     const payload = decodeToken(token)
-    return payload?.company_id || null
+    return payload?.sub || null
 }
 
 /**
