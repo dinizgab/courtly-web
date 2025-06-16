@@ -11,7 +11,7 @@ export function GuestHeader() {
             <div className="container mx-auto px-4">
                 <div className="flex h-16 items-center justify-between">
                     <div className="flex items-center">
-                        <Link href="/showcase" className="text-xl font-bold text-primary-heavy">
+                        <Link href="/" className="text-xl font-bold text-primary-heavy">
                             Courtly
                         </Link>
                     </div>

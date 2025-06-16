@@ -15,6 +15,7 @@ import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
 import { useAuth } from "@/contexts/auth-context"
 import { Checkbox } from "@radix-ui/react-checkbox"
+import AuthService from "@/lib/auth-service"
 
 export default function LoginPage() {
     const router = useRouter()
@@ -27,10 +28,10 @@ export default function LoginPage() {
     const { login, isAuthenticated } = useAuth()
 
     useEffect(() => {
-        if (isAuthenticated) {
+        if (AuthService.isAuthenticated()) {
             router.push("/admin/dashboard")
         }
-    }, [isAuthenticated, router])
+    }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()

@@ -3,9 +3,14 @@
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { BarChart3, CalendarDays, Home, LayoutGrid, LogOut, Settings, Users } from "lucide-react"
+import AuthService from "@/lib/auth-service"
 
 interface AdminSidebarProps {
   activePage?: string
+}
+
+const handleLogout = () => {
+        AuthService.removeToken()
 }
 
 export function AdminSidebar({ activePage }: AdminSidebarProps) {
@@ -73,6 +78,7 @@ export function AdminSidebar({ activePage }: AdminSidebarProps) {
       <div className="border-t border-slate-700 p-4">
         <Link
           href="/"
+          onClick={handleLogout}
           className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-100 hover:bg-primary-light hover:text-primary-heavy transition-colors"
         >
           <LogOut className="h-5 w-5" />

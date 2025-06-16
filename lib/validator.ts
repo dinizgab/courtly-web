@@ -1,3 +1,5 @@
+import { validate } from '@napunda/pix-key-ts'
+
 export function validateCNPJ(cnpj: string) {
   cnpj = cnpj.replace(/[^\d]/g, "")
 
@@ -46,3 +48,39 @@ export function validateCNPJ(cnpj: string) {
 
   return true
 }
+
+export function validateCPF(cpf: string): boolean {
+  cpf = cpf.replace(/[^\d]/g, "");
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+  let sum = 0;
+  for (let i = 0; i < 9; i++) sum += parseInt(cpf[i]) * (10 - i);
+  let check = 11 - (sum % 11);
+  if (check >= 10) check = 0;
+  if (check !== parseInt(cpf[9])) return false;
+
+  sum = 0;
+  for (let i = 0; i < 10; i++) sum += parseInt(cpf[i]) * (11 - i);
+  check = 11 - (sum % 11);
+  if (check >= 10) check = 0;
+  return check === parseInt(cpf[10]);
+}
+
+
+export function validatePIX(pix: string): boolean {
+  if (!pix) return false
+
+  // Remove espaços e caracteres não numéricos (exceto email/chave aleatória)
+  let cleanPix = pix.replace(/\s+/g, '').trim()
+
+  // Se for número de telefone nacional (ex: (11) 91234-5678), adiciona o DDI +55
+  const isLocalPhone = /^(\(?\d{2}\)?\s?)?9?\d{4}-?\d{4}$/.test(cleanPix) || /^\d{10,11}$/.test(cleanPix)
+  if (isLocalPhone && !cleanPix.startsWith('+55')) {
+    cleanPix = '+55' + cleanPix.replace(/\D/g, '')
+  }
+
+  const result = validate(cleanPix)
+  return result.length > 0
+}
+
+

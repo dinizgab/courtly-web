@@ -21,11 +21,13 @@ export interface PasswordUpdateData {
 
 const AuthService = {
     setToken: (token: string, rememberMe = false): void => {
-        if (rememberMe) {
-            localStorage.setItem(TOKEN_KEY, token)
-        } else {
-            sessionStorage.setItem(TOKEN_KEY, token)
-        }
+        localStorage.setItem(TOKEN_KEY, token)
+        sessionStorage.setItem(TOKEN_KEY, token)
+        // if (rememberMe) {
+        //     localStorage.setItem(TOKEN_KEY, token)
+        // } else {
+        //     sessionStorage.setItem(TOKEN_KEY, token)
+        // }
     },
 
     getToken: (): string | null => {

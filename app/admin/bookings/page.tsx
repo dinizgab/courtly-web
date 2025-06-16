@@ -18,8 +18,9 @@ import { formatBookingTime } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
 import { VerificationCodeModal } from "@/components/verification-code-modal"
 import { useAuth } from "@/contexts/auth-context"
+import { withAuth } from "@/utils/withAuth"
 
-export default function BookingsPage() {
+function BookingsPage() {
     const [bookings, setBookings] = useState<Booking[]>([])
     const [searchTerm, setSearchTerm] = useState("")
     const [statusFilter, setStatusFilter] = useState("todas")
@@ -261,3 +262,5 @@ export default function BookingsPage() {
         </div>
     )
 }
+
+export default withAuth(BookingsPage)

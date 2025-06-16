@@ -5,5 +5,6 @@ export type Company = {
     address: string
     phone: string
     email: string
+    pix_key:string
 }
 

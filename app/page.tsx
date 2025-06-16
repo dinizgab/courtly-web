@@ -353,13 +353,13 @@ export default function LandingPage() {
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow relative max-w-lg w-full">
               <CardContent className="p-8 text-center">
                 <h3 className="text-3xl font-bold mb-4 text-slate-700">
-                  Apenas <span className="text-green-600">R$3,00</span> por
+                  Apenas <span className="text-green-600">5%</span> por
                   reserva!
                 </h3>
                 <p className="text-gray-700 text-lg mb-6">
                   <strong>É simples, transparente e justo.</strong> Você não tem
                   mensalidades, nem taxas escondidas. Você só paga uma taxa fixa
-                  de R$3,00 por cada reserva confirmada através da plataforma.
+                  de 5% do valor de cada reserva confirmada através da plataforma.
                 </p>
 
                 <div className="text-left space-y-4 mb-8">

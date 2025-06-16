@@ -25,7 +25,7 @@ export function LandingHeader() {
   const navItems = [
     { label: "Recursos", href: "#recursos" },
     { label: "Como Funciona", href: "#como-funciona" },
-    //{ label: "Preços", href: "#precos" },
+    { label: "Preços", href: "#precos" },
     { label: "FAQ", href: "#faq" },
     { label: "Contato", href: "#contato" },
   ];
@@ -42,7 +42,6 @@ export function LandingHeader() {
             src={"/courtly.svg"}
             width={100}
             height={10}
-            className='p-0'
           />
           <nav className="hidden md:flex items-center space-x-8">
             {navItems.map((item, index) => (
