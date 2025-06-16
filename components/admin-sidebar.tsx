@@ -1,17 +1,26 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { cn } from "@/lib/utils"
-import { BarChart3, CalendarDays, Home, LayoutGrid, LogOut, Settings, Users } from "lucide-react"
-import AuthService from "@/lib/auth-service"
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import {
+  BarChart3,
+  CalendarDays,
+  Home,
+  LayoutGrid,
+  LogOut,
+  Settings,
+  Users,
+  Image
+} from "lucide-react";
+import AuthService from "@/lib/auth-service";
 
 interface AdminSidebarProps {
-  activePage?: string
+  activePage?: string;
 }
 
 const handleLogout = () => {
-        AuthService.removeToken()
-}
+  AuthService.removeToken();
+};
 
 export function AdminSidebar({ activePage }: AdminSidebarProps) {
   const menuItems = [
@@ -33,6 +42,12 @@ export function AdminSidebar({ activePage }: AdminSidebarProps) {
       icon: CalendarDays,
       id: "bookings",
     },
+    {
+      name: "Vitrine",
+      href: "/admin/showcase",
+      icon: Image,
+      id: "showcase",
+    },
     //{
     //  name: "Clientes",
     //  href: "/admin/clientes",
@@ -51,7 +66,7 @@ export function AdminSidebar({ activePage }: AdminSidebarProps) {
     //  icon: Settings,
     //  id: "configuracoes",
     //},
-  ]
+  ];
 
   return (
     <aside className="hidden md:flex h-screen w-64 flex-col border-r bg-primary-heavy text-white">
@@ -67,7 +82,9 @@ export function AdminSidebar({ activePage }: AdminSidebarProps) {
             href={item.href}
             className={cn(
               "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-              activePage === item.id ? "bg-primary text-white" : "text-slate-100 hover:bg-primary-light hover:text-primary-heavy",
+              activePage === item.id
+                ? "bg-primary text-white"
+                : "text-slate-100 hover:bg-primary-light hover:text-primary-heavy"
             )}
           >
             <item.icon className="h-5 w-5" />
@@ -86,5 +103,5 @@ export function AdminSidebar({ activePage }: AdminSidebarProps) {
         </Link>
       </div>
     </aside>
-  )
+  );
 }
