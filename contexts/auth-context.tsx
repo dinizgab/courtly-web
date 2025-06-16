@@ -65,11 +65,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
             const token = response.token
             const decoded = decodeToken(token)
-            setCompanyId(decoded?.sub|| null)
+            setCompanyId(decoded?.sub || null)
             setToken(token)
-
-            //const profile = await AuthService.getProfile()
-            //setUser(profile)
 
             setIsAuthenticated(true)
         } catch (error) {
