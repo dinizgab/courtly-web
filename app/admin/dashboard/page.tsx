@@ -20,8 +20,9 @@ import { WithdrawalInfoCard } from "@/components/dashboard/withdrawal-info-card"
 import { useBookingFromNextHours } from "@/hooks/use-booking-next-hours";
 import { Loader2 } from "lucide-react";
 import { getTimeFromDateString } from "@/lib/utils";
+import { withAuth } from "@/utils/withAuth";
 
-export default function DashboardPage() {
+function DashboardPage() {
     const [activeTab, setActiveTab] = useState("overview");
     const { data, isLoading, isError } = useDashboardStats();
 
@@ -199,3 +200,5 @@ export default function DashboardPage() {
         </div>
     );
 }
+
+export default withAuth(DashboardPage)

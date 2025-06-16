@@ -125,7 +125,7 @@ export default function PixPaymentPage() {
                                 <div className="bg-slate-100 p-4 rounded-lg mb-4">
                                     <code className="text-xs break-all text-slate-700">{charge.brCode}</code>
                                 </div>
-                                <Button onClick={copyPixCode} className="w-full bg-slate-700 hover:bg-slate-800" disabled={copied}>
+                                <Button onClick={copyPixCode} className="w-full bg-primary hover:bg-primary-heavy" disabled={copied}>
                                     {copied ? (
                                         <>
                                             <Check className="h-4 w-4 mr-2" />
@@ -163,9 +163,9 @@ export default function PixPaymentPage() {
                                 </ol>
                             </div>
 
-                            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                                <h4 className="font-semibold text-blue-800 mb-2">Resumo do Pagamento</h4>
-                                <div className="space-y-1 text-sm text-blue-700">
+                            <div className="mt-6 p-4 bg-primary-hiper_light rounded-lg">
+                                <h4 className="font-semibold text-primary-heavy mb-2">Resumo do Pagamento</h4>
+                                <div className="space-y-1 text-sm text-primary">
                                     <div className="flex justify-between">
                                         <span>Quadra:</span>
                                         <span>{booking?.court?.name}</span>

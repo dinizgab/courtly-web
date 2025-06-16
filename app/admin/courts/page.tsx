@@ -17,8 +17,9 @@ import { Court, CourtApi } from "@/types/court"
 import { useToast } from "@/components/ui/use-toast"
 import { strToTitle } from "@/lib/utils"
 import { useAuth } from "@/contexts/auth-context"
+import { withAuth } from "@/utils/withAuth"
 
-export default function courtsPage() {
+function courtsPage() {
     const [courts, setCourts] = useState<Court[]>([])
     const [searchTerm, setSearchTerm] = useState("")
     const { toast } = useToast()
@@ -223,3 +224,5 @@ export default function courtsPage() {
         </div>
     )
 }
+
+export default withAuth(courtsPage)
