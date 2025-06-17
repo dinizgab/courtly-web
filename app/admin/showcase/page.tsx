@@ -17,7 +17,7 @@ function ShowcasePage() {
   const { companyId } = useAuth();
   const [copied, setCopied] = useState(false);
 
-  const showcaseLink = `${TEST_URL}/showcase/${companyId}`;
+  const showcaseLink = `${DEFAULT_URL}/showcase/${companyId}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(showcaseLink);
