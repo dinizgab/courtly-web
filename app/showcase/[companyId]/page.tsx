@@ -14,6 +14,7 @@ import { Court } from "@/types/court"
 import api from "@/lib/axios"
 import { mapCourtApi } from "@/utils/mapping"
 import { getTimeFromDateString } from "@/lib/utils"
+import { RATE, TRANSFER_FEE } from "@/utils/rate"
 
 export default function CompanyShowcasePage() {
     const router = useRouter()
@@ -121,7 +122,7 @@ export default function CompanyShowcasePage() {
                                             </span>
                                         </div>
                                         <div className="flex items-center text-sm font-medium text-slate-600">
-                                            <span>R$ {c.hourlyPrice.toFixed(2)} / hora</span>
+                                            <span>R$ {c.hourlyPrice * RATE + TRANSFER_FEE} / hora</span>
                                         </div>
                                         <div className="flex justify-between items-center">
                                             <Button

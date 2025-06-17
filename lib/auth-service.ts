@@ -31,7 +31,7 @@ const AuthService = {
     },
 
     getToken: (): string | null => {
-        return sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY)
+        return localStorage.getItem(TOKEN_KEY)
     },
 
     removeToken: (): void => {

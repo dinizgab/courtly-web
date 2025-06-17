@@ -79,7 +79,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const signup = async (userData: any) => {
         setIsLoading(true)
-        console.log(userData);
         try {
             const response = await AuthService.signup(userData)
 

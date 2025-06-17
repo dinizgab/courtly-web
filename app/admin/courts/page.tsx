@@ -18,6 +18,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { strToTitle } from "@/lib/utils"
 import { useAuth } from "@/contexts/auth-context"
 import { withAuth } from "@/utils/withAuth"
+import { RATE, TRANSFER_FEE } from "@/utils/rate"
 
 function courtsPage() {
     const [courts, setCourts] = useState<Court[]>([])
@@ -137,6 +138,7 @@ function courtsPage() {
                                         <TableHead>Nome</TableHead>
                                         <TableHead>Tipo</TableHead>
                                         <TableHead className="text-right">Preço/Hora</TableHead>
+                                        <TableHead className="text-right">Preço para o cliente</TableHead>
                                         <TableHead>Status</TableHead>
                                         <TableHead className="text-center">Reservas Hoje</TableHead>
                                         <TableHead className="text-right">Ações</TableHead>
@@ -155,6 +157,7 @@ function courtsPage() {
                                                 <TableCell className="font-medium">{court.name}</TableCell>
                                                 <TableCell>{strToTitle(court.sportType.replace("_", " "))}</TableCell>
                                                 <TableCell className="text-right">R$ {court.hourlyPrice.toFixed(2)}</TableCell>
+                                                <TableCell className="text-right">R$ {court.hourlyPrice * RATE + TRANSFER_FEE}</TableCell>
                                                 <TableCell>
                                                     <Badge
                                                         variant={court.isActive ? "default" : "secondary"}

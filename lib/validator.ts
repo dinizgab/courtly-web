@@ -72,14 +72,16 @@ export function validatePIX(pix: string): boolean {
 
   // Remove espaços e caracteres não numéricos (exceto email/chave aleatória)
   let cleanPix = pix.replace(/\s+/g, '').trim()
-
+  console.log("antes", cleanPix);
   // Se for número de telefone nacional (ex: (11) 91234-5678), adiciona o DDI +55
   const isLocalPhone = /^(\(?\d{2}\)?\s?)?9?\d{4}-?\d{4}$/.test(cleanPix) || /^\d{10,11}$/.test(cleanPix)
   if (isLocalPhone && !cleanPix.startsWith('+55')) {
     cleanPix = '+55' + cleanPix.replace(/\D/g, '')
   }
-
+  console.log("depois", cleanPix);
+  
   const result = validate(cleanPix)
+  
   return result.length > 0
 }
 
