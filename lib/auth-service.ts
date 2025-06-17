@@ -31,7 +31,8 @@ const AuthService = {
     },
 
     getToken: (): string | null => {
-        return localStorage.getItem(TOKEN_KEY)
+        if (typeof window === "undefined") return null;
+        return localStorage.getItem(TOKEN_KEY)  
     },
 
     removeToken: (): void => {
