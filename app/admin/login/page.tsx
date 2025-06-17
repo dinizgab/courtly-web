@@ -17,12 +17,13 @@ import { useAuth } from "@/contexts/auth-context"
 import { Checkbox } from "@radix-ui/react-checkbox"
 import AuthService from "@/lib/auth-service"
 
+
 export default function LoginPage() {
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [error, setError] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState<string>("")
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [mostrarSenha, setMostrarSenha] = useState(false)
     const [rememberMe, setRememberMe] = useState(false)
     const { login, isAuthenticated } = useAuth()
@@ -47,8 +48,16 @@ export default function LoginPage() {
 
             router.push("/admin/dashboard")
         }
-        catch (error) {
-            setError(error instanceof Error ? error.message : "Email ou senha inválidos")
+        catch (e: any) {
+            if (axios.isAxiosError(e)) {
+                if (e.response?.status === 401) {
+                    setError("Email ou senha inválidos");
+                }
+            } else {
+                console.error("Unexpected error:", e);
+
+                setError("Ocorreu um erro inesperado.");
+            }
         } finally {
             setIsLoading(false)
         }
