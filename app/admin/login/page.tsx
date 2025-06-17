@@ -16,6 +16,7 @@ import { GuestFooter } from "@/components/guest-footer"
 import { useAuth } from "@/contexts/auth-context"
 import { Checkbox } from "@radix-ui/react-checkbox"
 import AuthService from "@/lib/auth-service"
+import axios from "axios"
 
 
 export default function LoginPage() {
