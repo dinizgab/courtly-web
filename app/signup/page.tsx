@@ -96,7 +96,6 @@ export default function SignupPage() {
 
   const onSubmit = async (data: SignupFormValues) => {
     try {
-        console.log("clicou")
       setIsSubmitting(true);
       setError("");
       const cleanedCNPJ = data.cnpj.replace(/[^\d]/g, "");

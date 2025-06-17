@@ -230,9 +230,8 @@ export default function LandingPage() {
               Simplifique a gestão das suas quadras em 3 passos
             </h2>
             <p className="text-lg text-gray-600">
-              Começar a usar o Courtly é simples e rápido. Em poucos
-              minutos você já pode estar gerenciando suas quadras de forma
-              eficiente.
+              Começar a usar o Courtly é simples e rápido. Em poucos minutos
+              você já pode estar gerenciando suas quadras de forma eficiente.
             </p>
           </div>
 
@@ -340,26 +339,27 @@ export default function LandingPage() {
               Preços
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Pague apenas pelo que você vende!
+              Gestão gratuita, lucro garantido!
             </h2>
             <p className="text-lg text-gray-600">
-              Com a nossa plataforma, a gestão das suas quadras é totalmente
-              gratuita. Você só nos paga uma pequena taxa quando seu negócio
-              prospera!
+              Com a nossa plataforma, você tem controle total sobre suas quadras
+              sem pagar mensalidades. E o melhor: você pode repassar as taxas
+              para o seu cliente final — ou seja, você continua recebendo o
+              mesmo valor.
             </p>
           </div>
 
-          <div className="flex justify-center">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow relative max-w-lg w-full">
+          <div className="flex justify-center mb-10">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow w-full max-w-3xl">
               <CardContent className="p-8 text-center">
                 <h3 className="text-3xl font-bold mb-4 text-slate-700">
-                  Apenas <span className="text-green-600">5%</span> por
-                  reserva!
+                  Apenas <span className="text-green-600">5%</span> + R$ 0,85
+                  por reserva
                 </h3>
                 <p className="text-gray-700 text-lg mb-6">
-                  <strong>É simples, transparente e justo.</strong> Você não tem
-                  mensalidades, nem taxas escondidas. Você só paga uma taxa fixa
-                  de 5% do valor de cada reserva confirmada através da plataforma.
+                  <strong>Transparente, simples e justo.</strong> Você não paga
+                  mensalidade e ainda pode repassar a taxa ao seu cliente,
+                  mantendo o valor líquido da sua reserva.
                 </p>
 
                 <div className="text-left space-y-4 mb-8">
@@ -370,53 +370,101 @@ export default function LandingPage() {
                     <li className="flex items-start">
                       <CheckCircle className="text-primary h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                       <span>
-                        <strong>Cadastro ilimitado de quadras:</strong> Adicione quantas
-                        quadras quiser, de diferentes esportes e modalidades.
+                        <strong>Cadastro ilimitado de quadras:</strong> Adicione
+                        quantas quadras quiser, de diferentes esportes e
+                        modalidades.
                       </span>
                     </li>
                     <li className="flex items-start">
                       <CheckCircle className="text-primary h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                       <span>
-                        <strong>Controle total de ocupação:</strong> Gerencie horários,
-                        disponibilidade e bloqueios de forma intuitiva.
+                        <strong>Controle total de ocupação:</strong> Gerencie
+                        horários, disponibilidade e bloqueios de forma
+                        intuitiva.
                       </span>
                     </li>
                     <li className="flex items-start">
                       <CheckCircle className="text-primary h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                       <span>
-                        <strong>Vitrine online personalizada:</strong> Sua página exclusiva
-                        para atrair mais clientes.
+                        <strong>Vitrine online personalizada:</strong> Sua
+                        página exclusiva para atrair mais clientes.
                       </span>
                     </li>
                     <li className="flex items-start">
                       <CheckCircle className="text-primary h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                       <span>
-                        <strong>Relatórios de desempenho:</strong> Acompanhe o crescimento do
-                        seu negócio.
+                        <strong>Relatórios de desempenho:</strong> Acompanhe o
+                        crescimento do seu negócio.
                       </span>
                     </li>
                     <li className="flex items-start">
                       <CheckCircle className="text-primary h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                       <span>
-                        <strong>Suporte dedicado:</strong> Estamos aqui para te ajudar em
-                        cada passo.
+                        <strong>Suporte dedicado:</strong> Estamos aqui para te
+                        ajudar em cada passo.
                       </span>
                     </li>
                   </ul>
                 </div>
 
                 <p className="text-gray-700 text-lg mb-6">
-                  <strong>Receba seus pagamentos a qualquer momento:</strong> Os valores das
-                  reservas (descontando nossa pequena taxa) ficam disponíveis
-                  para saque direto na sua conta, quando você quiser!
+                  <strong>Receba seus pagamentos a qualquer momento:</strong> Os
+                  valores das reservas (descontando nossa pequena taxa) ficam
+                  disponíveis para saque direto na sua conta, quando você
+                  quiser!
                 </p>
 
                 <Button
-                  className="w-full bg-primary hover:bg-primary-heavy py-3 text-lg"
+                  className="w-full bg-primary hover:bg-primary-heavy py-3 p-4 text-lg text-white font-semibold leading-snug whitespace-normal"
                   onClick={() => router.push("/signup")}
                 >
-                  Comece a receber reservas Agora!
+                  Comece a receber reservas agora!
                 </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Card de exemplo */}
+          <div className="flex justify-center">
+            <Card className="border border-gray-200 shadow-md w-full max-w-3xl">
+              <CardContent className="p-6">
+                <h4 className="text-xl font-bold text-slate-700 mb-4">
+                  Exemplo prático:
+                </h4>
+                <p className="text-gray-700 mb-4">
+                  Imagine que sua quadra custa <strong>R$ 60,00</strong>. Ao
+                  utilizar nossa plataforma, você pode configurar esse valor e
+                  deixar que o sistema adicione as taxas automaticamente para o
+                  seu cliente.
+                </p>
+                <ul className="text-gray-700 space-y-2 mb-6">
+                  <li>
+                    💳 <strong>Valor inserido por você:</strong> R$ 60,00
+                  </li>
+                  <li>
+                    ➕ <strong>Taxa de 5%:</strong> R$ 3,00
+                  </li>
+                  <li>
+                    ➕ <strong>Taxa fixa por transação:</strong> R$ 0,85
+                  </li>
+                  <li>
+                    🧾 <strong>Valor final para o cliente:</strong>{" "}
+                    <span className="text-green-600 font-semibold">
+                      R$ 63,85
+                    </span>
+                  </li>
+                  <li>
+                    ✅ <strong>Valor que você recebe:</strong>{" "}
+                    <span className="text-blue-600 font-semibold">
+                      R$ 60,00
+                    </span>
+                  </li>
+                </ul>
+                <p className="text-gray-600">
+                  Você continua recebendo o valor cheio e ainda tem todos os
+                  benefícios da gestão automatizada e profissional da
+                  plataforma.
+                </p>
               </CardContent>
             </Card>
           </div>
@@ -425,12 +473,16 @@ export default function LandingPage() {
             <p className="text-gray-600 mb-4">
               Tem alguma dúvida ou precisa de mais informações?
             </p>
-            <Button variant="outline" onClick={() => router.push("https://wa.me/5583986644385")}>
+            <Button
+              variant="outline"
+              onClick={() => router.push("https://wa.me/5583986644385")}
+            >
               Falar com um Consultor
             </Button>
           </div>
         </div>
       </section>
+
       {/* FAQ Section */}
       <section className="py-20 bg-gray-50" id="faq">
         <div className="container mx-auto px-4">
@@ -458,7 +510,10 @@ export default function LandingPage() {
 
           <div className="text-center mt-12">
             <p className="text-gray-600 mb-4">Não encontrou o que procurava?</p>
-            <Button variant="outline" onClick={() => router.push("https://wa.me/5583986644385")}>
+            <Button
+              variant="outline"
+              onClick={() => router.push("https://wa.me/5583986644385")}
+            >
               Entre em Contato
             </Button>
           </div>
@@ -472,8 +527,9 @@ export default function LandingPage() {
             Pronto para transformar a gestão das suas quadras?
           </h2>
           <p className="text-xl opacity-90 mb-8 max-w-3xl mx-auto">
-            Comece hoje mesmo e deixe que nos da courtly vamos te auxiliar em todo o processo das reservas de suas quadras.
-            Sem compromisso, sem necessidade de cartão de crédito.
+            Comece hoje mesmo e deixe que nos da courtly vamos te auxiliar em
+            todo o processo das reservas de suas quadras. Sem compromisso, sem
+            necessidade de cartão de crédito.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
