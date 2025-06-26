@@ -17,6 +17,7 @@ import api from "@/lib/axios";
 import { Booking } from "@/types/booking";
 import { useToast } from "@/components/ui/use-toast";
 import { getTimeFromDateString } from "@/lib/utils";
+import { RATE, TRANSFER_FEE } from "@/utils/rate";
 
 export default function BookingConfirmationPage() {
   const searchParams = useSearchParams();
@@ -154,7 +155,7 @@ export default function BookingConfirmationPage() {
                       <div className="flex justify-between items-center">
                         <span className="font-medium">Valor Total:</span>
                         <span className="font-bold text-green-600">
-                          R$ {booking.totalPrice}
+                          R$ {booking.totalPrice * RATE + TRANSFER_FEE}
                         </span>
                       </div>
                     </div>

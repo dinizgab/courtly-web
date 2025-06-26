@@ -12,6 +12,7 @@ import { getTimeFromDateString } from "@/lib/utils";
 import { GuestFooter } from "@/components/guest-footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { RATE, TRANSFER_FEE } from "@/utils/rate";
 
 export default function CancelBooking() {
   const router = useRouter();
@@ -159,7 +160,7 @@ export default function CancelBooking() {
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Valor Total:</span>
                     <span className="font-bold text-green-600">
-                      R$ {booking.totalPrice}
+                      R$ {booking.totalPrice * RATE + TRANSFER_FEE}
                     </span>
                   </div>
                 </div>
