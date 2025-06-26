@@ -1,6 +1,7 @@
 import { CheckCircle, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { format } from "date-fns";
+import { RATE, TRANSFER_FEE } from "@/utils/rate";
 
 interface BookingSummaryProps {
     courtName: string;
@@ -48,7 +49,7 @@ export default function BookingSummary({ courtName, date, startTime, duration, t
                     </div>
                     <div className="flex justify-between items-center text-lg font-bold text-primary">
                         <span>Valor Total:</span>
-                        <span>R$ {totalValue.toFixed(2)}</span>
+                        <span>R$ {totalValue * RATE + TRANSFER_FEE}</span>
                     </div>
 
                     <div className="pt-4 space-y-2 text-sm text-gray-600">
