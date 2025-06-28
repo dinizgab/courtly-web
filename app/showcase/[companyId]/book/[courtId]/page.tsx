@@ -117,8 +117,6 @@ export default function CreateBookingPage() {
             if (!occupied.has(hour)) times.push(`${hour.toString().padStart(2, "0")}:00`)
         }
 
-        console.log("Horários disponíveis:", open, close, occupied)
-        console.log("Horários disponíveis:", times)
         return times
     }, [court, alreadyBookedHours])
 
