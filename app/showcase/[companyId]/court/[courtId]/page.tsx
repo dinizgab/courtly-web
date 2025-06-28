@@ -15,6 +15,8 @@ import { Court, CourtApi } from "@/types/court"
 import api from "@/lib/axios"
 import { getTimeFromDateString } from "@/lib/utils"
 import { mapCourtApi } from "@/utils/mapping"
+import { format } from 'date-fns';
+import { toDate } from 'date-fns-tz';
 
 export default function CourtDetailsPage() {
     const router = useRouter()
@@ -92,7 +94,10 @@ export default function CourtDetailsPage() {
 
         const fetchAvailableSlots = async () => {
             try {
-                const response = await api.get(`/showcase/courts/${courtId}/available-slots?date=${new Date().toISOString()}`)
+                const dateInBrTimezone = toDate(new Date(), { timeZone: 'America/Sao_Paulo' });
+                const formattedDate = format(dateInBrTimezone, 'yyyy-MM-dd');
+
+                const response = await api.get(`/showcase/courts/${courtId}/available-slots?date=${formattedDate}`)
                 const unavailableSlots = response.data.map((slot: BookingApi) => ({
                     startTime: slot.start_time,
                     endTime: slot.end_time,
