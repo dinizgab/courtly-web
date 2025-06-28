@@ -6,15 +6,19 @@ export const generateAvailableHours = (court: Court, unavailableSlots: Partial<B
     if (!court || !unavailableSlots) return []
 
     const horarios = []
-    const [horaInicio] = getTimeFromDateString(court.courtSchedule![day].openingTime).split(":")
-    const [horaFim] = getTimeFromDateString(court.courtSchedule![day].closingTime).split(":")
+    let [open] = getTimeFromDateString(court.courtSchedule![day].openingTime).split(":")
+    let [close] = getTimeFromDateString(court.courtSchedule![day].closingTime).split(":")
 
     const occupiedSlots = new Set(unavailableSlots.map(slot => new Date(slot.startTime!).getUTCHours()))
 
-    for (let hour = Number.parseInt(horaInicio); hour < Number.parseInt(horaFim); hour++) {
+    const crossesMidnight = close <= open;
+    if (crossesMidnight) close += 24;
+
+    for (let hour = Number.parseInt(open); hour < Number.parseInt(close); hour++) {
+        const realHour = hour % 24;
         const horaFormatada = hour.toString().padStart(2, "0")
 
-        if (occupiedSlots.has(hour)) {
+        if (occupiedSlots.has(realHour)) {
             const slot = unavailableSlots.find((slot) => {
                 const slotHora = new Date(slot.startTime!).getUTCHours()
                 return slotHora === hour
@@ -23,7 +27,7 @@ export const generateAvailableHours = (court: Court, unavailableSlots: Partial<B
             if (slot) {
                 const endHour = new Date(slot.endTime!).getUTCHours()
 
-                for (let h = hour; h < endHour; h++) {
+                for (let h = realHour; h < endHour; h++) {
                     horarios.push({
                         horario: `${h}:00 - ${(h + 1).toString().padStart(2, "0")}:00`,
                         disponivel: false,
@@ -32,7 +36,7 @@ export const generateAvailableHours = (court: Court, unavailableSlots: Partial<B
             }
         } else {
             horarios.push({
-                horario: `${horaFormatada}:00 - ${(hour + 1).toString().padStart(2, "0")}:00`,
+                horario: `${horaFormatada}:00 - ${(realHour + 1).toString().padStart(2, "0")}:00`,
                 disponivel: true,
             })
         }
