@@ -79,7 +79,6 @@ export function CancelBookingClient() {
     const handleCancelBooking = async () => {
         try {
             setIsCancelling(true);
-            console.log("Cancelando reserva:", bookingId, token, confirmationCode);
             await api.post(`/bookings/cancel`,
                 {
                     body: {
@@ -98,7 +97,7 @@ export function CancelBookingClient() {
                 title: "Reserva cancelada com sucesso",
                 description: "A reserva foi cancelada.",
             });
-            router.push(`/showcase/${companyId}/cancel-success`);
+            router.push(`/booking/cancel/success?id=${bookingId}`);
         } catch (error) {
             toast({
                 title: "Erro ao cancelar a reserva",
