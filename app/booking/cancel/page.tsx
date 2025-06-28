@@ -15,7 +15,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RATE, TRANSFER_FEE } from "@/utils/rate";
 
-export default function CancelBooking() {
+export default function CancelBookingPage() {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Carregando...</div>}>
+            <CancelBookingClient />
+        </Suspense>
+    )
+}
+
+export function CancelBookingClient() {
     const router = useRouter();
     const { companyId } = useParams() as {
         companyId: string;
@@ -112,90 +120,88 @@ export default function CancelBooking() {
     }
 
     return (
-        <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Carregando...</div>}>
-            <div className="min-h-screen flex flex-col bg-gray-50">
-                <GuestHeader />
+        <div className="min-h-screen flex flex-col bg-gray-50">
+            <GuestHeader />
 
-                {booking && (
-                    <div className="flex-grow container mx-auto px-4 py-12">
-                        <div className="max-w-2xl mx-auto">
-                            <Card className="border-green-200 shadow-lg">
-                                <CardHeader className="text-center bg-green-50 border-b border-green-100">
-                                    <CardTitle className="text-2xl text-green-800">
-                                        Cancelar reserva
-                                    </CardTitle>
-                                </CardHeader>
-                                <div className="border-t border-b py-4 space-y-4 px-6">
-                                    <h3 className="font-medium text-lg">Detalhes da Reserva</h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div className="flex items-start">
-                                            <Calendar className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
-                                            <div>
-                                                <p className="text-sm text-gray-500">Data</p>
-                                                <p className="font-medium">
-                                                    {new Date(booking.startTime).toLocaleDateString("pt-BR")}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-start">
-                                            <Clock className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
-                                            <div>
-                                                <p className="text-sm text-gray-500">Horário</p>
-                                                <p className="font-medium">{`${getTimeFromDateString(
-                                                    booking.startTime
-                                                )} - ${getTimeFromDateString(booking.endTime)}`}</p>
-                                            </div>
+            {booking && (
+                <div className="flex-grow container mx-auto px-4 py-12">
+                    <div className="max-w-2xl mx-auto">
+                        <Card className="border-green-200 shadow-lg">
+                            <CardHeader className="text-center bg-green-50 border-b border-green-100">
+                                <CardTitle className="text-2xl text-green-800">
+                                    Cancelar reserva
+                                </CardTitle>
+                            </CardHeader>
+                            <div className="border-t border-b py-4 space-y-4 px-6">
+                                <h3 className="font-medium text-lg">Detalhes da Reserva</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="flex items-start">
+                                        <Calendar className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                                        <div>
+                                            <p className="text-sm text-gray-500">Data</p>
+                                            <p className="font-medium">
+                                                {new Date(booking.startTime).toLocaleDateString("pt-BR")}
+                                            </p>
                                         </div>
                                     </div>
-
-                                    <div className="space-y-2">
-                                        <div className="flex items-start">
-                                            <MapPin className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
-                                            <div>
-                                                <p className="text-sm text-gray-500">Local</p>
-                                                {/* <p className="font-medium">{booking.court.name}</p> */}
-                                                <p className="text-sm text-gray-600">
-                                                    {booking.court!.company!.address}
-                                                </p>
-                                            </div>
+                                    <div className="flex items-start">
+                                        <Clock className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                                        <div>
+                                            <p className="text-sm text-gray-500">Horário</p>
+                                            <p className="font-medium">{`${getTimeFromDateString(
+                                                booking.startTime
+                                            )} - ${getTimeFromDateString(booking.endTime)}`}</p>
                                         </div>
-                                    </div>
-
-                                    <div className="pt-2">
-                                        <div className="flex justify-between items-center">
-                                            <span className="font-medium">Valor Total:</span>
-                                            <span className="font-bold text-green-600">
-                                                R$ {booking.totalPrice * RATE + TRANSFER_FEE}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div className="pt-6 space-y-2">
-                                        <p className="text-sm text-gray-600">
-                                            Para confirmar o cancelamento:
-                                        </p>
-                                        <Input
-                                            placeholder="Digite o código da reserva"
-                                            value={confirmationCode}
-                                            onChange={(e) => setConfirmationCode(e.target.value)}
-                                        />
-                                        <Button
-                                            disabled={!confirmationCode.trim() || isCancelling}
-                                            onClick={handleCancelBooking}
-                                            variant="destructive"
-                                            className="w-full"
-                                        >
-                                            {isCancelling ? "Cancelando..." : "Cancelar Reserva"}
-                                        </Button>
                                     </div>
                                 </div>
-                            </Card>
-                        </div>
-                    </div>
-                )}
 
-                <GuestFooter />
-            </div>
-        </Suspense>
+                                <div className="space-y-2">
+                                    <div className="flex items-start">
+                                        <MapPin className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                                        <div>
+                                            <p className="text-sm text-gray-500">Local</p>
+                                            {/* <p className="font-medium">{booking.court.name}</p> */}
+                                            <p className="text-sm text-gray-600">
+                                                {booking.court!.company!.address}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="pt-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="font-medium">Valor Total:</span>
+                                        <span className="font-bold text-green-600">
+                                            R$ {booking.totalPrice * RATE + TRANSFER_FEE}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="pt-6 space-y-2">
+                                    <p className="text-sm text-gray-600">
+                                        Para confirmar o cancelamento:
+                                    </p>
+                                    <Input
+                                        placeholder="Digite o código da reserva"
+                                        value={confirmationCode}
+                                        onChange={(e) => setConfirmationCode(e.target.value)}
+                                    />
+                                    <Button
+                                        disabled={!confirmationCode.trim() || isCancelling}
+                                        onClick={handleCancelBooking}
+                                        variant="destructive"
+                                        className="w-full"
+                                    >
+                                        {isCancelling ? "Cancelando..." : "Cancelar Reserva"}
+                                    </Button>
+                                </div>
+                            </div>
+                        </Card>
+                    </div>
+                </div>
+            )}
+
+            <GuestFooter />
+        </div>
     );
 }
