@@ -12,14 +12,22 @@ import {
 import { GuestHeader } from "@/components/guest-header";
 import { GuestFooter } from "@/components/guest-footer";
 import { CheckCircle, Calendar, Clock, MapPin } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import api from "@/lib/axios";
 import { Booking } from "@/types/booking";
 import { useToast } from "@/components/ui/use-toast";
 import { getTimeFromDateString } from "@/lib/utils";
 import { RATE, TRANSFER_FEE } from "@/utils/rate";
 
-export default function BookingConfirmationPage() {
+export default function RefundConfirmationPage() {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Carregando...</div>}>
+            <RefundConfirmationClient />
+        </Suspense>
+    );
+}
+
+export function RefundConfirmationClient() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const bookingId = searchParams.get("id");
