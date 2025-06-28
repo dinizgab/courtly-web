@@ -51,14 +51,34 @@ export function calculateMaxBookingDuration(
     startHour: number,
     unavailableSlots: { startTime: number, endTime: number }[]
 ): number {
-    const open = new Date(openingTime).getUTCHours()
-    const close = new Date(closingTime).getUTCHours()
+    let open = new Date(openingTime).getUTCHours()
+    let close = new Date(closingTime).getUTCHours()
+
+    const crossesMidnight = close <= open;
+    if (crossesMidnight) {
+        close += 24;
+
+        if (startHour < open) startHour += 24;
+    }
 
     if (startHour < open || startHour >= close) return 0
 
+    const normalizedSlots = unavailableSlots.map(({ startTime, endTime }) => {
+        let sStart = startTime;
+        let sEnd = endTime;
+
+        if (sEnd <= sStart) sEnd += 24;
+
+        if (crossesMidnight && sStart < open) {
+            sStart += 24;
+            sEnd += 24;
+        }
+        return { startTime: sStart, endTime: sEnd };
+    });
+
     let max = 0
     for (let h = startHour; h < close; h++) {
-        const isOccupied = unavailableSlots.some(
+        const isOccupied = normalizedSlots.some(
             slot => h >= slot.startTime && h < slot.endTime
         )
 
