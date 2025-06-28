@@ -99,18 +99,26 @@ export default function CreateBookingPage() {
             (schedule) => schedule.weekday === watchDate.getDay()
         )
 
-        const open = new Date(selectedDaySchedule!.openingTime).getUTCHours()
-        const close = new Date(selectedDaySchedule!.closingTime).getUTCHours()
+        let open = new Date(selectedDaySchedule!.openingTime).getUTCHours()
+        let close = new Date(selectedDaySchedule!.closingTime).getUTCHours()
 
         const occupied = new Set<number>()
         alreadyBookedHours.forEach(({ startTime, endTime }) => {
             for (let h = startTime; h < endTime; h++) occupied.add(h)
         })
 
+        const crossesMidnight = close <= open;
+        if (crossesMidnight) close += 24;
+
         const times: string[] = []
         for (let h = open; h < close; h++) {
-            if (!occupied.has(h)) times.push(`${h.toString().padStart(2, "0")}:00`)
+             const hour = h % 24;
+
+            if (!occupied.has(hour)) times.push(`${hour.toString().padStart(2, "0")}:00`)
         }
+
+        console.log("Horários disponíveis:", open, close, occupied)
+        console.log("Horários disponíveis:", times)
         return times
     }, [court, alreadyBookedHours])
 
