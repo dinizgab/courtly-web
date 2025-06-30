@@ -113,14 +113,7 @@ export function LandingFooter() {
                     (83) 98664-4385
                   </a>
                 </li>
-                <li className="flex items-start">
-                  <MapPin className="h-5 w-5 mr-2 mt-1 text-gray-100" />
-                  <span className="text-gray-300">
-                    Rua das Quadras, 123 - Centro
-                    <br />
-                    São Paulo - SP, 01234-567
-                  </span>
-                </li>
+
               </ul>
             </div>
 

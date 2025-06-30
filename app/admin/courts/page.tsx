@@ -156,8 +156,8 @@ function courtsPage() {
                                             <TableRow key={court.id}>
                                                 <TableCell className="font-medium">{court.name}</TableCell>
                                                 <TableCell>{strToTitle(court.sportType.replace("_", " "))}</TableCell>
-                                                <TableCell className="text-right">R$ {court.hourlyPrice.toFixed(2)}</TableCell>
-                                                <TableCell className="text-right">R$ {court.hourlyPrice * RATE + TRANSFER_FEE}</TableCell>
+                                                <TableCell className="text-right">R$ {(court.hourlyPrice / 100).toFixed(2)}</TableCell>
+                                                <TableCell className="text-right">R$ {Number((court.hourlyPrice / 100).toFixed(2)) * RATE + TRANSFER_FEE}</TableCell>
                                                 <TableCell>
                                                     <Badge
                                                         variant={court.isActive ? "default" : "secondary"}

@@ -91,7 +91,7 @@ export default function LandingPage() {
     {
       question: "Como os clientes fazem reservas?",
       answer:
-        "Seus clientes podem fazer reservas através da sua vitrine online personalizada ou você pode registrar reservas manualmente no sistema administrativo.",
+        "Seus clientes podem fazer reservas através da sua vitrine online personalizada",
     },
     //{
     //  question: "É possível personalizar a vitrine com minha marca?",

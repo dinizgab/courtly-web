@@ -15,6 +15,7 @@ import { Court, CourtApi } from "@/types/court"
 import api from "@/lib/axios"
 import { getTimeFromDateString } from "@/lib/utils"
 import { mapCourtApi } from "@/utils/mapping"
+import { RATE, TRANSFER_FEE } from "@/utils/rate"
 
 export default function CourtDetailsPage() {
     const router = useRouter()
@@ -241,7 +242,7 @@ export default function CourtDetailsPage() {
                                     </div>
                                 </div>
                                 <div className="text-right mt-2 lg:mt-0">
-                                    <div className="text-2xl font-bold text-primary">R$ {court.hourlyPrice.toFixed(2)}</div>
+                                    <div className="text-2xl font-bold text-primary">R$ {court.hourlyPrice/100 * RATE + TRANSFER_FEE}</div>
                                     <div className="text-sm text-gray-500">por hora</div>
                                 </div>
                             </div>
@@ -377,10 +378,6 @@ export default function CourtDetailsPage() {
                                 <div className="mt-6 pt-6 border-t">
                                     <h3 className="font-medium mb-2">Informações importantes:</h3>
                                     <ul className="space-y-2 text-sm text-gray-600">
-                                        <li className="flex items-start">
-                                            <CheckCircle className="h-4 w-4 text-primary mr-2 mt-0.5" />
-                                            <span>Pagamento realizado no local</span>
-                                        </li>
                                         <li className="flex items-start">
                                             <CheckCircle className="h-4 w-4 text-primary mr-2 mt-0.5" />
                                             <span>Cancelamento gratuito com até 24h de antecedência</span>

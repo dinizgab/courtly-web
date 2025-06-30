@@ -160,7 +160,7 @@ export default function CancelBooking() {
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Valor Total:</span>
                     <span className="font-bold text-green-600">
-                      R$ {booking.totalPrice * RATE + TRANSFER_FEE}
+                      R$ {booking.totalPrice/100 * RATE + TRANSFER_FEE}
                     </span>
                   </div>
                 </div>
