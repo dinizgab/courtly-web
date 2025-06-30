@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { format, addDays, isBefore, isAfter, startOfDay } from "date-fns"
+import { format, addDays, isBefore, isAfter, startOfDay, addHours } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { GuestHeader } from "@/components/guest-header"
 import { GuestFooter } from "@/components/guest-footer"
 import { ArrowLeft, CalendarIcon, Loader2, QrCode, CreditCard } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn, makeUTC } from "@/lib/utils"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -99,18 +99,24 @@ export default function CreateBookingPage() {
             (schedule) => schedule.weekday === watchDate.getDay()
         )
 
-        const open = new Date(selectedDaySchedule!.openingTime).getUTCHours()
-        const close = new Date(selectedDaySchedule!.closingTime).getUTCHours()
+        let open = new Date(selectedDaySchedule!.openingTime).getUTCHours()
+        let close = new Date(selectedDaySchedule!.closingTime).getUTCHours()
 
         const occupied = new Set<number>()
         alreadyBookedHours.forEach(({ startTime, endTime }) => {
             for (let h = startTime; h < endTime; h++) occupied.add(h)
         })
 
+        const crossesMidnight = close <= open;
+        if (crossesMidnight) close += 24;
+
         const times: string[] = []
         for (let h = open; h < close; h++) {
-            if (!occupied.has(h)) times.push(`${h.toString().padStart(2, "0")}:00`)
+            const hour = h % 24;
+
+            if (!occupied.has(hour)) times.push(`${hour.toString().padStart(2, "0")}:00`)
         }
+
         return times
     }, [court, alreadyBookedHours])
 
@@ -129,19 +135,20 @@ export default function CreateBookingPage() {
         try {
             setIsSubmitting(true)
 
-            const [hora, minuto] = data.startTime.split(":").map(Number)
             const totalDuration = Number.parseInt(data.duration)
-            const horaFim = hora + totalDuration
-            const horarioFim = `${horaFim.toString().padStart(2, "0")}:${minuto.toString().padStart(2, "0")}`
-            const date = format(data.date, "yyyy-MM-dd")
+            const startUTC = makeUTC(data.date, data.startTime);
+            const endUTC = addHours(startUTC, totalDuration);
+
+            const isoStart = format(startUTC, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+            const isoEnd = format(endUTC, "yyyy-MM-dd'T'HH:mm:ss'Z'");
 
             const reservaData = {
                 guest_name: data.name,
                 guest_email: data.email,
                 guest_phone: data.phone,
                 company_id: court?.companyId,
-                start_time: `${date}T${data.startTime}:00Z`,
-                end_time: `${date}T${horarioFim}:00Z`,
+                start_time: isoStart,
+                end_time: isoEnd,
                 court: {
                     company_id: court?.companyId,
                 },

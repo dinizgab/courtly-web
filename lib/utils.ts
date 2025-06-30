@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { Booking } from "@/types/booking";
+import { set } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
@@ -30,4 +31,9 @@ export function getBookingTotalPrice(booking: Booking) {
 
 export function formatBookingTime(booking: Booking) {
     return `${getTimeFromDateString(booking.startTime)} - ${getTimeFromDateString(booking.endTime)}`;
+}
+
+export function makeUTC(date: Date, timeHHMM: string): Date {
+  const [h, m] = timeHHMM.split(":").map(Number);
+  return set(date, { hours: h, minutes: m, seconds: 0, milliseconds: 0 });
 }

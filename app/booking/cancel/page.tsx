@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Booking } from "@/types/booking";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -7,14 +8,28 @@ import { useEffect, useState } from "react";
 import api from "@/lib/axios";
 import { GuestHeader } from "@/components/guest-header";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Calendar, Clock, MapPin } from "lucide-react";
+import { Calendar, Clock, MapPin } from "lucide-react";
 import { getTimeFromDateString } from "@/lib/utils";
 import { GuestFooter } from "@/components/guest-footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RATE, TRANSFER_FEE } from "@/utils/rate";
 
-export default function CancelBooking() {
+export default function CancelBookingPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          Carregando...
+        </div>
+      }
+    >
+      <CancelBookingClient />
+    </Suspense>
+  );
+}
+
+export function CancelBookingClient() {
   const router = useRouter();
   const { companyId } = useParams() as {
     companyId: string;
@@ -70,23 +85,25 @@ export default function CancelBooking() {
   const handleCancelBooking = async () => {
     try {
       setIsCancelling(true);
-      await api.post(`/bookings/cancel`,
+      await api.post(
+        `/bookings/cancel`,
         {
-            params: {
-                id: bookingId,
-                token: token
-            },
-            body:{
-                token: confirmationCode
-            }
+          body: {
+            token: confirmationCode,
+          },
+        },
+        {
+          params: {
+            id: bookingId,
+            token: token,
+          },
         }
-
       );
       toast({
         title: "Reserva cancelada com sucesso",
         description: "A reserva foi cancelada.",
       });
-      router.push(`/showcase/${companyId}/cancel-success`);
+      router.push(`/booking/cancel/success?id=${bookingId}`);
     } catch (error) {
       toast({
         title: "Erro ao cancelar a reserva",
@@ -128,7 +145,9 @@ export default function CancelBooking() {
                     <div>
                       <p className="text-sm text-gray-500">Data</p>
                       <p className="font-medium">
-                        {new Date(booking.startTime).toLocaleDateString("pt-BR")}
+                        {new Date(booking.startTime).toLocaleDateString(
+                          "pt-BR"
+                        )}
                       </p>
                     </div>
                   </div>
@@ -160,7 +179,7 @@ export default function CancelBooking() {
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Valor Total:</span>
                     <span className="font-bold text-green-600">
-                      R$ {booking.totalPrice/100 * RATE + TRANSFER_FEE}
+                      R$ {booking.totalPrice * RATE + TRANSFER_FEE}
                     </span>
                   </div>
                 </div>
