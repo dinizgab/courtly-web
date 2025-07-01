@@ -251,6 +251,7 @@ export default function NewCourtPage() {
                             render={({ field }) => {
                               const basePrice = Number(field.value || 0);
                               const clientPrice = useMemo(() => {
+                                if(basePrice == 0) return (0).toFixed(2);
                                 return (basePrice * RATE + TRANSFER_FEE).toFixed(2);
                               }, [basePrice]);
 

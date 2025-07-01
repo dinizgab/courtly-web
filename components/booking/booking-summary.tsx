@@ -49,7 +49,7 @@ export default function BookingSummary({ courtName, date, startTime, duration, t
                     </div>
                     <div className="flex justify-between items-center text-lg font-bold text-primary">
                         <span>Valor Total:</span>
-                        <span>R$ {totalValue * RATE + TRANSFER_FEE}</span>
+                        <span>R$ {totalValue == 0 ? totalValue.toFixed(2) : totalValue/100 * RATE + TRANSFER_FEE}</span>
                     </div>
 
                     <div className="pt-4 space-y-2 text-sm text-gray-600">

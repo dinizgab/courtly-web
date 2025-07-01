@@ -122,7 +122,7 @@ export default function CompanyShowcasePage() {
                                             </span>
                                         </div>
                                         <div className="flex items-center text-sm font-medium text-slate-600">
-                                            <span>R$ {c.hourlyPrice * RATE + TRANSFER_FEE} / hora</span>
+                                            <span>R$ {(c.hourlyPrice/100) * RATE + TRANSFER_FEE} / hora</span>
                                         </div>
                                         <div className="flex justify-between items-center">
                                             <Button

@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast"
 import { VerificationCodeModal } from "@/components/verification-code-modal"
 import { useAuth } from "@/contexts/auth-context"
 import { withAuth } from "@/utils/withAuth"
+import { RATE, TRANSFER_FEE } from "@/utils/rate"
 
 function BookingsPage() {
     const [bookings, setBookings] = useState<Booking[]>([])
@@ -209,7 +210,7 @@ function BookingsPage() {
                                                 <TableCell>{booking.court?.name}</TableCell>
                                                 <TableCell>{new Date(booking.startTime).toLocaleDateString("pt-BR")}</TableCell>
                                                 <TableCell>{formatBookingTime(booking)}</TableCell>
-                                                <TableCell className="text-right">R$ {booking.totalPrice}</TableCell>
+                                                <TableCell className="text-right">R$ {Number((booking.totalPrice / 100).toFixed(2)) * RATE + TRANSFER_FEE}</TableCell>
                                                 <TableCell>{getStatusBadge(booking.status)}</TableCell>
                                                 <TableCell className="text-right">
                                                     <DropdownMenu>
