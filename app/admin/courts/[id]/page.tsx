@@ -155,23 +155,29 @@ export default function CourtDetailsPage() {
         "Tem certeza que deseja excluir esta quadra? Esta ação não pode ser desfeita."
       )
     ) {
-      await api.delete(`/courts/${id}`).then((response: AxiosResponse) => {
-        if (response.status === 200) {
-          toast({
-            title: "Quadra excluída",
-            description: "A quadra foi excluída com sucesso.",
-          });
+      await api
+        .delete(`/courts/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response: AxiosResponse) => {
+          if (response.status === 200) {
+            toast({
+              title: "Quadra excluída",
+              description: "A quadra foi excluída com sucesso.",
+            });
 
-          router.push("/admin/courts");
-        } else {
-          toast({
-            title: "Erro ao excluir quadra",
-            description:
-              "Não foi possível excluir a quadra. Tente novamente mais tarde.",
-            variant: "destructive",
-          });
-        }
-      });
+            router.push("/admin/courts");
+          } else {
+            toast({
+              title: "Erro ao excluir quadra",
+              description:
+                "Não foi possível excluir a quadra. Tente novamente mais tarde.",
+              variant: "destructive",
+            });
+          }
+        });
     }
   };
 
@@ -328,7 +334,7 @@ export default function CourtDetailsPage() {
             </div>
           </div>
 
-          <div >
+          <div>
             <div className="lg:col-span-2">
               <Card>
                 <CardHeader className="pb-2">
