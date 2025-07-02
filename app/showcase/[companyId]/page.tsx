@@ -109,7 +109,7 @@ export default function CompanyShowcasePage() {
                                         className="object-cover"
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                     />
-                                    <Badge className="absolute top-2 right-2 bg-blue-500">{c.sportType[0].toUpperCase() + c.sportType.slice(1)}</Badge>
+                                    <Badge className="absolute top-2 right-2 bg-primary">{c.sportType[0].toUpperCase() + c.sportType.slice(1)}</Badge>
                                 </div>
                                 <CardContent className="p-6">
                                     <h3 className="text-xl font-bold mb-2">{c.name}</h3>
