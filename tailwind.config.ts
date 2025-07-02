@@ -34,6 +34,7 @@ const config: Config = {
 
         secondary: {
           DEFAULT: "#f5f5f5",
+          yellow: "#FFD166",
           foreground: "#171717",
         },
 

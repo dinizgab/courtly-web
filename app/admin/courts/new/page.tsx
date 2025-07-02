@@ -104,7 +104,7 @@ export default function NewCourtPage() {
           name: data.name,
           company_id: companyId,
           sport_type: data.sportType,
-          hourly_price: data.hourlyPrice,
+          hourly_price: data.hourlyPrice * 100,
           capacity: data.capacity,
           description: data.description,
           is_active: data.isActive,
