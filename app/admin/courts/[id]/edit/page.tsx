@@ -530,7 +530,7 @@ export default function EditCourtPage() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => router.push(`/admin/quadras/${id}`)}
+                    onClick={() => router.push(`/admin/courts/${id}`)}
                     disabled={isSubmitting}
                   >
                     Cancelar
