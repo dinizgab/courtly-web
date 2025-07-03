@@ -16,6 +16,9 @@ import {
   Settings,
   ArrowRight,
 } from "lucide-react";
+
+import { DollarSign, Percent, Coins, Tag } from "lucide-react";
+
 import { LandingHeader } from "@/components/landing-header";
 import { LandingFooter } from "@/components/landing-footer";
 
@@ -29,18 +32,18 @@ export default function LandingPage() {
       description:
         "Controle total sobre agendamentos, com confirmação automática e lembretes para clientes.",
     },
-    {
-      icon: Users,
-      title: "Cadastro de Clientes",
-      description:
-        "Mantenha uma base de dados organizada com histórico de reservas e preferências.",
-    },
-    {
-      icon: BarChart3,
-      title: "Relatórios Detalhados",
-      description:
-        "Visualize o desempenho do seu negócio com gráficos e métricas importantes.",
-    },
+    // {
+    //   icon: Users,
+    //   title: "Cadastro de Clientes",
+    //   description:
+    //     "Mantenha uma base de dados organizada com histórico de reservas e preferências.",
+    // },
+    // {
+    //   icon: BarChart3,
+    //   title: "Relatórios Detalhados",
+    //   description:
+    //     "Visualize o desempenho do seu negócio com gráficos e métricas importantes.",
+    // },
     {
       icon: Clock,
       title: "Disponibilidade em Tempo Real",
@@ -200,7 +203,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
             {features.map((feature, index) => (
               <Card
                 key={index}
@@ -248,14 +251,14 @@ export default function LandingPage() {
                 step: "2",
                 title: "Personalize sua vitrine",
                 description:
-                  "Customize a página de vitrine que seus clientes verão, com suas cores, logo e informações do seu negócio.",
+                  "Customize a página de vitrine que seus clientes verão, com suas quadras e informações do seu negócio.",
                 image: "/personalize-vitrine.svg?height=200&width=300",
               },
               {
                 step: "3",
                 title: "Comece a receber reservas",
                 description:
-                  "Compartilhe o link da sua vitrine e comece a receber reservas online ou registre manualmente no sistema.",
+                  "Compartilhe o link da sua vitrine e comece a receber reservas online.",
                 image: "/reservas.svg?height=200&width=300",
               },
             ].map((step, index) => (
@@ -425,46 +428,100 @@ export default function LandingPage() {
           </div>
 
           {/* Card de exemplo */}
-          <div className="flex justify-center">
-            <Card className="border border-gray-200 shadow-md w-full max-w-3xl">
-              <CardContent className="p-6">
-                <h4 className="text-xl font-bold text-slate-700 mb-4">
-                  Exemplo prático:
-                </h4>
-                <p className="text-gray-700 mb-4">
-                  Imagine que sua quadra custa <strong>R$ 60,00</strong>. Ao
-                  utilizar nossa plataforma, você pode configurar esse valor e
-                  deixar que o sistema adicione as taxas automaticamente para o
-                  seu cliente.
+          <div className="flex justify-center bg-white p-10">
+            <Card className="w-full max-w-5xl bg-[#F5F5F5] rounded-lg shadow-md border-none">
+              <CardContent className="p-8">
+                <h2 className="text-3xl font-bold text-[#52b788] text-center mb-2">
+                  Como funciona na prática
+                </h2>
+
+                <p className="text-center text-lg text-gray-700 mb-6">
+                  Veja um exemplo real de como a precificação funciona na
+                  plataforma Courtly
                 </p>
-                <ul className="text-gray-700 space-y-2 mb-6">
-                  <li>
-                    💳 <strong>Valor inserido por você:</strong> R$ 60,00
-                  </li>
-                  <li>
-                    ➕ <strong>Taxa de 5%:</strong> R$ 3,00
-                  </li>
-                  <li>
-                    ➕ <strong>Taxa fixa por transação:</strong> R$ 0,85
-                  </li>
-                  <li>
-                    🧾 <strong>Valor final para o cliente:</strong>{" "}
-                    <span className="text-green-600 font-semibold">
-                      R$ 63,85
-                    </span>
-                  </li>
-                  <li>
-                    ✅ <strong>Valor que você recebe:</strong>{" "}
-                    <span className="text-blue-600 font-semibold">
-                      R$ 60,00
-                    </span>
-                  </li>
-                </ul>
-                <p className="text-gray-600">
-                  Você continua recebendo o valor cheio e ainda tem todos os
-                  benefícios da gestão automatizada e profissional da
-                  plataforma.
-                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Lado Esquerdo */}
+                  <div className="space-y-4">
+                    <div className="flex items-center bg-white p-3 rounded-lg shadow-sm">
+                      <div className="w-9 h-9 bg-[#52b788] text-white flex items-center justify-center rounded-full mr-3">
+                        <DollarSign className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-gray-700">
+                          Valor inserido por você:
+                        </div>
+                        <div className="text-lg font-bold">R$ 60,00</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center bg-white p-3 rounded-lg shadow-sm">
+                      <div className="w-9 h-9 bg-[#FFD166] text-white flex items-center justify-center rounded-full mr-3">
+                        <Percent className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-gray-700">
+                          Taxa de 5%:
+                        </div>
+                        <div className="text-lg font-bold">R$ 3,00</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center bg-white p-3 rounded-lg shadow-sm">
+                      <div className="w-9 h-9 bg-[#FFD166] text-white flex items-center justify-center rounded-full mr-3">
+                        <Coins className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-gray-700">
+                          Taxa fixa por transação:
+                        </div>
+                        <div className="text-lg font-bold">R$ 0,85</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Lado Direito */}
+                  <div className="space-y-4">
+                    <div className="flex items-center bg-white p-3 rounded-lg shadow-sm">
+                      <div className="w-9 h-9 bg-[#52b788] text-white flex items-center justify-center rounded-full mr-3">
+                        <Tag className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-gray-700">
+                          Valor final para o cliente:
+                        </div>
+                        <div className="text-lg font-bold text-[#52b788]">
+                          R$ 63,85
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center bg-white p-3 rounded-lg shadow-sm">
+                      <div className="w-9 h-9 bg-[#52b788] text-white flex items-center justify-center rounded-full mr-3">
+                        <CheckCircle className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-gray-700">
+                          Valor que você recebe:
+                        </div>
+                        <div className="text-lg font-bold text-[#52b788]">
+                          R$ 60,00
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-[#e6ffe6] border-l-4 border-[#52b788] p-4 rounded-lg mt-2 text-gray-700">
+                      Você continua recebendo o valor cheio e ainda tem todos os
+                      benefícios da gestão automatizada.
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-center mt-6">
+                  <button className="bg-[#52b788] hover:bg-[#40916c] text-white font-bold py-2 px-6 rounded-full text-lg transition duration-300">
+                    Comece a usar agora!
+                  </button>
+                </div>
               </CardContent>
             </Card>
           </div>

@@ -60,7 +60,9 @@ const signupFormSchema = z
     street: z.string().min(3, { message: "Rua é obrigatória" }),
     number: z.string().min(1, { message: "Número é obrigatório" }),
     neighborhood: z.string().min(3, { message: "Bairro é obrigatório" }),
-    pix_key: z.string().refine((pix) => validatePIX(pix), {message: "Pix inválido"}),
+    pix_key: z
+      .string()
+      .refine((pix) => validatePIX(pix), { message: "Pix inválido" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "As senhas não coincidem",
@@ -77,6 +79,9 @@ export default function SignupPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { signup, isAuthenticated } = useAuth();
   const [error, setError] = useState("");
+  const [pixKeyType, setPixKeyType] = useState<
+    "cpf" | "cnpj" | "phone" | "email" | "random"
+  >("cpf");
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupFormSchema),
@@ -95,11 +100,17 @@ export default function SignupPage() {
   });
 
   const onSubmit = async (data: SignupFormValues) => {
+    console.log("ENVIANDO", data);
     try {
       setIsSubmitting(true);
       setError("");
       const cleanedCNPJ = data.cnpj.replace(/[^\d]/g, "");
       const cleanedPhone = data.phone.replace(/[^\d]/g, "");
+      let cleanedPix = data.pix_key;
+      if(pixKeyType == 'phone' || pixKeyType == 'cnpj' || pixKeyType =='cpf'){
+        cleanedPix = cleanedPix.replace(/[^\d]/g, "");
+      }
+
 
       await signup({
         name: data.companyName,
@@ -110,7 +121,8 @@ export default function SignupPage() {
         street: data.street,
         number: data.number,
         neighborhood: data.neighborhood,
-        pix_key: data.pix_key,
+        pix_key: cleanedPix,
+        pix_key_type: pixKeyType,
       });
 
       toast({
@@ -260,25 +272,84 @@ export default function SignupPage() {
                         <FormLabel>
                           Chave PIX para onde seus saques devem ser enviados
                         </FormLabel>
+
+                        <div className="flex flex-wrap gap-2 mb-3 pb-1">
+                          {["cpf", "cnpj", "phone", "email", "random"].map(
+                            (type) => (
+                              <Button
+                                key={type}
+                                type="button"
+                                variant={
+                                  pixKeyType === type ? "default" : "outline"
+                                }
+                                onClick={() => {
+                                  setPixKeyType(type as any);
+                                  form.setValue("pix_key", ""); // limpa o campo ao trocar o tipo
+                                }}
+                                className="text-xs"
+                              >
+                                {type === "cpf"
+                                  ? "CPF"
+                                  : type === "cnpj"
+                                  ? "CNPJ"
+                                  : type === "phone"
+                                  ? "Telefone"
+                                  : type === "email"
+                                  ? "Email"
+                                  : "Aleatória"}
+                              </Button>
+                            )
+                          )}
+                        </div>
+
                         <FormControl>
                           <Input
                             placeholder="Digite sua chave PIX"
                             {...field}
+                            value={field.value}
                             onChange={(e) => {
-                              const raw = e.target.value.trim();
-                              const digitsOnly = raw.replace(/\D/g, "");
+                              let value = e.target.value.trim();
 
-                              let formatted = raw;
-
-                              if (/^\d{11}$/.test(digitsOnly)) {
-                                formatted = formatCPF(digitsOnly);
-                              } else if (/^\d{14}$/.test(digitsOnly)) {
-                                formatted = formatCNPJ(digitsOnly);
-                              } else if (/^\d{10,11}$/.test(digitsOnly)) {
-                                formatted = formatPhone(digitsOnly);
+                              if (pixKeyType === "cpf") {
+                                const digits = value
+                                  .replace(/\D/g, "")
+                                  .slice(0, 11);
+                                value = digits.replace(
+                                  /^(\d{3})(\d{3})(\d{3})(\d{0,2})$/,
+                                  "$1.$2.$3-$4"
+                                );
                               }
 
-                              field.onChange(formatted); 
+                              if (pixKeyType === "cnpj") {
+                                const digits = value
+                                  .replace(/\D/g, "")
+                                  .slice(0, 14);
+                                value = digits
+                                  .replace(/^(\d{2})(\d)/, "$1.$2")
+                                  .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+                                  .replace(/\.(\d{3})(\d)/, ".$1/$2")
+                                  .replace(/(\d{4})(\d)/, "$1-$2")
+                                  .substring(0, 18);
+                              }
+
+                              if (pixKeyType === "phone") {
+                                const digits = value
+                                  .replace(/\D/g, "")
+                                  .slice(0, 11);
+                                if (digits.length <= 10) {
+                                  value = digits
+                                    .replace(/^(\d{2})(\d)/, "($1) $2")
+                                    .replace(/(\d{4})(\d)/, "$1-$2")
+                                    .substring(0, 14);
+                                } else {
+                                  value = digits
+                                    .replace(/^(\d{2})(\d)/, "($1) $2")
+                                    .replace(/(\d{5})(\d)/, "$1-$2")
+                                    .substring(0, 15);
+                                }
+                              }
+
+                              field.onChange(value);
                             }}
                           />
                         </FormControl>

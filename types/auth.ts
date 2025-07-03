@@ -7,6 +7,8 @@ export interface SignupData {
     street: string
     number: string
     neighborhood: string
+    pix_key: string
+    pix_key_type: string
 }
 
 export interface LoginCredentials {

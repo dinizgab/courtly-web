@@ -11,6 +11,7 @@ import { useBookingPaymentStatus } from "@/hooks/use-booking-payment-status"
 import { useBookingInformationShowcase } from "@/hooks/use-booking"
 import { formatBookingDateTimeString, formatTimePtBr } from "@/utils/date"
 import { useChargePaymentInformation } from "@/hooks/use-charge-information"
+import { RATE, TRANSFER_FEE } from "@/utils/rate"
 
 export default function PixPaymentPage() {
     const router = useRouter()
@@ -182,7 +183,7 @@ export default function PixPaymentPage() {
                                     </div>
                                     <div className="flex justify-between font-semibold border-t border-blue-200 pt-2 mt-2">
                                         <span>Total:</span>
-                                        <span>R$ {booking?.totalPrice.toFixed(2)}</span>
+                                        <span>R$ {(booking?.totalPrice/100) * RATE + TRANSFER_FEE}</span>
                                     </div>
                                 </div>
                             </div>
