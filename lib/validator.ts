@@ -77,7 +77,6 @@ export function validatePIX(pix: string): boolean {
   }
   
   const result = validate(cleanPix)
-  
   return result.length > 0
 }
 

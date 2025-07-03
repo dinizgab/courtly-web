@@ -92,6 +92,8 @@ const AuthService = {
                 phone: signupData.phone,
                 email: signupData.email,
                 password: signupData.password,
+                pix_key: signupData.pix_key,
+                pix_key_type: signupData.pix_key_type
             },
                 {
                     headers: { "Content-Type": "application/json", }
