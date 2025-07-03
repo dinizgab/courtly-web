@@ -51,7 +51,6 @@ function courtsPage() {
     if (confirm("Tem certeza que deseja excluir esta quadra?")) {
       setCourts(courts.filter((court) => court.id !== id));
 
-      // TODO - Add token to header
       api
         .delete(`/admin/courts/${id}`, {
           headers: {
@@ -76,12 +75,25 @@ function courtsPage() {
     }
   };
 
-  const toggleStatus = (id: string) => {
+  const toggleStatus = async (id: string) => {
+    const court = courts.find((court) => court.id === id);
     setCourts(
       courts.map((court) =>
         court.id === id ? { ...court, isActive: !court.isActive } : court
       )
     );
+
+    await api.patch(
+        `/admin/courts/${court?.id}/status`,
+        {
+          is_active: !court?.isActive
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+    )
   };
 
   useEffect(() => {
