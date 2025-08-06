@@ -1,6 +1,5 @@
 # Courtly - A Sports Court Reservation Management
-
-The project was built with **Next.js 15**, **React 19**, and **Tailwind CSS**, providing an online showcase and administrative tools for court owners.
+- Courtly is a court and reservation management system, where the court owner can manage its courts and reservations while the user can create, make payments and refunds of its own reservations.
 
 ## Features
 - **Reservation Management**: Control bookings with automatic confirmations.  
