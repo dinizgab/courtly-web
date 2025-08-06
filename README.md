@@ -1,47 +1,48 @@
-# Courtly Web
+# Courtly - A Sports Court Reservation Management
 
-Plataforma web para gestão de reservas de quadras esportivas. O projeto foi construído com **Next.js 15**, **React 19** e **Tailwind CSS**, oferecendo uma vitrine online e ferramentas administrativas para proprietários de quadras.
+The project was built with **Next.js 15**, **React 19**, and **Tailwind CSS**, providing an online showcase and administrative tools for court owners.
 
-## Funcionalidades
-- **Gestão de Reservas**: controle de agendamentos com confirmações automáticas.
-- **Disponibilidade em Tempo Real**: evita conflitos exibindo apenas horários livres.
-- **Personalização Completa**: configuração de preços, horários e regras para cada quadra.
-- **Vitrine Online**: página pública para que clientes descubram e reservem quadras.
+## Features
+- **Reservation Management**: Control bookings with automatic confirmations.  
+- **Real-Time Availability**: Prevents conflicts by displaying only available time slots.  
+- **Full Customization**: Configure prices, schedules, and rules for each court.  
+- **Online Showcase**: Public page for customers to discover and book courts.
 
-## Tecnologias Principais
-- [Next.js](https://nextjs.org/) & React
-- [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Radix UI](https://www.radix-ui.com/) para componentes acessíveis
-- [React Query](https://tanstack.com/query/latest) para requisições e cache de dados
-- [Zod](https://zod.dev/) para validação
+## Main Technologies
+- **Next.js & React**  
+- **TypeScript**  
+- **Tailwind CSS**  
+- **Radix UI** for accessible components  
+- **React Query** for data fetching and caching  
+- **Zod** for validation  
 
-## Estrutura do Projeto
-A organização principal segue o padrão do diretório `app` do Next.js:
+## Project Structure
+The main organization follows the Next.js app directory pattern:
 
-```text
-app/          # páginas e rotas da aplicação
-components/   # componentes reutilizáveis
-contexts/     # provedores de contexto
-hooks/        # hooks personalizados
-lib/          # integrações e utilitários de API
-public/       # arquivos estáticos
-styles/       # estilos globais
+```
+app/          # Application pages and routes
+components/   # Reusable components
+contexts/     # Context providers
+hooks/        # Custom hooks
+lib/          # API integrations and utilities
+public/       # Static files
+styles/       # Global styles
 ```
 
-## Como Iniciar
-1. Instale as dependências:
-   ```bash
-   npm install
-   # ou
-   pnpm install
-   ```
-2. Inicie o servidor de desenvolvimento:
-   ```bash
-   npm run dev
-   ```
-   A aplicação estará disponível em `http://localhost:3000`.
+## Getting Started
+Install dependencies:
+```bash
+npm install
+# or
+pnpm install
+```
 
-## Comandos Úteis
-- `npm run lint` – executa a verificação de lint.
-- `npm run build` – gera a versão de produção.
+Start the development server:
+```bash
+npm run dev
+```
+The application will be available at **http://localhost:3000**.
+
+## Useful Commands
+- `npm run lint` – runs lint checks.  
+- `npm run build` – generates the production build.  
